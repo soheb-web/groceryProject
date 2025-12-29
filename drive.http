@@ -1,6 +1,7 @@
 @token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTM4ZmY3MzRiMDc4OGQ5NTJjYmRkYjAiLCJlbWFpbCI6InNhaGlsam95YUBnbWFpbC5jb20iLCJpYXQiOjE3NjUzNDM5NDQsImV4cCI6MTc5Njg3OTk0NH0.TJLeynyh-xSNoiMFTEkdin5x4zEJw1yi05nvK318f-0
 //@url =  http://192.168.1.22:9999/api/v1
-@url =  https://majesticlivingproperties.com/api/v1
+# @url =  https://majesticlivingproperties.com/api/v1
+@url =  https://api.propertyleinnovation.com/api/v1
 
 # 
 post {{url}}/user/userRegister
@@ -37,7 +38,9 @@ Content-type: application/json
 # userProfile
 post {{url}}/user/userProfile
 Content-type: application/json
-Authorization: {{token}}
+Authorization: {{token}
+
+
 
 ############
 # userUpdate

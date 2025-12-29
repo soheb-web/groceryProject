@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,7 +40,13 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
         bathrooms: '3',
         area: '1200',
         furnishing: 'Semi-Furnished',
-        amenities: ['Gymnasium', 'Swimming Pool', 'Lift', 'Security', 'Parking'],
+        amenities: [
+          'Gymnasium',
+          'Swimming Pool',
+          'Lift',
+          'Security',
+          'Parking',
+        ],
         aroundProject: [
           {'place': 'Metro Station', 'details': '2 mins walk'},
           {'place': 'School', 'details': 'International School - 1 km'},
@@ -165,7 +170,9 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
           onPressed: () async {
             final newProperty = await Navigator.push(
               context,
-              CupertinoPageRoute(builder: (context) => const CreatePropertyScreen()),
+              CupertinoPageRoute(
+                builder: (context) => const CreatePropertyScreen(),
+              ),
             );
 
             if (newProperty != null && newProperty is Property) {
@@ -217,172 +224,218 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
   Widget HomeScreen() {
     return SafeArea(
       top: false,
-       child:  Builder(  // <-- यहीं Builder add करो
-            builder: (BuildContext context) {  // नया context जो Scaffold के अंदर है
-              return SingleChildScrollView(
-        child: Column(
-          children: [
-            // APP BAR
-            Container(
-              height: 120.h,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              color: const Color(0xffFF6A2A),
-              child: Padding(
-                padding: EdgeInsets.only(top: 25.h),
-                child: Row(
-                  children: [
-                    InkWell(
-                        onTap: (){
+      child: Builder(
+        // <-- यहीं Builder add करो
+        builder: (BuildContext context) {
+          // नया context जो Scaffold के अंदर है
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                // APP BAR
+                Container(
+                  height: 120.h,
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  color: const Color(0xffFF6A2A),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 25.h),
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                          child: Icon(
+                            Icons.menu,
+                            color: Colors.white,
+                            size: 24.sp,
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: TextField(
+                            style: GoogleFonts.inter(color: Colors.white),
+                            cursorColor: Colors.white,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white.withOpacity(0.25),
+                              isDense: true,
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 10.h,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.r),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.r),
+                                borderSide: BorderSide.none,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Colors.white,
+                                size: 18.sp,
+                              ),
+                              prefixIconConstraints: BoxConstraints(
+                                minHeight: 32.h,
+                                minWidth: 36.w,
+                              ),
+                              hintText: "Search",
+                              hintStyle: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        const Icon(Icons.mic, color: Colors.white),
+                        SizedBox(width: 10.w),
+                        const Icon(
+                          Icons.notifications_none,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 10.w),
+                        SvgPicture.asset("assets/Svg/whatsapp.svg"),
+                        SizedBox(width: 10.w),
+                        const Icon(Icons.logout, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
 
-                          Scaffold.of(context).openDrawer();
-                        },
-                        child: Icon(Icons.menu, color: Colors.white, size: 24.sp)),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: TextField(
-                        style: GoogleFonts.inter(color: Colors.white),
-                        cursorColor: Colors.white,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white.withOpacity(0.25),
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 10.h),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.r),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.r),
-                            borderSide: BorderSide.none,
-                          ),
-                          prefixIcon: Icon(Icons.search, color: Colors.white, size: 18.sp),
-                          prefixIconConstraints: BoxConstraints(minHeight: 32.h, minWidth: 36.w),
-                          hintText: "Search",
-                          hintStyle: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 14.sp),
+                // BANNER
+                Stack(
+                  children: [
+                    Image.asset(
+                      "assets/home (3).png",
+                      height: 260.h,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                    Container(
+                      height: 260.h,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.black.withOpacity(0.6),
+                            Colors.transparent,
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
                         ),
                       ),
                     ),
-                    SizedBox(width: 10.w),
-                    const Icon(Icons.mic, color: Colors.white),
-                    SizedBox(width: 10.w),
-                    const Icon(Icons.notifications_none, color: Colors.white),
-                    SizedBox(width: 10.w),
-                    SvgPicture.asset("assets/Svg/whatsapp.svg"),
-                    SizedBox(width: 10.w),
-                    const Icon(Icons.logout, color: Colors.white),
+                    Positioned(
+                      left: 16.w,
+                      bottom: 20.h,
+                      right: 16.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Chip(
+                            label: const Text("Top rated"),
+                            backgroundColor: const Color.fromARGB(
+                              178,
+                              255,
+                              255,
+                              255,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40.r),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          const Text(
+                            "Sea Facing Villa, Miami\nBeach Property",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            "24 XYZ, Miami Beach, Florida",
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ),
 
-            // BANNER
-            Stack(
-              children: [
-                Image.asset(
-                  "assets/home (3).png",
-                  height: 260.h,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                // MARQUEE
                 Container(
-                  height: 260.h,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.black.withOpacity(0.6), Colors.transparent],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
+                  width: double.infinity,
+                  height: 40.h,
+                  color: const Color(0xffFF6A2A),
+                  child: Marquee(
+                    text:
+                        "CALL US TODAY AT +91-8899556644 FOR PROPERTY INQUERY",
+                    style: GoogleFonts.inter(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
                     ),
+                    scrollAxis: Axis.horizontal,
+                    velocity: 40,
+                    blankSpace: 50,
+                    startPadding: 10,
                   ),
                 ),
-                Positioned(
-                  left: 16.w,
-                  bottom: 20.h,
-                  right: 16.w,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                SizedBox(height: 15.h),
+
+                // TABS
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Row(
                     children: [
-                      Chip(
-                        label: const Text("Top rated"),
-                        backgroundColor: const Color.fromARGB(178, 255, 255, 255),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.r)),
-                      ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        "Sea Facing Villa, Miami\nBeach Property",
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text("24 XYZ, Miami Beach, Florida", style: TextStyle(color: Colors.white70)),
+                      _tab("Buy & Rent Property", 0),
+                      _tab("Home Services", 1),
+                      _tab("Loan Service", 2),
                     ],
                   ),
                 ),
+
+                SizedBox(height: 16.h),
+
+                // TAB CONTENT
+                if (selectIndex == 0)
+                  Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: GridView.count(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      children: [
+                        _gridItem("assets/png/home.png", "Buy House"),
+                        _gridItem("assets/png/apartment.png", "Rent Studio"),
+                        _gridItem("assets/png/buyFlat.png", "Buy Flats"),
+                        _gridItem("assets/png/buyPlot.png", "Buy Plots"),
+                        _gridItem("assets/png/commercial.png", "Commercial"),
+                        _gridItem("assets/png/buyHotel.png", "Buy Hotels"),
+                        _gridItem("assets/png/rentCondos.png", "Rent Condos"),
+                        _gridItem("assets/png/buyDuplex.png", "Buy Duplex"),
+                        _gridItem("assets/png/rentHouse.png", "Rent House"),
+                      ],
+                    ),
+                  )
+                else if (selectIndex == 1)
+                  const HomeService()
+                else if (selectIndex == 2)
+                  const LoanService(),
+                SizedBox(height: 80.h),
               ],
             ),
-
-            // MARQUEE
-            Container(
-              width: double.infinity,
-              height: 40.h,
-              color: const Color(0xffFF6A2A),
-              child: Marquee(
-                text: "CALL US TODAY AT +91-8899556644 FOR PROPERTY INQUERY",
-                style: GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.w400, color: Colors.white),
-                scrollAxis: Axis.horizontal,
-                velocity: 40,
-                blankSpace: 50,
-                startPadding: 10,
-              ),
-            ),
-
-            SizedBox(height: 15.h),
-
-            // TABS
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Row(
-                children: [
-                  _tab("Buy & Rent Property", 0),
-                  _tab("Home Services", 1),
-                  _tab("Loan Service", 2),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 16.h),
-
-            // TAB CONTENT
-            if (selectIndex == 0)
-              Padding(
-                padding: EdgeInsets.all(16.w),
-                child: GridView.count(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  children: [
-                    _gridItem("assets/png/home.png", "Buy House"),
-                    _gridItem("assets/png/apartment.png", "Rent Studio"),
-                    _gridItem("assets/png/buyFlat.png", "Buy Flats"),
-                    _gridItem("assets/png/buyPlot.png", "Buy Plots"),
-                    _gridItem("assets/png/commercial.png", "Commercial"),
-                    _gridItem("assets/png/buyHotel.png", "Buy Hotels"),
-                    _gridItem("assets/png/rentCondos.png", "Rent Condos"),
-                    _gridItem("assets/png/buyDuplex.png", "Buy Duplex"),
-                    _gridItem("assets/png/rentHouse.png", "Rent House"),
-                  ],
-                ),
-              )
-            else if (selectIndex == 1)
-              const HomeService()
-            else if (selectIndex == 2)
-                const LoanService(),
-            SizedBox(height: 80.h),
-          ],
-        ),
-              );} ),
+          );
+        },
+      ),
     );
   }
 
@@ -400,10 +453,13 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
               padding: EdgeInsets.only(top: 25.h),
               child: Row(
                 children: [
-
                   Text(
                     "My Listings",
-                    style: GoogleFonts.inter(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -412,30 +468,43 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
           Expanded(
             child: properties.isEmpty
                 ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.home_work_outlined, size: 100, color: Colors.grey.shade400),
-                  const SizedBox(height: 20),
-                  Text('No properties listed yet', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
-                  const SizedBox(height: 10),
-                  Text('Tap + to add your first property', style: TextStyle(color: Colors.grey.shade500)),
-                ],
-              ),
-            )
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.home_work_outlined,
+                          size: 100,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'No properties listed yet',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Tap + to add your first property',
+                          style: TextStyle(color: Colors.grey.shade500),
+                        ),
+                      ],
+                    ),
+                  )
                 : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: properties.length,
-              itemBuilder: (context, index) {
-                return PropertyCard(property: properties[index]);
-              },
-            ),
+                    padding: const EdgeInsets.all(16),
+                    itemCount: properties.length,
+                    itemBuilder: (context, index) {
+                      return PropertyCard(property: properties[index]);
+                    },
+                  ),
           ),
         ],
       ),
     );
   }
-/*
+  /*
   Widget CallUsScreen() {
     return SafeArea(
       top: false,
@@ -528,7 +597,10 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
 
                   Text(
                     "For any property inquiry, feel free to call us anytime.",
-                    style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey.shade600),
+                    style: GoogleFonts.inter(
+                      fontSize: 16.sp,
+                      color: Colors.grey.shade600,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 40.h),
@@ -546,7 +618,10 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
 
                   Text(
                     "Available 24/7",
-                    style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey.shade700),
+                    style: GoogleFonts.inter(
+                      fontSize: 16.sp,
+                      color: Colors.grey.shade700,
+                    ),
                   ),
                   SizedBox(height: 40.h),
 
@@ -559,11 +634,17 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
                         // Direct call launch करने के लिए url_launcher package add करो
                         // launchUrl(Uri.parse('tel:+918899556644'));
                       },
-                      icon: const Icon(Icons.call, size: 28, color: Colors.white),
+                      icon: const Icon(
+                        Icons.call,
+                        size: 28,
+                        color: Colors.white,
+                      ),
                       label: Text(
                         "Call Now",
-                        style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold,
-                        color: Colors.white
+                        style: GoogleFonts.inter(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -580,7 +661,11 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset("assets/Svg/whatsapp.svg", height: 40.h,color: Colors.green,),
+                      SvgPicture.asset(
+                        "assets/Svg/whatsapp.svg",
+                        height: 40.h,
+                        color: Colors.green,
+                      ),
                       SizedBox(width: 12.w),
                       Text(
                         "Chat on WhatsApp",
@@ -600,25 +685,34 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.access_time, color: const Color(0xffFF6A2A)),
+                            Icon(
+                              Icons.access_time,
+                              color: const Color(0xffFF6A2A),
+                            ),
                             SizedBox(width: 12.w),
-                            Text("Support Hours: 24 Hours / 7 Days",
-                                style: GoogleFonts.inter(fontSize: 14.sp)),
+                            Text(
+                              "Support Hours: 24 Hours / 7 Days",
+                              style: GoogleFonts.inter(fontSize: 14.sp),
+                            ),
                           ],
                         ),
                         SizedBox(height: 12.h),
                         Row(
                           children: [
-                            Icon(Icons.email_outlined, color: const Color(0xffFF6A2A)),
+                            Icon(
+                              Icons.email_outlined,
+                              color: const Color(0xffFF6A2A),
+                            ),
                             SizedBox(width: 12.w),
-                            Text("Email: support@yourrealestate.com",
-                                style: GoogleFonts.inter(fontSize: 14.sp)),
+                            Text(
+                              "Email: support@yourrealestate.com",
+                              style: GoogleFonts.inter(fontSize: 14.sp),
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -645,7 +739,11 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
                   // SizedBox(width: 12.w),
                   Text(
                     "Saved Property",
-                    style: GoogleFonts.inter(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -654,29 +752,42 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
           Expanded(
             child: properties.isEmpty
                 ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.home_work_outlined, size: 100, color: Colors.grey.shade400),
-                  const SizedBox(height: 20),
-                  Text('No properties listed yet', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
-                  const SizedBox(height: 10),
-                  Text('Tap + to add your first property', style: TextStyle(color: Colors.grey.shade500)),
-                ],
-              ),
-            )
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.home_work_outlined,
+                          size: 100,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'No properties listed yet',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Tap + to add your first property',
+                          style: TextStyle(color: Colors.grey.shade500),
+                        ),
+                      ],
+                    ),
+                  )
                 : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: properties.length,
-              itemBuilder: (context, index) {
-                return PropertyCard(property: properties[index]);
-              },
-            ),
+                    padding: const EdgeInsets.all(16),
+                    itemCount: properties.length,
+                    itemBuilder: (context, index) {
+                      return PropertyCard(property: properties[index]);
+                    },
+                  ),
           ),
         ],
       ),
     );
-  } 
+  }
 
   // NAV ITEM
   Widget buildNavItem(IconData icon, String label, int index) {
@@ -694,7 +805,9 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xffFF6A2A) : Colors.transparent,
+                color: isSelected
+                    ? const Color(0xffFF6A2A)
+                    : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -726,7 +839,6 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
         setState(() {
           selectIndex = index;
         });
-
       },
       child: Container(
         margin: EdgeInsets.only(right: 10.w),
@@ -750,10 +862,11 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
   // GRID ITEM
   Widget _gridItem(String icon, String title) {
     return GestureDetector(
-      onTap: (){
-
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>PropertyPageCat()));
-
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PropertyPageCat()),
+        );
       },
       child: Container(
         decoration: BoxDecoration(
@@ -775,9 +888,7 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
       ),
     );
   }
-
 }
-
 
 // ==================== PROPERTY MODEL ====================
 class Property {
@@ -847,7 +958,7 @@ class PropertyCard extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFFFF5722),
-                    ), 
+                    ),
                   ),
                 ),
                 Chip(
@@ -935,11 +1046,9 @@ class PropertyCard extends StatelessWidget {
       ],
     );
   }
-
 }
 
 // ==================== MAIN STATE CLASS ====================
-
 
 class HomeService extends StatelessWidget {
   const HomeService({super.key});
@@ -948,42 +1057,42 @@ class HomeService extends StatelessWidget {
     {
       'label': 'ELECTRICIAN',
       'url':
-      'https://media.istockphoto.com/id/1049775258/photo/smiling-handsome-electrician-repairing-electrical-box-with-pliers-in-corridor-and-looking-at.jpg?s=612x612&w=0&k=20&c=stdWozouV2XsrHk2xXD3C31nT90BG7ydZvcpAn1Fx7I=',
+          'https://media.istockphoto.com/id/1049775258/photo/smiling-handsome-electrician-repairing-electrical-box-with-pliers-in-corridor-and-looking-at.jpg?s=612x612&w=0&k=20&c=stdWozouV2XsrHk2xXD3C31nT90BG7ydZvcpAn1Fx7I=',
     }, // Replace with actual
     {
       'label': 'CARPENTER',
       'url':
-      'https://s3-media0.fl.yelpcdn.com/bphoto/y2N9GweV0RhaXx9dYbXHTA/l.jpg',
+          'https://s3-media0.fl.yelpcdn.com/bphoto/y2N9GweV0RhaXx9dYbXHTA/l.jpg',
     },
     {
       'label': 'PAINTER',
       'url':
-      'https://www.shutterstock.com/image-vector/worker-repair-service-plumber-handyman-260nw-2234725577.jpg',
+          'https://www.shutterstock.com/image-vector/worker-repair-service-plumber-handyman-260nw-2234725577.jpg',
     },
     {
       'label': 'PLUMBER',
       'url':
-      'https://cdn.prod.website-files.com/5e593fb060cf877cf875dd1f/679085ac60c170e5ebba4b34_recBrwtY2JtNJji6k_image_1.webp',
+          'https://cdn.prod.website-files.com/5e593fb060cf877cf875dd1f/679085ac60c170e5ebba4b34_recBrwtY2JtNJji6k_image_1.webp',
     },
     {
       'label': 'CLEANING',
       'url':
-      'https://www.shutterstock.com/shutterstock/videos/3684051321/thumb/4.jpg?ip=x480',
+          'https://www.shutterstock.com/shutterstock/videos/3684051321/thumb/4.jpg?ip=x480',
     },
     {
       'label': 'INTERIOR',
       'url':
-      'https://s3-media0.fl.yelpcdn.com/bphoto/tuGs0mGEDRuE8omqeINuKQ/l.jpg',
+          'https://s3-media0.fl.yelpcdn.com/bphoto/tuGs0mGEDRuE8omqeINuKQ/l.jpg',
     },
     {
       'label': 'RENOVATION',
       'url':
-      'https://cdn.prod.website-files.com/5e593fb060cf877cf875dd1f/677c007c62c5db1e8a3b1317_handyman-webflow-template.png',
+          'https://cdn.prod.website-files.com/5e593fb060cf877cf875dd1f/677c007c62c5db1e8a3b1317_handyman-webflow-template.png',
     },
     {
       'label': 'PEST CONTROL',
       'url':
-      'https://img.freepik.com/free-photo/people-disinfecting-together-dangerous-area_23-2148848569.jpg?semt=ais_hybrid&w=740&q=80',
+          'https://img.freepik.com/free-photo/people-disinfecting-together-dangerous-area_23-2148848569.jpg?semt=ais_hybrid&w=740&q=80',
     },
   ];
 
@@ -992,7 +1101,7 @@ class HomeService extends StatelessWidget {
       'icon': 'Toilet Repair',
       'title': 'Toilet Repair',
       'desc':
-      'Fast, reliable toilet fixes that restore comfort and functionality.',
+          'Fast, reliable toilet fixes that restore comfort and functionality.',
     },
     {
       'icon': 'Faucet Installation',
@@ -1016,7 +1125,6 @@ class HomeService extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         // Categories Grid
         GridView.builder(
           shrinkWrap: true,
@@ -1055,7 +1163,7 @@ class HomeService extends StatelessWidget {
         ),
 
         // We Provide Quality Services
-        Center                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           (
+        Center(
           child: Text(
             'What We Offer',
             style: GoogleFonts.inter(
@@ -1089,25 +1197,25 @@ class HomeService extends StatelessWidget {
               title: 'Toilet Repair',
               desc: 'Fast, reliable toilet fixes that restore proper function.',
               imageUrl:
-              'https://media.gettyimages.com/id/2192255408/vector/plumbing-line-icon-set-group-of-object-pipe-bathtub-boiler-faucet-repair.jpg?s=612x612&w=gi&k=20&c=IgKlfAmPPCWSHJy7L_KlG4bjVyB_If33cqFTI8X51Ng=',
+                  'https://media.gettyimages.com/id/2192255408/vector/plumbing-line-icon-set-group-of-object-pipe-bathtub-boiler-faucet-repair.jpg?s=612x612&w=gi&k=20&c=IgKlfAmPPCWSHJy7L_KlG4bjVyB_If33cqFTI8X51Ng=',
             ),
             ServiceCard(
               title: 'Faucet Installation',
               desc: 'Expert faucet fitting that ensures smooth water flow.',
               imageUrl:
-              'https://media.istockphoto.com/id/1140334314/vector/plumber-master-with-wrench-fixing-kitchen-faucet.jpg?s=612x612&w=0&k=20&c=5XTiydIT32QfXU-x8WVM6rSeWpy6TopGU66RNfPunw4=',
+                  'https://media.istockphoto.com/id/1140334314/vector/plumber-master-with-wrench-fixing-kitchen-faucet.jpg?s=612x612&w=0&k=20&c=5XTiydIT32QfXU-x8WVM6rSeWpy6TopGU66RNfPunw4=',
             ),
             ServiceCard(
               title: 'Sewer Inspection',
               desc: 'Advanced sewer checks to detect issues early.',
               imageUrl:
-              'https://media.istockphoto.com/id/2194903933/vector/plumbers-and-plumbing-thin-line-icons-editable-stroke-icons-include-plumbing-pipes-leaky.jpg?s=612x612&w=0&k=20&c=V2EAWro2g_Xk72Bl9c0LJ78ylpTxzZaZcyct56nqwCc=',
+                  'https://media.istockphoto.com/id/2194903933/vector/plumbers-and-plumbing-thin-line-icons-editable-stroke-icons-include-plumbing-pipes-leaky.jpg?s=612x612&w=0&k=20&c=V2EAWro2g_Xk72Bl9c0LJ78ylpTxzZaZcyct56nqwCc=',
             ),
             ServiceCard(
               title: 'Drain Cleaning',
               desc: 'Prevent damage with professional drain cleaning.',
               imageUrl:
-              'https://media.istockphoto.com/id/1363041172/vector/water-tank-pipe-pipeline-and-sewerage-cleaning-service-by-cleaner.jpg?s=612x612&w=0&k=20&c=OPh5837hpAV13c5fsr3daJrrzFK1E4HjSEhiDdgZwN0=',
+                  'https://media.istockphoto.com/id/1363041172/vector/water-tank-pipe-pipeline-and-sewerage-cleaning-service-by-cleaner.jpg?s=612x612&w=0&k=20&c=OPh5837hpAV13c5fsr3daJrrzFK1E4HjSEhiDdgZwN0=',
             ),
           ],
         ),
@@ -1229,19 +1337,19 @@ class HomeService extends StatelessWidget {
             children: [
               FeaturedProject(
                 imageUrl:
-                'https://images.finehomebuilding.com/app/uploads/2016/04/09114955/021181bs116-01_xlg.jpg',
+                    'https://images.finehomebuilding.com/app/uploads/2016/04/09114955/021181bs116-01_xlg.jpg',
                 title: 'Drain Overhaul',
                 subtitle: 'Complete drain system upgrade',
               ),
               FeaturedProject(
                 imageUrl:
-                'https://www.thespruce.com/thmb/e-MxaOBy4AKp4JW1XFZGbrkDaIw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/how-to-install-a-sink-drain-2718789_hero_5078-64538f6f90d545c7af0728e4bf8f894e.jpg',
+                    'https://www.thespruce.com/thmb/e-MxaOBy4AKp4JW1XFZGbrkDaIw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/how-to-install-a-sink-drain-2718789_hero_5078-64538f6f90d545c7af0728e4bf8f894e.jpg',
                 title: 'Sink Installation',
                 subtitle: 'New kitchen sink setup',
               ),
               FeaturedProject(
                 imageUrl:
-                'https://gharpedia.com/_next/image/?url=https%3A%2F%2Fcloudfrontgharpediabucket.gharpedia.com%2Fuploads%2F2021%2F12%2FBest-Way-to-Install-a-Bathroom-Sink-Drain-01-0504130013.jpg&w=3840&q=75',
+                    'https://gharpedia.com/_next/image/?url=https%3A%2F%2Fcloudfrontgharpediabucket.gharpedia.com%2Fuploads%2F2021%2F12%2FBest-Way-to-Install-a-Bathroom-Sink-Drain-01-0504130013.jpg&w=3840&q=75',
                 title: 'Drain Overhaul',
                 subtitle: 'Complete drain system upgrade',
               ),
@@ -1286,7 +1394,6 @@ class HomeService extends StatelessWidget {
         ),
 
         const SizedBox(height: 20),
-
       ],
     );
   }
@@ -1340,7 +1447,6 @@ class ServiceCard extends StatelessWidget {
             ),
           ),
 
-
           const SizedBox(height: 6),
 
           // DESCRIPTION
@@ -1351,7 +1457,6 @@ class ServiceCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
           ),
-
         ],
       ),
     );
@@ -1532,6 +1637,7 @@ class LoanService extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.h),
+
           /// 🔹 Heading
           Row(
             children: [
@@ -1559,6 +1665,7 @@ class LoanService extends StatelessWidget {
             style: TextStyle(fontSize: 12.sp, color: Colors.black),
           ),
           SizedBox(height: 14.h),
+
           /// 🔹 Info Chips
           Wrap(
             spacing: 8.w,
@@ -1571,9 +1678,11 @@ class LoanService extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
+
           /// 🔹 Bank Card
           _bankOfferCard(),
           SizedBox(height: 16.h),
+
           /// 🔹 Explore Button
           Center(
             child: Container(
@@ -1596,6 +1705,7 @@ class LoanService extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24.h),
+
           /// 🔹 How it works
           Text(
             "How it works?",

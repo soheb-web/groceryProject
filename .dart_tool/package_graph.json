@@ -30,7 +30,8 @@
         "permission_handler",
         "pretty_dio_logger",
         "retrofit",
-        "riverpod"
+        "riverpod",
+        "shimmer"
       ],
       "devDependencies": [
         "build_runner",
@@ -126,6 +127,13 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "shimmer",
+      "version": "3.0.0",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:realstate/Model/Body/userResister.dart';
+import 'package:realstate/Model/editProfileBodyModel.dart';
+import 'package:realstate/Model/editProfileResModel.dart';
 import 'package:realstate/Model/loginWithPhoneBodyModel.dart';
 import 'package:realstate/Model/registerResModel.dart';
+import 'package:realstate/Model/userProfileResModel.dart';
 import 'package:realstate/Model/verifyBodyModel.dart';
 import 'package:realstate/Model/verifyResModel.dart';
 import 'package:retrofit/retrofit.dart';
@@ -20,5 +23,11 @@ abstract class APIStateNetwork {
   Future<VerifyResModel> verifyUser(@Body() VerifyBodyModel body);
 
   @POST("/user/userLogin")
-  Future<RegisterResModel> loginUser(@Body() LoginWithPhoneBodyModel body);
+  Future<VerifyResModel> loginUser(@Body() LoginWithPhoneBodyModel body);
+
+  @POST("/user/userProfile")
+  Future<UserProfileResModel> userProfile();
+
+  @POST("/user/userUpdate")
+  Future<EditProfileResModel> editProfile(@Body() EditProfileBodyModel body);
 }
