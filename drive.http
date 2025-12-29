@@ -1,0 +1,214 @@
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTM4ZmY3MzRiMDc4OGQ5NTJjYmRkYjAiLCJlbWFpbCI6InNhaGlsam95YUBnbWFpbC5jb20iLCJpYXQiOjE3NjUzNDM5NDQsImV4cCI6MTc5Njg3OTk0NH0.TJLeynyh-xSNoiMFTEkdin5x4zEJw1yi05nvK318f-0
+//@url =  http://192.168.1.22:9999/api/v1
+@url =  https://majesticlivingproperties.com/api/v1
+
+# 
+post {{url}}/user/userRegister
+Content-type: application/json
+
+{
+    "name":"demo1",
+    "email":"demo1@gmail.com",
+    "phone":"1234567890",
+    "password":"123456"
+}
+
+############
+# login user
+post {{url}}/user/userLogin
+Content-type: application/json
+
+{
+    "phone":"8955892899"
+}
+
+############
+# otp verify
+post {{url}}/user/verifyOtp
+Content-type: application/json
+
+{
+    "token":"w1dI6AhKBDfDMPM1jH7dXYZszCm8ydJ05yscfw0x",
+    "otp":"123456"
+}
+
+
+############
+# userProfile
+post {{url}}/user/userProfile
+Content-type: application/json
+Authorization: {{token}}
+
+############
+# userUpdate
+post {{url}}/user/userUpdate
+Content-type: application/json
+Authorization: {{token}}
+
+{
+    "name":"Sahil Joya",
+    "image":"https://demmyimage.com/upload/khan.png"
+}
+
+############
+# userSellProperty
+post {{url}}/user/userSellProperty
+Content-type: application/json
+Authorization: {{token}}
+
+{
+    "name":"Sahil Joya",
+    "image":"https://demmyimage.com/upload/khan.png"
+}
+
+//userSellProperty
+###
+POST {{url}}/user/sell-property HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+{
+  "propertyType": "Apartment",
+  "listingCategory": "sell",
+  "location": "Downtown, Dubai",
+  "city": "Dubai",
+  "price": "950000 AED",
+  "area": "1450 sqft",
+  "bedRoom": "3 BHK",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Security 24/7"
+  ],
+  "aroundProject":[{
+    "name":"School",
+    "details":"MDS School"
+  }],
+  "permitNo": "45236897",
+  "rera": "RERA-12345",
+  "ded": "",
+  "brn": "",
+  "bathrooms": "2",
+  "furnishing": "furnished",
+  "description": "Luxury apartment with premium interiors, prime location and full city view. Easy connectivity & all essential facilities nearby.",
+  "aveneuOverView": {
+    "projectArea": "10 Acre",
+    "size": "1100 - 1600 sqft",
+    "projectSize": "4 Towers / 28 Floors Each",
+    "launchDate": "2023",
+    "avgPrice": "900 AED / sqft",
+    "possessionStart": "2025"
+  },
+  "fullName": "Sahil Khan",
+  "email": "sahiljoya@example.com",
+  "phone": "8955892899",
+  "propertyAddress": "Tower B, Marina View Road, Dubai",
+  "language": "English",
+  "uploadedPhotos": [
+    "https://example.com/photo1.jpg",
+    "https://example.com/photo2.jpg",
+    "https://example.com/photo3.jpg"
+  ]
+}
+
+
+############
+# getPropertyList
+post {{url}}/user/get-list
+Content-type: application/json
+Authorization: {{token}}
+
+{
+    "sortOrder":"desc",
+    "sortBy":"createdAt",
+    "pageNo":"1",
+    "size":"10"
+}
+
+
+############
+# getPropertyById
+post {{url}}/user/get-property-by-id
+Content-type: application/json
+Authorization: {{token}}
+
+{
+    "id":"2-bhk-apartment-mansarovar-jaipur-rent-1706092339123"
+}
+
+############
+# contact property wale ko
+post {{url}}/user/saveContactInProperty
+Content-type: application/json
+Authorization: {{token}}
+
+{
+    "email":"vivek.khenna@gmail.com",
+    "name":"vivek khenna",
+    "phone":"32423423423",
+    "propertyId":"6936818024ce03a334a1e82e"
+}
+
+############
+# Contact Us
+post {{url}}/user/contact-us
+Content-type: application/json
+Authorization: {{token}}
+
+{
+    "email":"vivek.khenna@gmail.com",
+    "name":"vivek khenna",
+    "phone":"32423423423",
+    "propertyType":"Flat",
+    "preferredTime":"09:28",
+    "location":"Jaipur"
+}
+
+############
+# getLoanList
+post {{url}}/user/getLoanList
+Content-type: application/json
+Authorization: {{token}}
+
+{
+  "pageNo":1,
+  "size":10
+}
+
+############
+# loanQuery
+post {{url}}/user/loanQuery
+Content-type: application/json
+Authorization: {{token}}
+
+{
+  "phone":"9784945414",
+  "finalize":true,
+  "amount":5000000,
+  "city":"Merta"
+}
+
+############
+# getServiceCategory
+post {{url}}/user/getServiceCategory
+Content-type: application/json
+Authorization: {{token}}
+
+############
+# serviceSave
+post {{url}}/user/serviceSave
+Content-type: application/json
+Authorization: {{token}}
+
+{
+  "name":"John",
+  "email":"John@gmail.com",
+  "phone":"9583764576",
+  "serviceType":"69425d19cb4e5371e2d03f44"
+}
+
+############
+# city list
+post {{url}}/user/getCityList
+Content-type: application/json
