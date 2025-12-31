@@ -5,6 +5,9 @@ import 'package:realstate/Model/Body/userResister.dart';
 import 'package:realstate/Model/editProfileBodyModel.dart';
 import 'package:realstate/Model/editProfileResModel.dart';
 import 'package:realstate/Model/homeGetServiceCateogryModel.dart';
+import 'package:realstate/Model/loanQueryBodyModel.dart';
+import 'package:realstate/Model/loanQueryResModel.dart';
+import 'package:realstate/Model/loanServiceResModel.dart';
 import 'package:realstate/Model/loginWithPhoneBodyModel.dart';
 import 'package:realstate/Model/registerResModel.dart';
 import 'package:realstate/Model/uploadImageBodyModel.dart';
@@ -42,4 +45,12 @@ abstract class APIStateNetwork {
 
   @POST("/user/getServiceCategory")
   Future<HomeGetServiceCategoryModel> homeServiceCategory();
+
+  @POST("/user/getLoanList")
+  Future<LoanServiceResModel> fetchAllLoanService(
+    @Body() LoanServiceBodyModel body,
+  );
+
+  @POST("/user/loanQuery")
+  Future<LoanQueryResModel> loanQuery(@Body() LoanQueryBodyModel body);
 }
