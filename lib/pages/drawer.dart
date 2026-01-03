@@ -7,12 +7,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:realstate/Controller/userProfileController.dart';
+import 'package:realstate/Model/userProfileResModel.dart';
 import 'package:realstate/pages/editProfile.page.dart';
 import 'package:realstate/pages/login.page.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AppDrawer extends ConsumerStatefulWidget {
-  const AppDrawer({super.key});
+  final AsyncValue<UserProfileResModel> profileController;
+  const AppDrawer({super.key, required this.profileController});
 
   @override
   ConsumerState<AppDrawer> createState() => _AppDrawerState();
@@ -99,7 +101,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                                 width: 35.w,
                                 height: 35.h,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.r),
+                                  shape: BoxShape.circle,
                                   color: Colors.blueGrey,
                                 ),
                                 child: Center(
@@ -170,7 +172,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                   // bottomIndex = 3;
                 },
               ),
-              const Divider(),
+
               ListTile(
                 leading: const Icon(Icons.settings),
                 title: const Text('Settings'),

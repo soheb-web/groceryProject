@@ -5,22 +5,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marquee/marquee.dart';
+import 'package:realstate/Controller/contactUsController.dart';
+import 'package:realstate/Controller/getMyPropertyController.dart';
 import 'package:realstate/Controller/homeServiceCategoryController.dart';
+import 'package:realstate/Controller/loanServiceController.dart';
+import 'package:realstate/Controller/userProfileController.dart';
+import 'package:realstate/Model/contactUsBodyModel.dart';
+import 'package:realstate/Model/getMyPropertyResModel.dart';
+import 'package:realstate/core/network/api.state.dart';
+import 'package:realstate/core/utils/preety.dio.dart';
+import 'package:realstate/pages/homeServiceDetails.page.dart';
+import 'package:realstate/pages/loanServiceDetails.page.dart';
+import 'package:realstate/pages/myPropertyDetals.page.dart';
 import 'package:realstate/pages/propertyCat.page.dart';
 import 'package:shimmer/shimmer.dart';
 import 'createPropertyPage.dart';
 import 'drawer.dart';
 
-class RealEstateHomePage extends StatefulWidget {
+class RealEstateHomePage extends ConsumerStatefulWidget {
   const RealEstateHomePage({super.key});
 
   @override
-  State<RealEstateHomePage> createState() => _RealEstateHomePageState();
+  ConsumerState<RealEstateHomePage> createState() => _RealEstateHomePageState();
 }
 
-class _RealEstateHomePageState extends State<RealEstateHomePage> {
+class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
   int bottomIndex = 0;
   int selectIndex = 0;
   final GlobalKey<_RealEstateHomePageState> _scaffoldKey = GlobalKey();
@@ -30,6 +42,9 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
   void initState() {
     super.initState();
     _addDummyProperties();
+    Future.microtask(() {
+      ref.read(userProfileController);
+    });
   }
 
   void _addDummyProperties() {
@@ -152,11 +167,21 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
     ];
   }
 
+  final emailController = TextEditingController();
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+  final subjectController = TextEditingController();
+  final messageController = TextEditingController();
+  final locationController = TextEditingController();
+  bool isLoading = false;
+  final _formKeyContactUs = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    final profileController = ref.watch(userProfileController);
     return Scaffold(
       key: _scaffoldKey,
-      drawer: AppDrawer(),
+      drawer: AppDrawer(profileController: profileController),
       backgroundColor: const Color(0xffF5F7FA),
       body: <Widget>[
         HomeScreen(),
@@ -446,6 +471,7 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
 
   // ==================== MY LISTINGS SCREEN ====================
   Widget MyListingsScreen() {
+    final getMyPropertyProvider = ref.watch(getMyPropertyController);
     return SafeArea(
       top: false,
       child: Column(
@@ -459,7 +485,7 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
               child: Row(
                 children: [
                   Text(
-                    "My Listings",
+                    "My Property Manage",
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 20.sp,
@@ -471,77 +497,87 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
             ),
           ),
           Expanded(
-            child: properties.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.home_work_outlined,
-                          size: 100,
-                          color: Colors.grey.shade400,
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          'No properties listed yet',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey.shade600,
+            child: getMyPropertyProvider.when(
+              data: (snap) {
+                if (snap.data!.list!.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24.w),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.home_outlined,
+                            size: 80.sp,
+                            color: Colors.grey.shade400,
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Tap + to add your first property',
-                          style: TextStyle(color: Colors.grey.shade500),
-                        ),
-                      ],
+                          SizedBox(height: 16.h),
+                          Text(
+                            "No properties listed yet",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            "Start by adding your first property to manage listings easily.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) =>
+                                      const CreatePropertyScreen(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.add, color: Colors.white),
+                            label: const Text(
+                              "Add Property",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF5722),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24.w,
+                                vertical: 12.h,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: properties.length,
-                    itemBuilder: (context, index) {
-                      return PropertyCard(property: properties[index]);
-                    },
-                  ),
+                  );
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: snap.data!.list!.length,
+                  itemBuilder: (context, index) {
+                    return PropertyCard(data: snap.data!.list![index]);
+                  },
+                );
+              },
+              error: (error, stackTrace) {
+                return Center(child: Text(error.toString()));
+              },
+              loading: () => Center(child: CircularProgressIndicator()),
+            ),
           ),
         ],
       ),
     );
   }
-  /*
-  Widget CallUsScreen() {
-    return SafeArea(
-      top: false,
-      child: Column(
-        children: [
-
-
-          Container(
-            height: 120.h,
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            color: const Color(0xffFF6A2A),
-            child: Padding(
-              padding: EdgeInsets.only(top: 25.h),
-              child: Row(
-                children: [
-                  // Icon(Icons.menu, color: Colors.white, size: 24.sp),
-                  // SizedBox(width: 12.w),
-                  Text(
-                    "Call Us Page",
-                    style: GoogleFonts.inter(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Center(
-            child: Text("Call Us Page", style: TextStyle(fontSize: 20.sp)),
-          ),
-        ],
-      ),
-    );
-  }*/
 
   Widget CallUsScreen() {
     return SafeArea(
@@ -581,6 +617,390 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
               padding: EdgeInsets.all(24.w),
               child: Column(
                 children: [
+                  Form(
+                    key: _formKeyContactUs,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Enter Your Email",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff0E1A35),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        TextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.mail_outline,
+                              color: Colors.grey,
+                            ),
+                            hintStyle: TextStyle(fontSize: 14.sp),
+                            hintText: "Email",
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.red.shade300,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Email is required";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Enter Your Name",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff0E1A35),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        TextFormField(
+                          controller: nameController,
+                          keyboardType: TextInputType.name,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.person, color: Colors.grey),
+                            hintStyle: TextStyle(fontSize: 14.sp),
+                            hintText: "Name",
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.red.shade300,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Name is required";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Mobile Number",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff0E1A35),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          maxLength: 10,
+                          controller: phoneController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.call_outlined,
+                              color: Colors.grey,
+                            ),
+                            counterText: "",
+                            hintStyle: TextStyle(fontSize: 14.sp),
+                            hintText: "Mobile Number",
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.red.shade300,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Mobile Number is required";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Subject",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff0E1A35),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        TextFormField(
+                          controller: subjectController,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.subject_outlined,
+                              color: Colors.grey,
+                            ),
+                            hintStyle: TextStyle(fontSize: 14.sp),
+                            hintText: "Subject",
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.red.shade300,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Subject is required";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Message",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff0E1A35),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        TextFormField(
+                          controller: messageController,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.messenger_outline,
+                              color: Colors.grey,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.red.shade300,
+                              ),
+                            ),
+                            hintStyle: TextStyle(fontSize: 14.sp),
+                            hintText: "Message",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Message is required";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Location",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff0E1A35),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        SizedBox(width: 10),
+                        TextFormField(
+                          controller: locationController,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(
+                                color: Colors.red.shade300,
+                              ),
+                            ),
+                            hintStyle: TextStyle(fontSize: 14.sp),
+                            hintText: "Location",
+                            prefixIcon: Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Location is required";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        /// ==== SIGN IN BUTTON ====
+                        Center(
+                          child: GestureDetector(
+                            onTap: isLoading
+                                ? null
+                                : () async {
+                                    if (!_formKeyContactUs.currentState!
+                                        .validate()) {
+                                      return;
+                                    }
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    final body = ContactUsBodyModel(
+                                      email: emailController.text,
+                                      name: nameController.text,
+                                      phone: phoneController.text,
+                                      subject: subjectController.text,
+                                      message: messageController.text,
+                                      location: locationController.text,
+                                    );
+                                    try {
+                                      final response = await ref.read(
+                                        contactUsController(body).future,
+                                      );
+                                      if (response.code == 0 ||
+                                          response.error == false) {
+                                        Fluttertoast.showToast(
+                                          msg: response.message,
+                                        );
+                                        emailController.clear();
+                                        nameController.clear();
+                                        phoneController.clear();
+                                        subjectController.clear();
+                                        messageController.clear();
+                                        locationController.clear();
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg: response.message,
+                                        );
+                                      }
+                                    } catch (e) {
+                                      log(e.toString());
+                                    } finally {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                    }
+                                  },
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xffE86A34),
+                                borderRadius: BorderRadius.circular(40),
+                              ),
+                              child: Center(
+                                child: isLoading
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        "Submit",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17.sp,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 22),
+
                   // Big Phone Icon
                   Icon(
                     Icons.phone_in_talk,
@@ -754,41 +1174,42 @@ class _RealEstateHomePageState extends State<RealEstateHomePage> {
               ),
             ),
           ),
-          Expanded(
-            child: properties.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.home_work_outlined,
-                          size: 100,
-                          color: Colors.grey.shade400,
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          'No properties listed yet',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Tap + to add your first property',
-                          style: TextStyle(color: Colors.grey.shade500),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: properties.length,
-                    itemBuilder: (context, index) {
-                      return PropertyCard(property: properties[index]);
-                    },
-                  ),
-          ),
+          // Expanded(
+          //   child: properties.isEmpty
+          //       ? Center(
+          //           child: Column(
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: [
+          //               Icon(
+          //                 Icons.home_work_outlined,
+          //                 size: 100,
+          //                 color: Colors.grey.shade400,
+          //               ),
+          //               const SizedBox(height: 20),
+          //               Text(
+          //                 'No properties listed yet',
+          //                 style: TextStyle(
+          //                   fontSize: 18,
+          //                   color: Colors.grey.shade600,
+          //                 ),
+          //               ),
+          //               const SizedBox(height: 10),
+          //               Text(
+          //                 'Tap + to add your first property',
+          //                 style: TextStyle(color: Colors.grey.shade500),
+          //               ),
+          //             ],
+          //           ),
+          //         )
+          //       : ListView.builder(
+          //           padding: const EdgeInsets.all(16),
+          //           itemCount: properties.length,
+          //           itemBuilder: (context, index) {
+          //             return PropertyCard(: properties[index]);
+          //           },
+          //         ),
+          // ),
+          Text("Save Property"),
         ],
       ),
     );
@@ -938,123 +1359,381 @@ class Property {
 
 // ==================== PROPERTY CARD ====================
 class PropertyCard extends StatelessWidget {
-  final Property property;
-
-  const PropertyCard({Key? key, required this.property}) : super(key: key);
+  final ListElement data;
+  const PropertyCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    property.propertyType,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFFF5722),
+    final primary = const Color(0xFFFF5722);
+    // return Container(
+    //   margin: EdgeInsets.only(bottom: 20.h),
+    //   decoration: BoxDecoration(
+    //     color: Colors.white,
+    //     borderRadius: BorderRadius.circular(18.r),
+    //     boxShadow: [
+    //       BoxShadow(
+    //         color: Colors.black.withOpacity(.08),
+    //         blurRadius: 12,
+    //         offset: const Offset(0, 6),
+    //       ),
+    //     ],
+    //   ),
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       // ================= IMAGE =================
+    //       Stack(
+    //         children: [
+    //           ClipRRect(
+    //             borderRadius: BorderRadius.vertical(top: Radius.circular(18.r)),
+    //             child: Image.network(
+    //               (data.uploadedPhotos != null &&
+    //                       data.uploadedPhotos!.isNotEmpty)
+    //                   ? data.uploadedPhotos!.first
+    //                   : '',
+    //               height: 220.h,
+    //               width: double.infinity,
+    //               fit: BoxFit.cover,
+    //               errorBuilder: (_, __, ___) => Container(
+    //                 height: 220.h,
+    //                 color: Colors.grey.shade300,
+    //                 child: const Icon(Icons.image, size: 50),
+    //               ),
+    //             ),
+    //           ),
+    //           // status
+    //           Positioned(
+    //             top: 14,
+    //             left: 14,
+    //             child: Container(
+    //               padding: EdgeInsets.symmetric(
+    //                 horizontal: 12.w,
+    //                 vertical: 6.h,
+    //               ),
+    //               decoration: BoxDecoration(
+    //                 color: data.status == 'approved'
+    //                     ? Colors.green
+    //                     : Colors.orange,
+    //                 borderRadius: BorderRadius.circular(20.r),
+    //               ),
+    //               child: Text(
+    //                 data.status?.toUpperCase() ?? '',
+    //                 style: TextStyle(
+    //                   fontSize: 12.sp,
+    //                   color: Colors.white,
+    //                   fontWeight: FontWeight.w600,
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //           // price floating
+    //           Positioned(
+    //             bottom: 14,
+    //             right: 14,
+    //             child: Container(
+    //               padding: EdgeInsets.symmetric(
+    //                 horizontal: 14.w,
+    //                 vertical: 8.h,
+    //               ),
+    //               decoration: BoxDecoration(
+    //                 color: Colors.white,
+    //                 borderRadius: BorderRadius.circular(30.r),
+    //                 boxShadow: [
+    //                   BoxShadow(
+    //                     color: Colors.black.withOpacity(.15),
+    //                     blurRadius: 8,
+    //                   ),
+    //                 ],
+    //               ),
+    //               child: Text(
+    //                 "₹ ${data.price}",
+    //                 style: TextStyle(
+    //                   fontSize: 16.sp,
+    //                   fontWeight: FontWeight.bold,
+    //                   color: primary,
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //       Padding(
+    //         padding: EdgeInsets.all(16.w),
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             // ================= TITLE =================
+    //             Text(
+    //               "${data.bedRoom} BHK ${data.propertyType}",
+    //               style: TextStyle(
+    //                 fontSize: 18.sp,
+    //                 fontWeight: FontWeight.bold,
+    //               ),
+    //             ),
+    //             SizedBox(height: 4.h),
+    //             Row(
+    //               children: [
+    //                 const Icon(Icons.location_on, size: 16, color: Colors.grey),
+    //                 SizedBox(width: 4.w),
+    //                 Expanded(
+    //                   child: Text(
+    //                     "${data.localityArea}, ${data.city}",
+    //                     style: TextStyle(fontSize: 13.sp, color: Colors.grey),
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //             SizedBox(height: 14.h),
+    //             // ================= SPECS GRID =================
+    //             Row(
+    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //               children: [
+    //                 _spec(Icons.king_bed, "${data.bedRoom} Beds"),
+    //                 _spec(Icons.bathtub, "${data.bathrooms} Baths"),
+    //                 _spec(Icons.square_foot, "${data.area} sqft"),
+    //                 _spec(Icons.chair, data.furnishing ?? ''),
+    //               ],
+    //             ),
+    //             SizedBox(height: 16.h),
+    //             // ================= AMENITIES =================
+    //             if (data.amenities != null && data.amenities!.isNotEmpty) ...[
+    //               Text(
+    //                 "Amenities",
+    //                 style: TextStyle(
+    //                   fontSize: 16.sp,
+    //                   fontWeight: FontWeight.w600,
+    //                 ),
+    //               ),
+    //               SizedBox(height: 8.h),
+    //               Wrap(
+    //                 spacing: 8.w,
+    //                 runSpacing: 8.h,
+    //                 children: data.amenities!
+    //                     .take(5)
+    //                     .map(
+    //                       (e) => Container(
+    //                         padding: EdgeInsets.symmetric(
+    //                           horizontal: 10.w,
+    //                           vertical: 6.h,
+    //                         ),
+    //                         decoration: BoxDecoration(
+    //                           color: primary.withOpacity(.1),
+    //                           borderRadius: BorderRadius.circular(20.r),
+    //                         ),
+    //                         child: Text(
+    //                           e.toString(),
+    //                           style: TextStyle(fontSize: 12.sp, color: primary),
+    //                         ),
+    //                       ),
+    //                     )
+    //                     .toList(),
+    //               ),
+    //             ],
+    //             SizedBox(height: 16.h),
+    //             // ================= OWNER =================
+    //             Container(
+    //               padding: EdgeInsets.all(12.w),
+    //               decoration: BoxDecoration(
+    //                 color: Colors.grey.shade100,
+    //                 borderRadius: BorderRadius.circular(12.r),
+    //               ),
+    //               child: Row(
+    //                 children: [
+    //                   const CircleAvatar(radius: 18, child: Icon(Icons.person)),
+    //                   SizedBox(width: 10.w),
+    //                   Expanded(
+    //                     child: Column(
+    //                       crossAxisAlignment: CrossAxisAlignment.start,
+    //                       children: [
+    //                         Text(
+    //                           data.fullName ?? '',
+    //                           style: TextStyle(fontWeight: FontWeight.w600),
+    //                         ),
+    //                         Text(
+    //                           data.phone ?? '',
+    //                           style: TextStyle(
+    //                             fontSize: 12.sp,
+    //                             color: Colors.grey,
+    //                           ),
+    //                         ),
+    //                       ],
+    //                     ),
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.08),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ================= IMAGE =================
+          Stack(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) =>
+                          MyPropertyDetalsPage(propetyId: data.slug ?? ""),
+                    ),
+                  );
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(16.r),
+                  ),
+                  child: Image.network(
+                    (data.uploadedPhotos != null &&
+                            data.uploadedPhotos!.isNotEmpty)
+                        ? data.uploadedPhotos!.first
+                        : '',
+                    height: 190.h,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      width: double.infinity,
+                      height: 190.h,
+                      color: Colors.grey.shade300,
+                      child: Center(child: const Icon(Icons.image, size: 40)),
                     ),
                   ),
                 ),
-                Chip(
-                  label: Text(
-                    property.listingCategory,
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                  backgroundColor: const Color(0xFFFF5722),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Icons.location_on, color: Colors.grey, size: 18),
-                const SizedBox(width: 4),
-                Text(
-                  '${property.locality}, ${property.city}',
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '₹ ${property.price}',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
               ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildSpecItem(Icons.king_bed, '${property.bedrooms} Beds'),
-                _buildSpecItem(Icons.bathtub, '${property.bathrooms} Baths'),
-                _buildSpecItem(Icons.square_foot, '${property.area} sqft'),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              children: [
-                Chip(
-                  label: Text(
-                    property.furnishing,
-                    style: const TextStyle(fontSize: 12),
+
+              // BUY / RENT CHIP
+              Positioned(
+                top: 12,
+                left: 12,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 5.h,
                   ),
-                  backgroundColor: Colors.grey.shade200,
-                ),
-                if (property.amenities.isNotEmpty)
-                  Chip(
-                    label: Text(
-                      '${property.amenities.length} Amenities',
-                      style: const TextStyle(fontSize: 12),
+                  decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    (data.listingCategory ?? '').toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
                     ),
-                    backgroundColor: Colors.grey.shade200,
                   ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
+                ),
+              ),
+
+              // PRICE
+              Positioned(
+                bottom: 12,
+                right: 12,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    "₹ ${data.price}",
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.bold,
+                      color: primary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // ================= DETAILS =================
+          Padding(
+            padding: EdgeInsets.all(14.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.person, size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
+                // TITLE
                 Text(
-                  'Listed by: ${property.fullName}',
-                  style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  "${data.bedRoom} BHK ${data.propertyType}",
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+
+                SizedBox(height: 4.h),
+
+                // LOCATION
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, size: 14, color: Colors.grey),
+                    SizedBox(width: 4.w),
+                    Expanded(
+                      child: Text(
+                        "${data.localityArea}, ${data.city}",
+                        style: TextStyle(fontSize: 13.sp, color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 10.h),
+
+                // SPECS
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _spec(Icons.king_bed, "${data.bedRoom} Beds"),
+                    _spec(Icons.bathtub, "${data.bathrooms} Baths"),
+                    _spec(Icons.square_foot, "${data.area} sqft"),
+                    _spec(Icons.chair, data.furnishing ?? ''),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          SizedBox(height: 10.h),
+        ],
       ),
     );
   }
 
-  Widget _buildSpecItem(IconData icon, String label) {
-    return Row(
+  // ================= HELPERS (SAME CLASS) =================
+  Widget _spec(IconData icon, String text) {
+    return Column(
       children: [
-        Icon(icon, size: 18, color: const Color(0xFFFF5722)),
-        const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 14)),
+        Icon(icon, size: 18, color: Colors.grey),
+        SizedBox(height: 4.h),
+        Text(text, style: TextStyle(fontSize: 12.sp)),
       ],
     );
   }
 }
 
 // ==================== MAIN STATE CLASS ====================
-
 class HomeService extends ConsumerStatefulWidget {
   const HomeService({super.key});
 
@@ -1155,15 +1834,25 @@ class _HomeServiceState extends ConsumerState<HomeService> {
                 final item = service.data!.list![index];
                 return Column(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: Image.network(
-                        // categories[index]['url']!,
-                        item.image ??
-                            "https://s3-media0.fl.yelpcdn.com/bphoto/y2N9GweV0RhaXx9dYbXHTA/l.jpg",
-                        width: 80.w,
-                        height: 80.h,
-                        fit: BoxFit.cover,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => HomeServiceDetailsPage(),
+                          ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: Image.network(
+                          // categories[index]['url']!,
+                          item.image ??
+                              "https://s3-media0.fl.yelpcdn.com/bphoto/y2N9GweV0RhaXx9dYbXHTA/l.jpg",
+                          width: 80.w,
+                          height: 80.h,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     SizedBox(height: 8.h),
@@ -1680,790 +2369,136 @@ class FeaturedProject extends StatelessWidget {
   }
 }
 
-class LoanService extends StatelessWidget {
+class LoanService extends ConsumerStatefulWidget {
   const LoanService({super.key});
 
   @override
+  ConsumerState<LoanService> createState() => _LoanServiceState();
+}
+
+class _LoanServiceState extends ConsumerState<LoanService> {
+  @override
   Widget build(BuildContext context) {
+    final loanServiceProvider = ref.watch(loanServiceController);
     return Padding(
       padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 🔹 Top Image
-          Container(
-            height: 200.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.r),
-              image: const DecorationImage(
-                image: AssetImage("assets/image 15.png"),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-
-          SizedBox(height: 20.h),
-
           /// 🔹 Title
           Text(
             "Top Home Loan Bank Partners",
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
-
           SizedBox(height: 16.h),
 
           /// 🔹 Loan Grid
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemCount: loanList.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 12.w,
-              mainAxisSpacing: 12.h,
-              childAspectRatio: 0.80,
-            ),
-            itemBuilder: (context, index) {
-              return Container(
-                padding: EdgeInsets.all(10.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 6,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+          loanServiceProvider.when(
+            data: (loan) {
+              final list = loan.data?.list ?? [];
+
+              if (list.isEmpty) {
+                return const Center(child: Text("No loan services found"));
+              }
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                // itemCount: loanList.length,
+                itemCount: list.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 12.w,
+                  mainAxisSpacing: 12.h,
+                  childAspectRatio: 0.70,
                 ),
-                child: Column(
-                  children: [
-                    Icon(loanList[index].icon, size: 36.sp, color: Colors.blue),
-                    SizedBox(height: 6.h),
-                    Text(
-                      loanList[index].title,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Spacer(),
-                    Container(
-                      height: 28.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFF6725),
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Call Now",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                itemBuilder: (context, index) {
+                  final item = loan.data!.list![index];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) =>
+                              LoanServiceDetailsPage(item: item),
                         ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 6,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          // Icon(
+                          //   loanList[index].icon,
+                          //   size: 36.sp,
+                          //   color: Colors.blue,
+                          // ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10.r),
+                            child: Image.network(
+                              item.bankLogo ?? "",
+                              width: 100.w,
+                              height: 55.h,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          SizedBox(height: 6.h),
+                          Text(
+                            // loanList[index].title,
+                            item.name ?? "N/A",
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            height: 28.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFFF6725),
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Call Now",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  );
+                },
               );
             },
+            error: (error, stackTrace) {
+              log(stackTrace.toString());
+              return Center(child: Text(error.toString()));
+            },
+            loading: () => Center(child: CircularProgressIndicator()),
           ),
 
           SizedBox(height: 24.h),
-
-          /// 🔹 Offer Section
-          Text(
-            "PROPERTYLOAN",
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFFFF6725),
-            ),
-          ),
-
-          SizedBox(height: 10.h),
-
-          _bulletText("Apply Home Loan Online at Magicbricks"),
-          _bulletText("Loan Offers from 34+ Banks"),
-          _bulletText("Dedicated RM for Property Search"),
-          _bulletText("Highest Loan Value & Lowest ROI"),
-          SizedBox(height: 12.h),
-          Text(
-            "Check Your Credit Score →",
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFFFF6725),
-            ),
-          ),
-          SizedBox(height: 12.h),
-
-          /// 🔹 Heading
-          Row(
-            children: [
-              Text(
-                "Home Loan Offers",
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(width: 8.w),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Text(
-                  "New Schemes",
-                  style: TextStyle(color: Colors.white, fontSize: 10.sp),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            "Get personalised home loan offers from top banks in just 2 mins.",
-            style: TextStyle(fontSize: 12.sp, color: Colors.black),
-          ),
-          SizedBox(height: 14.h),
-
-          /// 🔹 Info Chips
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: [
-              _chip("Loan req. - ₹50,00,000"),
-              _chip("Credit Score - 820"),
-              _chip("Ongoing EMI - ₹10,000"),
-              _chip("Monthly income - ₹1,00,000"),
-            ],
-          ),
-          SizedBox(height: 16.h),
-
-          /// 🔹 Bank Card
-          _bankOfferCard(),
-          SizedBox(height: 16.h),
-
-          /// 🔹 Explore Button
-          Center(
-            child: Container(
-              height: 45.h,
-              width: 220.w,
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: Center(
-                child: Text(
-                  "Explore More Offer",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 24.h),
-
-          /// 🔹 How it works
-          Text(
-            "How it works?",
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 16.h),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemCount: workSteps.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12.h,
-              crossAxisSpacing: 12.w,
-              childAspectRatio: 1.2,
-            ),
-            itemBuilder: (context, index) {
-              return Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14.r),
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      workSteps[index].icon,
-                      size: 28.sp,
-                      color: Colors.orange,
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      workSteps[index].title,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 6.h),
-                    Text(
-                      workSteps[index].desc,
-                      style: TextStyle(fontSize: 11.sp, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          SizedBox(height: 25.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                "assets/Rectangle 559.png",
-                width: 158.w,
-                height: 159.h,
-                fit: BoxFit.cover,
-              ),
-              Image.asset(
-                "assets/Rectangle 560.png",
-                width: 158.w,
-                height: 159.h,
-                fit: BoxFit.cover,
-              ),
-            ],
-          ),
-          SizedBox(height: 25.h),
-          Image.asset("assets/Frame (1).png"),
-          SizedBox(height: 25.h),
-          Text(
-            "Property not finalized yet?",
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-          ),
-          Text(
-            "Unlock the power of a Pre-approved Loan. Apply now and make your property search more focused and easy.",
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w400,
-              color: Color.fromARGB(178, 0, 0, 0),
-            ),
-          ),
-          SizedBox(height: 10.h),
-
-          /// 🔹 Offer Section
-          Text(
-            "Benefits of Pre-approved loans",
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          _bulletText("Plan your budget smartly"),
-          _bulletText("Negotiate a better deal with the seller"),
-          _bulletText("Dedicated RM for Property Search"),
-          _bulletText("Get the loan processed quickly"),
-          SizedBox(height: 20.h),
-
-          /// 🔹 Explore Button
-          Center(
-            child: Container(
-              height: 45.h,
-              width: 220.w,
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: Center(
-                child: Text(
-                  "Explore More Offer",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 20.h),
-
-          /// 🔹 Offer Section
-          Text(
-            "Personalized deals for everyone",
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          Text(
-            "Explore the home loan options that best match your requirements",
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w400,
-              color: Color.fromARGB(178, 0, 0, 0),
-            ),
-          ),
-          SizedBox(height: 20.h),
-
-          /// 🔹 Top Cards
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemCount: topCards.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12.w,
-              mainAxisSpacing: 12.h,
-              childAspectRatio: 0.9,
-            ),
-            itemBuilder: (_, index) => Container(
-              padding: EdgeInsets.all(12.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14.r),
-                boxShadow: const [
-                  BoxShadow(color: Colors.black12, blurRadius: 6),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: Image.asset(
-                      topCards[index].image.toString(),
-                      width: 160.w,
-                      height: 93.h,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    topCards[index].title,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    topCards[index].desc,
-                    style: TextStyle(fontSize: 11.sp, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          SizedBox(height: 20.h),
-
-          /// 🔹 EMI Calculator
-          Text(
-            "EMI Calculator",
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-          ),
-
-          SizedBox(height: 10.h),
-
-          Container(
-            padding: EdgeInsets.all(14.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: const [
-                BoxShadow(color: Colors.black12, blurRadius: 6),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Propertyle Loan",
-                  style: TextStyle(
-                    fontSize: 19.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFFFF6725),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10.h),
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 10.h,
-                        horizontal: 10.w,
-                      ),
-                      labelText: "Enter Loan Amount",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.r),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10.h, top: 10.h),
-                  child: DropdownButtonFormField(
-                    value: "value",
-                    items: [
-                      DropdownMenuItem(value: "value", child: Text("30 yrs")),
-                    ],
-                    onChanged: (v) {},
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 10.h,
-                        horizontal: 10.w,
-                      ),
-                      labelText: "Loan Tenure",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.r),
-                      ),
-                      hintText: "₹ 60,00,000",
-                    ),
-                  ),
-                ),
-
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10.h, top: 10.h),
-                  child: DropdownButtonFormField(
-                    value: "7.35",
-                    items: [
-                      DropdownMenuItem(value: "7.35", child: Text("7.35")),
-                    ],
-                    onChanged: (v) {},
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 10.h,
-                        horizontal: 10.w,
-                      ),
-                      labelText: "Interest Rate % (P.a.)",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.r),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                SizedBox(
-                  width: double.infinity,
-                  height: 44.h,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.r),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      "Calculate Your EMI",
-                      style: TextStyle(fontSize: 14.sp),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          SizedBox(height: 18.h),
-
-          /// 🔹 EMI Result
-          Text(
-            "You are Eligible for EMI Amount ₹39,388",
-            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
-          ),
-
-          SizedBox(height: 12.h),
-
-          Row(
-            children: [
-              _emiInfo("Principal Amount", "₹80,00,000"),
-              SizedBox(width: 12.w),
-              _emiInfo("Interest Amount", "₹29,53,299"),
-            ],
-          ),
-
-          SizedBox(height: 20.h),
-
-          /// 🔹 Benefits
-          Text(
-            "Why Magicbricks?",
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-          ),
-
-          SizedBox(height: 10.h),
-          _bulletText("Offers from 34+ Banks"),
-          _bulletText("Lowest Interest Rate"),
-          _bulletText("Highest Loan Value"),
-
-          SizedBox(height: 14.h),
-
-          SizedBox(
-            width: double.infinity,
-            height: 45.h,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.r),
-                ),
-              ),
-              onPressed: () {},
-              child: Text("Check Bank Offers"),
-            ),
-          ),
-
-          SizedBox(height: 20.h),
-
-          /// 🔹 FAQs
-          Text(
-            "Home Loan FAQs",
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-          ),
-
-          SizedBox(height: 10.h),
-          Container(
-            padding: EdgeInsets.all(14.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: const [
-                BoxShadow(color: Colors.black12, blurRadius: 6),
-              ],
-            ),
-            child: Column(
-              children: [
-                _faq("What are the key features?", context),
-                _faq("What are the different types?", context),
-                _faq("What are the factors you should consider?", context),
-                _faq(
-                  "How does Credit score impact your interest rate?",
-                  context,
-                ),
-                _faq(
-                  "What's the benefit of having a female co-applicant?",
-                  context,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.h),
-        ],
-      ),
-    );
-  }
-
-  Widget _bulletText(String text) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 6.h),
-      child: Row(
-        children: [
-          const Icon(Icons.check, color: Color(0xFFFF6725), size: 16),
-          SizedBox(width: 6.w),
-          Expanded(
-            child: Text(text, style: TextStyle(fontSize: 13.sp)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 🔹 Chip Widget
-  Widget _chip(String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Text(text, style: TextStyle(fontSize: 11.sp)),
-    );
-  }
-
-  /// 🔹 Bank Offer Card
-  Widget _bankOfferCard() {
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.account_balance, color: Colors.blue),
-              SizedBox(width: 6.w),
-              Text(
-                "Bank of Baroda",
-                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Text(
-                  "Recommended",
-                  style: TextStyle(color: Colors.white, fontSize: 10.sp),
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 12.h),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _offerText("8.4%", "Interest"),
-              _offerText("₹50L", "Loan Amount"),
-              _offerText("30 Yr", "Tenure"),
-              _offerText("₹38.4K", "Monthly EMI"),
-            ],
-          ),
-
-          SizedBox(height: 10.h),
-
-          Text(
-            "Get Loan disbursed under 8 Days",
-            style: TextStyle(fontSize: 15.sp, color: Colors.black),
-          ),
-
-          SizedBox(height: 8.h),
-
-          Row(
-            children: [
-              Text(
-                "₹14,000 Cash Reward",
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Text(
-                  "Claim Now",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _offerText(String title, String sub) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.orange,
-          ),
-        ),
-        Text(
-          sub,
-          style: TextStyle(
-            fontSize: 11.sp,
-            color: Color.fromARGB(178, 0, 0, 0),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _emiInfo(String title, String value) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: Color.fromARGB(178, 0, 0, 0),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _faq(String text, BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        dividerColor: Colors.transparent, // 👈 border remove
-      ),
-      child: ExpansionTile(
-        tilePadding: EdgeInsets.zero,
-        childrenPadding: EdgeInsets.zero,
-        title: Text(text, style: TextStyle(fontSize: 13.sp)),
-        children: [
-          Align(
-            alignment: Alignment.centerLeft, // 👈 LEFT align
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Detailed explanation will appear here.",
-                  textAlign: TextAlign.start, // 👈 safe side
-                  style: TextStyle(fontSize: 12.sp),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
