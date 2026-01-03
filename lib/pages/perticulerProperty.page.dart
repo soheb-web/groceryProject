@@ -60,16 +60,13 @@ class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
           'https://img.freepik.com/free-photo/construction-worker-site_23-2149371540.jpg',
     },
   ];
-
   late List<bool> selected, searchSelect;
-
   @override
   void initState() {
     super.initState();
     selected = List<bool>.filled(items.length, false);
     searchSelect = List<bool>.filled(searchItem.length, false);
   }
-
   double isValue = 0.0;
 
   List<String> items = [

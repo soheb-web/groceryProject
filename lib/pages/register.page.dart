@@ -23,7 +23,6 @@ class RegisterPage extends ConsumerStatefulWidget {
 class _RegisterPageState extends ConsumerState<RegisterPage> {
   bool _obscurePassword = true;
   bool _isLoading = false; // Loading state
-
   // Text Controllers
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -74,18 +73,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         password: password,
       );
 
-      // // await ref.read(getFindProfileProvider(userData).future);
-      // await ref.read(userRegisterController(userData).future);
-      // // Success
-      // Fluttertoast.showToast(
-      //   msg: "Registration successful! Please login.",
-      //   backgroundColor: Colors.green,
-      // );
-      // // Navigate to Login
-      // Navigator.pushReplacement(
-      //   context,
-      //   CupertinoPageRoute(builder: (_) => const LoginPage()),
-      // );
+
 
       final registerService = APIStateNetwork(createDio());
       final response = await registerService.userRegister(userData);
