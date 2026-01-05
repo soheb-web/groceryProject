@@ -17,17 +17,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       "title": "Find Your Perfect Home\nEasily",
       "description":
-      "Discover verified properties, trusted agents, and smooth buying–selling experiences — all in one place. Your dream home is now just a tap away.",
+          "Discover verified properties, trusted agents, and smooth buying–selling experiences — all in one place. Your dream home is now just a tap away.",
     },
     {
       "title": "Explore Properties\nAnytime, Anywhere",
       "description":
-      "Browse thousands of listings, view detailed photos, virtual tours, and connect with agents instantly from your phone.",
+          "Browse thousands of listings, view detailed photos, virtual tours, and connect with agents instantly from your phone.",
     },
     {
       "title": "Secure & Hassle-Free\nTransactions",
       "description":
-      "Enjoy safe payments, legal guidance, and transparent processes. We make buying or selling your property stress-free.",
+          "Enjoy safe payments, legal guidance, and transparent processes. We make buying or selling your property stress-free.",
     },
   ];
 
@@ -70,7 +70,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 14,
       margin: EdgeInsets.symmetric(horizontal: 5.w),
       decoration: BoxDecoration(
-        color: _currentPage == index ? const Color(0xffE86A34) : const Color(0xffF2C3A5),
+        color: _currentPage == index
+            ? const Color(0xffE86A34)
+            : const Color(0xffF2C3A5),
         shape: BoxShape.circle,
       ),
     );
@@ -80,6 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF6F7FB),
+
       body: SafeArea(
         child: Column(
           children: [

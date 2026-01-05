@@ -54,6 +54,15 @@ class HomeServiceDetailsPage extends StatelessWidget {
               background: Image.network(
                 "https://images.unsplash.com/photo-1581578731548-c64695cc6952",
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 1,
+                    ),
+                  );
+                },
               ),
             ),
           ),

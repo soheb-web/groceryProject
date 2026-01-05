@@ -1,15 +1,11 @@
-
-
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:realstate/Model/Body/CreatePropertyBodyModel.dart';
 import 'package:flutter/cupertino.dart';
-
 import '../Controller/getCityListController.dart';
 import '../Model/CityResponseModel.dart';
 import '../core/network/api.state.dart';
@@ -19,7 +15,8 @@ class CreatePropertyScreen extends ConsumerStatefulWidget {
   const CreatePropertyScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<CreatePropertyScreen> createState() => _CreatePropertyScreenState();
+  ConsumerState<CreatePropertyScreen> createState() =>
+      _CreatePropertyScreenState();
 }
 
 class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
@@ -28,7 +25,7 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
   String? selectedListingCategory;
   String? selectedFurnishing;
   // String? selectedPropertyType;        // residential / commercial
-  String? selectedPropertySubType;     // ← नया: apartment, villa, office आदि
+  String? selectedPropertySubType; // ← नया: apartment, villa, office आदि
   // City & Locality (Dynamic from API)
   String? selectedCity;
   String? selectedLocality;
@@ -85,7 +82,7 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
     "Dishwasher",
     "Microwave",
     "Stainless Steel Appliances",
-    "Garbage Disposal"
+    "Garbage Disposal",
   ];
   List<String> selectedAmenities = [];
   // Around Project Dynamic Rows
@@ -107,11 +104,13 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
   final TextEditingController _projectSizeController = TextEditingController();
   final TextEditingController _launchDateController = TextEditingController();
   final TextEditingController _avgPriceController = TextEditingController();
-  final TextEditingController _possessionDateController = TextEditingController();
+  final TextEditingController _possessionDateController =
+      TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _propertyAddressController = TextEditingController();
+  final TextEditingController _propertyAddressController =
+      TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   bool _isLoading = false;
   @override
@@ -119,6 +118,7 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
     super.initState();
     addAroundProjectRow();
   }
+
   void addAroundProjectRow() {
     setState(() {
       aroundProjectList.add({
@@ -127,6 +127,7 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
       });
     });
   }
+
   void removeAroundProjectRow(int index) {
     if (aroundProjectList.length > 1) {
       setState(() {
@@ -143,6 +144,7 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
       );
     }
   }
+
   @override
   void dispose() {
     _priceController.dispose();
@@ -170,6 +172,7 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
     }
     super.dispose();
   }
+
   // Image Picker
   Future<void> pickImages() async {
     showCupertinoModalPopup(
@@ -192,7 +195,10 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
           CupertinoActionSheetAction(
             onPressed: () async {
               Navigator.pop(context);
-              final file = await _picker.pickImage(source: ImageSource.camera, imageQuality: 70);
+              final file = await _picker.pickImage(
+                source: ImageSource.camera,
+                imageQuality: 70,
+              );
               if (file != null) {
                 setState(() {
                   propertyImages.add(File(file.path));
@@ -209,13 +215,13 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
       ),
     );
   }
+
   void removeImage(int index) {
     setState(() {
       propertyImages.removeAt(index);
     });
   }
   // Create Property API Call
-
 
   // Future<void> createPropertyApi() async {
   //   if (_isLoading) return;
@@ -304,8 +310,6 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
   //   }
   // }
 
-
-
   // Create Property API Call - Updated Part
   Future<void> createPropertyApi() async {
     if (_isLoading) return;
@@ -319,19 +323,30 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
 
       // Upload Images
       if (propertyImages.isNotEmpty) {
-        final uploadResponse = await service.uploadImageMultiple(propertyImages);
-        if (uploadResponse.error == false && uploadResponse.data != null && uploadResponse.data!.isNotEmpty) {
+        final uploadResponse = await service.uploadImageMultiple(
+          propertyImages,
+        );
+        if (uploadResponse.error == false &&
+            uploadResponse.data != null &&
+            uploadResponse.data!.isNotEmpty) {
           uploadedImageUrls = uploadResponse.data!
               .map((item) => item.imageUrl ?? "")
               .where((url) => url.isNotEmpty)
               .toList();
 
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("${uploadedImageUrls.length} photos uploaded successfully!")),
+            SnackBar(
+              content: Text(
+                "${uploadedImageUrls.length} photos uploaded successfully!",
+              ),
+            ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Image upload failed."), backgroundColor: Colors.red),
+            const SnackBar(
+              content: Text("Image upload failed."),
+              backgroundColor: Colors.red,
+            ),
           );
           setState(() => _isLoading = false);
           return;
@@ -339,18 +354,21 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
       }
 
       // Around Project
-      List<AroundProject> aroundProjectData = aroundProjectList.map((e) {
-        return AroundProject(
-          name: e['place']!.text.trim(),
-          details: e['details']!.text.trim(),
-        );
-      }).where((item) => item.name?.isNotEmpty == true).toList();
+      List<AroundProject> aroundProjectData = aroundProjectList
+          .map((e) {
+            return AroundProject(
+              name: e['place']!.text.trim(),
+              details: e['details']!.text.trim(),
+            );
+          })
+          .where((item) => item.name?.isNotEmpty == true)
+          .toList();
 
       // Final Body
       final body = CreatePropertyBodyModel(
         localityArea: selectedLocality,
-        property: selectedPropertyType,           // residential / commercial
-        propertyType: selectedPropertySubType,    // apartment, villa, office etc.
+        property: selectedPropertyType, // residential / commercial
+        propertyType: selectedPropertySubType, // apartment, villa, office etc.
         listingCategory: selectedListingCategory,
         city: selectedCity ?? "",
         price: _priceController.text.trim(),
@@ -412,6 +430,7 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final cityAsync = ref.watch(getCityController);
@@ -421,7 +440,10 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Create Property Listing', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Create Property Listing',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -433,11 +455,17 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('BASIC INFO', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'BASIC INFO',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
 
-// BASIC INFO के बाद...
-
+            // BASIC INFO के बाद...
             _buildDropdown(
               label: 'Property',
               value: selectedPropertyType,
@@ -447,38 +475,38 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
 
             const SizedBox(height: 16),
 
-// अब Property Type dropdown — dynamic items के साथ
+            // अब Property Type dropdown — dynamic items के साथ
             _buildDropdown(
               label: 'Property Type',
-              value: selectedPropertySubType,  // नया variable add करना पड़ेगा
+              value: selectedPropertySubType, // नया variable add करना पड़ेगा
               items: selectedPropertyType == "residential"
                   ? [
-                "apartment",
-                "townhouse",
-                "villa-compound",
-                "land",
-                "building",
-                "villa",
-                "penthouse",
-                "hotel-apartment",
-                "floor",
-                "studio",
-              ]
+                      "apartment",
+                      "townhouse",
+                      "villa-compound",
+                      "land",
+                      "building",
+                      "villa",
+                      "penthouse",
+                      "hotel-apartment",
+                      "floor",
+                      "studio",
+                    ]
                   : [
-                "office",
-                "warehouse",
-                "industrial-land",
-                "showroom",
-                "shop",
-                "labour-camp",
-                "bulk-unit",
-                "factory",
-                "mixed-use-land",
-                "other-commercial",
-                "floor",
-                "building",
-                "villa",
-              ],
+                      "office",
+                      "warehouse",
+                      "industrial-land",
+                      "showroom",
+                      "shop",
+                      "labour-camp",
+                      "bulk-unit",
+                      "factory",
+                      "mixed-use-land",
+                      "other-commercial",
+                      "floor",
+                      "building",
+                      "villa",
+                    ],
               onChanged: (v) => setState(() => selectedPropertySubType = v),
             ),
 
@@ -495,7 +523,10 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
             // City Dropdown - From API
             cityAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, __) => const Text('Failed to load cities', style: TextStyle(color: Colors.red)),
+              error: (_, __) => const Text(
+                'Failed to load cities',
+                style: TextStyle(color: Colors.red),
+              ),
               data: (cityResponse) {
                 final cities = cityResponse.data ?? [];
                 final cityNames = cities.map((e) => e.cityName ?? "").toList();
@@ -521,7 +552,7 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
               cityAsync.when(
                 data: (cityResponse) {
                   final selectedCityObj = cityResponse.data?.firstWhere(
-                        (city) => city.cityName == selectedCity,
+                    (city) => city.cityName == selectedCity,
                     orElse: () => Datum(),
                   );
                   final areas = selectedCityObj?.areas ?? [];
@@ -549,42 +580,93 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
             _buildDropdown(
               label: 'Furnishing',
               value: selectedFurnishing,
-              items: [   "furnished",
-                "semi-furnished",
-                "unfurnished",],
+              items: ["furnished", "semi-furnished", "unfurnished"],
               onChanged: (v) => setState(() => selectedFurnishing = v),
             ),
 
             const SizedBox(height: 32),
-            const Text('Legal Information', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Legal Information',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             _buildTextField('Permit No', controller: _permitNoController),
             const SizedBox(height: 16),
-            _buildTextField('RERA Registration No', controller: _reraController),
+            _buildTextField(
+              'RERA Registration No',
+              controller: _reraController,
+            ),
             const SizedBox(height: 16),
             _buildTextField('DED', controller: _dedController),
             const SizedBox(height: 16),
             _buildTextField('BRN', controller: _brnController),
             const SizedBox(height: 32),
-            const Text('Project Overview', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Project Overview',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
-            _buildTextField('Project Area (Acre)', controller: _projectAreaController, hint: 'e.g. 0.89 Acres'),
+            _buildTextField(
+              'Project Area (Acre)',
+              controller: _projectAreaController,
+              hint: 'e.g. 0.89 Acres',
+            ),
             const SizedBox(height: 16),
-            _buildTextField('Unit Sizes (sq.ft)', controller: _unitSizesController, hint: 'e.g. 431 - 460 sq.ft.'),
+            _buildTextField(
+              'Unit Sizes (sq.ft)',
+              controller: _unitSizesController,
+              hint: 'e.g. 431 - 460 sq.ft.',
+            ),
             const SizedBox(height: 16),
-            _buildTextField('Project Size', controller: _projectSizeController, hint: 'e.g. 1 Building - 258 Units'),
+            _buildTextField(
+              'Project Size',
+              controller: _projectSizeController,
+              hint: 'e.g. 1 Building - 258 Units',
+            ),
             const SizedBox(height: 16),
-            _buildTextField('Project launch month & year', controller: _launchDateController),
+            _buildTextField(
+              'Project launch month & year',
+              controller: _launchDateController,
+            ),
             const SizedBox(height: 16),
-            _buildTextField('Avg Price', controller: _avgPriceController, suffix: '₹ / sq.ft'),
+            _buildTextField(
+              'Avg Price',
+              controller: _avgPriceController,
+              suffix: '₹ / sq.ft',
+            ),
             const SizedBox(height: 16),
-            _buildTextField('Expected possession start date', controller: _possessionDateController),
+            _buildTextField(
+              'Expected possession start date',
+              controller: _possessionDateController,
+            ),
             const SizedBox(height: 32),
-            const Text('Amenities', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Amenities',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             _buildMultiSelectAmenities(),
             const SizedBox(height: 32),
-            const Text('Around Project', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Around Project',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
 
             ...aroundProjectList.asMap().entries.map((entry) {
@@ -597,7 +679,10 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
                   children: [
                     Column(
                       children: [
-                        _buildTextField('Place Name', controller: ctrl['place']),
+                        _buildTextField(
+                          'Place Name',
+                          controller: ctrl['place'],
+                        ),
                         const SizedBox(height: 16),
                         _buildTextField('Details', controller: ctrl['details']),
                       ],
@@ -607,7 +692,11 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
                         top: 0,
                         right: 0,
                         child: IconButton(
-                          icon: const Icon(Icons.remove_circle, color: Colors.red, size: 30),
+                          icon: const Icon(
+                            Icons.remove_circle,
+                            color: Colors.red,
+                            size: 30,
+                          ),
                           onPressed: () => removeAroundProjectRow(idx),
                         ),
                       ),
@@ -622,13 +711,25 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
               label: const Text('Add More'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFF5722),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 14,
+                ),
               ),
             ),
 
             const SizedBox(height: 32),
-            const Text('Property Photos', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Property Photos',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
 
             ElevatedButton.icon(
@@ -637,48 +738,70 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
               label: const Text('Add Photos'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFF5722),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 padding: const EdgeInsets.all(16),
               ),
             ),
 
             const SizedBox(height: 16),
             propertyImages.isEmpty
-                ? const Text('No photos selected', style: TextStyle(color: Colors.grey))
+                ? const Text(
+                    'No photos selected',
+                    style: TextStyle(color: Colors.grey),
+                  )
                 : GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 1,
-              ),
-              itemCount: propertyImages.length,
-              itemBuilder: (_, i) => Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.file(propertyImages[i], fit: BoxFit.cover, width: double.infinity, height: double.infinity),
-                  ),
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: GestureDetector(
-                      onTap: () => removeImage(i),
-                      child: const CircleAvatar(
-                        radius: 14,
-                        backgroundColor: Colors.red,
-                        child: Icon(Icons.close, size: 16, color: Colors.white),
-                      ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio: 1,
+                        ),
+                    itemCount: propertyImages.length,
+                    itemBuilder: (_, i) => Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.file(
+                            propertyImages[i],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: GestureDetector(
+                            onTap: () => removeImage(i),
+                            child: const CircleAvatar(
+                              radius: 14,
+                              backgroundColor: Colors.red,
+                              child: Icon(
+                                Icons.close,
+                                size: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
 
             const SizedBox(height: 32),
-            const Text('Contact Information', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Contact Information',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             _buildTextField('Full Name', controller: _fullNameController),
             const SizedBox(height: 16),
@@ -687,14 +810,36 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
             _buildTextField('Phone', controller: _phoneController),
 
             const SizedBox(height: 32),
-            const Text('Property Address', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Property Address',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
-            _buildTextField('Property Address', controller: _propertyAddressController, maxLines: 4),
+            _buildTextField(
+              'Property Address',
+              controller: _propertyAddressController,
+              maxLines: 4,
+            ),
 
             const SizedBox(height: 32),
-            const Text('Description', style: TextStyle(color: Color(0xFFFF5722), fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Description',
+              style: TextStyle(
+                color: Color(0xFFFF5722),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
-            _buildTextField('Description', controller: _descriptionController, maxLines: 6),
+            _buildTextField(
+              'Description',
+              controller: _descriptionController,
+              maxLines: 6,
+            ),
 
             const SizedBox(height: 40),
             SizedBox(
@@ -704,11 +849,20 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
                 onPressed: _isLoading ? null : createPropertyApi,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF5722),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Submit Property', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+                    : const Text(
+                        'Submit Property',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ),
             const SizedBox(height: 30),
@@ -719,11 +873,24 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
   }
 
   // Helper Widgets
-  Widget _buildTextField(String label, {String? hint, String? suffix, int maxLines = 1, TextEditingController? controller}) {
+  Widget _buildTextField(
+    String label, {
+    String? hint,
+    String? suffix,
+    int maxLines = 1,
+    TextEditingController? controller,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
@@ -733,10 +900,22 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
             suffixText: suffix,
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFFF5722), width: 2)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFFF5722), width: 2),
+            ),
           ),
         ),
       ],
@@ -752,7 +931,14 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
@@ -766,9 +952,16 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
             child: DropdownButton<String>(
               value: value,
               isExpanded: true,
-              hint: Text('Select $label', style: const TextStyle(color: Colors.grey)),
+              hint: Text(
+                'Select $label',
+                style: const TextStyle(color: Colors.grey),
+              ),
               icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-              items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
+              items: items
+                  .map(
+                    (item) => DropdownMenuItem(value: item, child: Text(item)),
+                  )
+                  .toList(),
               onChanged: onChanged,
             ),
           ),
@@ -781,7 +974,14 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Select Amenities', style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w500)),
+        const Text(
+          'Select Amenities',
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -809,13 +1009,3 @@ class _CreatePropertyScreenState extends ConsumerState<CreatePropertyScreen> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-

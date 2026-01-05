@@ -14,7 +14,12 @@ import 'package:shimmer/shimmer.dart';
 
 class AppDrawer extends ConsumerStatefulWidget {
   final AsyncValue<UserProfileResModel> profileController;
-  const AppDrawer({super.key, required this.profileController});
+  final Function(int) onItemSelected;
+  const AppDrawer({
+    super.key,
+    required this.profileController,
+    required this.onItemSelected,
+  });
 
   @override
   ConsumerState<AppDrawer> createState() => _AppDrawerState();
@@ -77,11 +82,37 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundImage: NetworkImage(
-                            user.data!.image ?? "https://i.pravatar.cc/150",
-                          ), // optional
+                        Container(
+                          width: 90.w,
+                          height: 90.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey.shade200,
+                          ),
+                          child: ClipOval(
+                            child: Image.network(
+                              user.data!.image ?? "https://i.pravatar.cc/150",
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: Color(0xFFFF5722),
+                                        strokeWidth: 1,
+                                      ),
+                                    );
+                                  },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                  "https://i.pravatar.cc/150",
+                                  width: 40.w,
+                                  height: 40.h,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
                         ),
                         Positioned(
                           top: 0,
@@ -144,8 +175,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 title: const Text('Home'),
                 selected: ModalRoute.of(context)?.settings.name == '/',
                 onTap: () {
-                  // Navigator.pop(context);  // drawer close
-                  // setState(() => bottomIndex = 0);  // अगर state access हो तो
+                  Navigator.pop(context);
+                  widget.onItemSelected(0);
                 },
               ),
               ListTile(
@@ -153,7 +184,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 title: const Text('My Listings'),
                 onTap: () {
                   Navigator.pop(context);
-                  // bottomIndex = 1; change करें (state access के लिए key use करें या provider)
+                  widget.onItemSelected(1);
                 },
               ),
               ListTile(
@@ -161,7 +192,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 title: const Text('Call Us'),
                 onTap: () {
                   Navigator.pop(context);
-                  // bottomIndex = 2;
+                  widget.onItemSelected(2);
                 },
               ),
               ListTile(
@@ -169,7 +200,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 title: const Text('Saved'),
                 onTap: () {
                   Navigator.pop(context);
-                  // bottomIndex = 3;
+                  widget.onItemSelected(3);
                 },
               ),
 
@@ -177,7 +208,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 leading: const Icon(Icons.settings),
                 title: const Text('Settings'),
                 onTap: () {
-                  Navigator.pop(context);
+                  //Navigator.pop(context);
                   // Settings page पर navigate
                 },
               ),

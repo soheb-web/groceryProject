@@ -54,58 +54,6 @@ Authorization: {{token}}
 }
 
 
-//userSellProperty
-###
-POST {{url}}/user/sell-property HTTP/1.1
-Content-type: application/json
-Authorization: {{token}}
-
-{
-  "propertyType": "Apartment",
-  "listingCategory": "sell",
-  "location": "Downtown, Dubai",
-  "city": "Dubai",
-  "price": "950000 AED",
-  "area": "1450 sqft",
-  "bedRoom": "3 BHK",
-  "amenities": [
-    "Swimming Pool",
-    "Gym",
-    "Parking",
-    "Security 24/7"
-  ],
-  "aroundProject":[{
-    "name":"School",
-    "details":"MDS School"
-  }],
-  "permitNo": "45236897",
-  "rera": "RERA-12345",
-  "ded": "",
-  "brn": "",
-  "bathrooms": "2",
-  "furnishing": "furnished",
-  "description": "Luxury apartment with premium interiors, prime location and full city view. Easy connectivity & all essential facilities nearby.",
-  "aveneuOverView": {
-    "projectArea": "10 Acre",
-    "size": "1100 - 1600 sqft",
-    "projectSize": "4 Towers / 28 Floors Each",
-    "launchDate": "2023",
-    "avgPrice": "900 AED / sqft",
-    "possessionStart": "2025"
-  },
-  "fullName": "Sahil Khan",
-  "email": "sahiljoya@example.com",
-  "phone": "8955892899",
-  "propertyAddress": "Tower B, Marina View Road, Dubai",
-  "language": "English",
-  "uploadedPhotos": [
-    "https://example.com/photo1.jpg",
-    "https://example.com/photo2.jpg",
-    "https://example.com/photo3.jpg"
-  ]
-}
-
-
 //userSellProperty ============= new field add 
 ###
 POST {{url}}/user/sell-property HTTP/1.1
