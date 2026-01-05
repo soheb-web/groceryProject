@@ -28,9 +28,9 @@ class CreatePropertyBodyModel {
   String? furnishing;
   String? description;
   AveneuOverView? aveneuOverView;
-  String? fullName;
-  String? email;
-  String? phone;
+  // String? fullName;
+  // String? email;
+  // String? phone;
   String? propertyAddress;
   // String? language;
   List<String>? uploadedPhotos;
@@ -55,9 +55,9 @@ class CreatePropertyBodyModel {
     this.furnishing,
     this.description,
     this.aveneuOverView,
-    this.fullName,
-    this.email,
-    this.phone,
+    // this.fullName,
+    // this.email,
+    // this.phone,
     this.propertyAddress,
     // this.language,
     this.uploadedPhotos,
@@ -83,21 +83,23 @@ class CreatePropertyBodyModel {
     furnishing: json["furnishing"],
     description: json["description"],
     aveneuOverView: json["aveneuOverView"] == null ? null : AveneuOverView.fromJson(json["aveneuOverView"]),
-    fullName: json["fullName"],
-    email: json["email"],
-    phone: json["phone"],
+    // fullName: json["fullName"],
+    // email: json["email"],
+    // phone: json["phone"],
     propertyAddress: json["propertyAddress"],
     // language: json["language"],
     uploadedPhotos: json["uploadedPhotos"] == null ? [] : List<String>.from(json["uploadedPhotos"]!.map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
-    "propertyType":"apartment",
-    // propertyType,
+    "propertyType":
+    // "apartment",
+    propertyType,
     "property": property,
     "localityArea": localityArea,
-    "listingCategory":"buy",
-    // listingCategory,
+    "listingCategory":
+    // "buy",
+    listingCategory,
     // "location": location,
     "city": city,
     "price": price,
@@ -113,9 +115,9 @@ class CreatePropertyBodyModel {
     "furnishing": furnishing,
     "description": description,
     "aveneuOverView": aveneuOverView?.toJson(),
-    "fullName": fullName,
-    "email": email,
-    "phone": phone,
+    // "fullName": fullName,
+    // "email": email,
+    // "phone": phone,
     "propertyAddress": propertyAddress,
     // "language": language,
     "uploadedPhotos": uploadedPhotos == null ? [] : List<dynamic>.from(uploadedPhotos!.map((x) => x)),
