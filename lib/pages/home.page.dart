@@ -492,7 +492,7 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
                         _gridItem("assets/png/buyFlat.png", "Buy Flats"),
                         _gridItem("assets/png/buyPlot.png", "Buy Plots"),
                         _gridItem("assets/png/commercial.png", "Commercial"),
-                        _gridItem("assets/png/buyHotel.png", "Buy Hotels"),
+                        _gridItem("assets/png/buyHotel.png", "residential"),
                         _gridItem("assets/png/rentCondos.png", "Rent Condos"),
                         _gridItem("assets/png/buyDuplex.png", "Buy Duplex"),
                         _gridItem("assets/png/rentHouse.png", "Rent House"),
@@ -1334,7 +1334,7 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PropertyPageCat()),
+          MaterialPageRoute(builder: (context) => PropertyPageCat(property:title)),
         );
       },
       child: Container(

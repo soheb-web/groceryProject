@@ -22,9 +22,11 @@ import 'package:realstate/Model/verifyBodyModel.dart';
 import 'package:realstate/Model/verifyResModel.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../../Model/Body/PropertyListBodyModel.dart';
 import '../../Model/CityResponseModel.dart';
 import '../../Model/CreatePropertyResponseModel.dart';
 import '../../Model/MultipleImgaeResponseModel.dart';
+import '../../Model/getPropertyResponsemodel.dart';
 
 part 'api.state.g.dart'; // File name ke hisab se .g.dart
 
@@ -73,6 +75,10 @@ abstract class APIStateNetwork {
   Future<LoanServiceResModel> fetchAllLoanService(
     @Body() LoanServiceBodyModel body,
   );
+
+  @POST("/user/get-list")
+  Future<PropertyGetReponseModel> getListProperty(@Body() PropertyListBodyModel body);
+
 
   @POST("/user/loanQuery")
   Future<LoanQueryResModel> loanQuery(@Body() LoanQueryBodyModel body);
