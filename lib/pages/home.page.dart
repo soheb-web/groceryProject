@@ -1,7 +1,7 @@
 import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -35,7 +35,8 @@ class RealEstateHomePage extends ConsumerStatefulWidget {
 class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
   int bottomIndex = 0;
   int selectIndex = 0;
-  final GlobalKey<_RealEstateHomePageState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   List<Property> properties = [];
 
   @override
@@ -179,70 +180,112 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
   @override
   Widget build(BuildContext context) {
     final profileController = ref.watch(userProfileController);
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: AppDrawer(profileController: profileController),
-      backgroundColor: const Color(0xffF5F7FA),
-      body: <Widget>[
-        HomeScreen(),
-        MyListingsScreen(),
-        CallUsScreen(),
-        SavedScreen(),
-      ][bottomIndex],
-
-      floatingActionButton: SizedBox(
-        height: 55,
-        width: 55,
-        child: FloatingActionButton(
-          elevation: 10,
-          backgroundColor: const Color(0xffFF6A2A),
-          shape: const CircleBorder(),
-          onPressed: () async {
-            final newProperty = await Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => const CreatePropertyScreen(),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+          Navigator.pop(context);
+          return;
+        }
+        if (bottomIndex != 0) {
+          setState(() {
+            bottomIndex = 0;
+          });
+          return;
+        }
+        final shouldExit = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Exit App"),
+            content: const Text("Are you sure you want to exit the app?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text("No"),
               ),
-            );
-
-            if (newProperty != null && newProperty is Property) {
-              setState(() {
-                properties.add(newProperty);
-              });
-            }
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text("Yes"),
+              ),
+            ],
+          ),
+        );
+        if (shouldExit == true) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: AppDrawer(
+          onItemSelected: (index) {
+            setState(() {
+              bottomIndex = index;
+            });
           },
-          child: const Icon(Icons.add, size: 28, color: Colors.white),
+          profileController: profileController,
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        backgroundColor: const Color(0xffF5F7FA),
+        body: <Widget>[
+          HomeScreen(),
+          MyListingsScreen(),
+          CallUsScreen(),
+          SavedScreen(),
+        ][bottomIndex],
 
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 12,
-              offset: const Offset(0, -4),
-            ),
-          ],
+        floatingActionButton: SizedBox(
+          height: 55,
+          width: 55,
+          child: FloatingActionButton(
+            elevation: 10,
+            backgroundColor: const Color(0xffFF6A2A),
+            shape: const CircleBorder(),
+            onPressed: () async {
+              final newProperty = await Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => const CreatePropertyScreen(),
+                ),
+              );
+
+              if (newProperty != null && newProperty is Property) {
+                setState(() {
+                  properties.add(newProperty);
+                });
+              }
+            },
+            child: const Icon(Icons.add, size: 28, color: Colors.white),
+          ),
         ),
-        child: BottomAppBar(
-          padding: EdgeInsets.zero,
-          color: Colors.white,
-          elevation: 10,
-          height: 90.h,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 8,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              children: [
-                buildNavItem(Icons.home_outlined, 'Home', 0),
-                buildNavItem(Icons.description_outlined, 'My Listings', 1),
-                SizedBox(width: 48.w),
-                buildNavItem(Icons.call_outlined, 'Call us', 2),
-                buildNavItem(Icons.bookmark_border, 'Saved', 3),
-              ],
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 12,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
+          child: BottomAppBar(
+            padding: EdgeInsets.zero,
+            color: Colors.white,
+            elevation: 10,
+            height: 90.h,
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 8,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: [
+                  buildNavItem(Icons.home_outlined, 'Home', 0),
+                  buildNavItem(Icons.description_outlined, 'My Listings', 1),
+                  SizedBox(width: 48.w),
+                  buildNavItem(Icons.call_outlined, 'Call us', 2),
+                  buildNavItem(Icons.bookmark_border, 'Saved', 3),
+                ],
+              ),
             ),
           ),
         ),
@@ -1315,6 +1358,8 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
     );
   }
 }
+
+
 
 // ==================== PROPERTY MODEL ====================
 class Property {

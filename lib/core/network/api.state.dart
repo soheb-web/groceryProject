@@ -51,11 +51,11 @@ abstract class APIStateNetwork {
   @POST("/uploadImage")
   Future<UploadImageResModel> uploadImage(@Part(name: "file") File file);
 
-
   @MultiPart()
   @POST("/uploadMultipleImages")
-  Future<MultipleImageUploadResponse> uploadImageMultiple(@Part(name: "file") List<File> file);
-
+  Future<MultipleImageUploadResponse> uploadImageMultiple(
+    @Part(name: "file") List<File> file,
+  );
 
   @POST("/user/userUpdate")
   Future<EditProfileResModel> editProfile(@Body() EditProfileBodyModel body);
@@ -63,14 +63,13 @@ abstract class APIStateNetwork {
   @POST("/user/getServiceCategory")
   Future<HomeGetServiceCategoryModel> homeServiceCategory();
 
-
   @POST("/user/getCityList")
   Future<CityResponseModel> getCityList();
 
-
   @POST('/user/sell-property')
-  Future<CreatePropertyResponseModel> createProperty(@Body() CreatePropertyBodyModel body);
-
+  Future<CreatePropertyResponseModel> createProperty(
+    @Body() CreatePropertyBodyModel body,
+  );
 
   @POST("/user/getLoanList")
   Future<LoanServiceResModel> fetchAllLoanService(
@@ -95,9 +94,3 @@ abstract class APIStateNetwork {
     @Body() GetMyPropertyDetailsBodyModel body,
   );
 }
-
-
-
-
-
-

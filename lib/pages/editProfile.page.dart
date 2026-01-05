@@ -165,9 +165,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         CircleAvatar(
                           radius: 60.r,
                           backgroundColor: Colors.grey.shade300,
-                          // backgroundImage: existingImage.isEmpty
-                          //     ? NetworkImage("https://i.pravatar.cc/150")
-                          //     : NetworkImage(existingImage),
                           backgroundImage: profileImage != null
                               ? FileImage(profileImage!)
                               : (existingImage.isNotEmpty
@@ -240,6 +237,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     );
                   },
                   controller: emailControler,
+                  readOnly: true,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -252,7 +250,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14.r),
-                      borderSide: BorderSide(color: Color(0xffE86A34)),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
                     ),
                   ),
                 ),
@@ -286,12 +284,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14.r),
-                      borderSide: BorderSide(color: Color(0xffE86A34)),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
                     ),
                   ),
                 ),
                 SizedBox(height: 30.h),
-
                 /// Save Button
                 InkWell(
                   onTap: isLoading ? null : updateProfile,

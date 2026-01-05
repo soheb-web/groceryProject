@@ -25,13 +25,10 @@ class _MyPropertyDetalsPageState extends ConsumerState<MyPropertyDetalsPage> {
     final myPropertyDetailProvider = ref.watch(
       getMyPropertyDetailsController(widget.propetyId),
     );
-    return
-
-      Scaffold(
+    return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: myPropertyDetailProvider.when(
         data: (snap) {
-
           final item = snap.data;
 
           if (item == null) {
@@ -336,7 +333,6 @@ class _MyPropertyDetalsPageState extends ConsumerState<MyPropertyDetalsPage> {
               ),
             ],
           );
-
         },
 
         error: (error, stackTrace) {
@@ -345,10 +341,8 @@ class _MyPropertyDetalsPageState extends ConsumerState<MyPropertyDetalsPage> {
         },
 
         loading: () => Center(child: CircularProgressIndicator()),
-
       ),
     );
-
   }
 
   Widget _spec(IconData icon, String title, String value) {
