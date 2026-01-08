@@ -11,12 +11,15 @@ import 'package:marquee/marquee.dart';
 import 'package:realstate/Controller/contactUsController.dart';
 import 'package:realstate/Controller/getMyPropertyController.dart';
 import 'package:realstate/Controller/homeServiceCategoryController.dart';
+import 'package:realstate/Controller/likePropertyController.dart';
 import 'package:realstate/Controller/loanServiceController.dart';
 import 'package:realstate/Controller/userProfileController.dart';
 import 'package:realstate/Model/contactUsBodyModel.dart';
+import 'package:realstate/Model/getLikeProperyResModel.dart';
 import 'package:realstate/pages/homeServiceDetails.page.dart';
 import 'package:realstate/pages/loanServiceDetails.page.dart';
 import 'package:realstate/pages/myPropertyDetals.page.dart';
+import 'package:realstate/pages/perticulerProperty.page.dart';
 import 'package:realstate/pages/propertyCat.page.dart';
 import 'package:realstate/pages/savedDetails.page.dart';
 import 'package:shimmer/shimmer.dart';
@@ -1106,143 +1109,143 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
                   ),
                   const SizedBox(height: 22),
 
-                  // Big Phone Icon
-                  Icon(
-                    Icons.phone_in_talk,
-                    size: 100.sp,
-                    color: const Color(0xffFF6A2A),
-                  ),
-                  SizedBox(height: 20.h),
+                  // // Big Phone Icon
+                  // Icon(
+                  //   Icons.phone_in_talk,
+                  //   size: 100.sp,
+                  //   color: const Color(0xffFF6A2A),
+                  // ),
+                  // SizedBox(height: 20.h),
 
-                  // Title
-                  Text(
-                    "We're Here to Help!",
-                    style: GoogleFonts.inter(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 10.h),
+                  // // Title
+                  // Text(
+                  //   "We're Here to Help!",
+                  //   style: GoogleFonts.inter(
+                  //     fontSize: 24.sp,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  //   textAlign: TextAlign.center,
+                  // ),
+                  // SizedBox(height: 10.h),
 
-                  Text(
-                    "For any property inquiry, feel free to call us anytime.",
-                    style: GoogleFonts.inter(
-                      fontSize: 16.sp,
-                      color: Colors.grey.shade600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 40.h),
+                  // Text(
+                  //   "For any property inquiry, feel free to call us anytime.",
+                  //   style: GoogleFonts.inter(
+                  //     fontSize: 16.sp,
+                  //     color: Colors.grey.shade600,
+                  //   ),
+                  //   textAlign: TextAlign.center,
+                  // ),
+                  // SizedBox(height: 40.h),
 
-                  // Main Inquiry Number
-                  Text(
-                    "+91-8899556644",
-                    style: GoogleFonts.inter(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xffFF6A2A),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
+                  // // Main Inquiry Number
+                  // Text(
+                  //   "+91-8899556644",
+                  //   style: GoogleFonts.inter(
+                  //     fontSize: 22.sp,
+                  //     fontWeight: FontWeight.bold,
+                  //     color: const Color(0xffFF6A2A),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 10.h),
 
-                  Text(
-                    "Available 24/7",
-                    style: GoogleFonts.inter(
-                      fontSize: 16.sp,
-                      color: Colors.grey.shade700,
-                    ),
-                  ),
-                  SizedBox(height: 40.h),
+                  // Text(
+                  //   "Available 24/7",
+                  //   style: GoogleFonts.inter(
+                  //     fontSize: 16.sp,
+                  //     color: Colors.grey.shade700,
+                  //   ),
+                  // ),
+                  // SizedBox(height: 40.h),
 
-                  // Big Call Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50.h,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Direct call launch करने के लिए url_launcher package add करो
-                        // launchUrl(Uri.parse('tel:+918899556644'));
-                      },
-                      icon: const Icon(
-                        Icons.call,
-                        size: 28,
-                        color: Colors.white,
-                      ),
-                      label: Text(
-                        "Call Now",
-                        style: GoogleFonts.inter(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xffFF6A2A),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.r),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
+                  // // Big Call Button
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   height: 50.h,
+                  //   child: ElevatedButton.icon(
+                  //     onPressed: () {
+                  //       // Direct call launch करने के लिए url_launcher package add करो
+                  //       // launchUrl(Uri.parse('tel:+918899556644'));
+                  //     },
+                  //     icon: const Icon(
+                  //       Icons.call,
+                  //       size: 28,
+                  //       color: Colors.white,
+                  //     ),
+                  //     label: Text(
+                  //       "Call Now",
+                  //       style: GoogleFonts.inter(
+                  //         fontSize: 18.sp,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: Colors.white,
+                  //       ),
+                  //     ),
+                  //     style: ElevatedButton.styleFrom(
+                  //       backgroundColor: const Color(0xffFF6A2A),
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(30.r),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 20.h),
 
-                  // WhatsApp Option
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        "assets/Svg/whatsapp.svg",
-                        height: 40.h,
-                        color: Colors.green,
-                      ),
-                      SizedBox(width: 12.w),
-                      Text(
-                        "Chat on WhatsApp",
-                        style: GoogleFonts.inter(fontSize: 16.sp),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 30.h),
-                  // Extra Info Cards
-                  Container(
-                    padding: EdgeInsets.all(20.w),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(16.r),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.access_time,
-                              color: const Color(0xffFF6A2A),
-                            ),
-                            SizedBox(width: 12.w),
-                            Text(
-                              "Support Hours: 24 Hours / 7 Days",
-                              style: GoogleFonts.inter(fontSize: 14.sp),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.h),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.email_outlined,
-                              color: const Color(0xffFF6A2A),
-                            ),
-                            SizedBox(width: 12.w),
-                            Text(
-                              "Email: support@yourrealestate.com",
-                              style: GoogleFonts.inter(fontSize: 14.sp),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  // // WhatsApp Option
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     SvgPicture.asset(
+                  //       "assets/Svg/whatsapp.svg",
+                  //       height: 40.h,
+                  //       color: Colors.green,
+                  //     ),
+                  //     SizedBox(width: 12.w),
+                  //     Text(
+                  //       "Chat on WhatsApp",
+                  //       style: GoogleFonts.inter(fontSize: 16.sp),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 30.h),
+                  // // Extra Info Cards
+                  // Container(
+                  //   padding: EdgeInsets.all(20.w),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.grey.shade100,
+                  //     borderRadius: BorderRadius.circular(16.r),
+                  //   ),
+                  //   child: Column(
+                  //     children: [
+                  //       Row(
+                  //         children: [
+                  //           Icon(
+                  //             Icons.access_time,
+                  //             color: const Color(0xffFF6A2A),
+                  //           ),
+                  //           SizedBox(width: 12.w),
+                  //           Text(
+                  //             "Support Hours: 24 Hours / 7 Days",
+                  //             style: GoogleFonts.inter(fontSize: 14.sp),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       SizedBox(height: 12.h),
+                  //       Row(
+                  //         children: [
+                  //           Icon(
+                  //             Icons.email_outlined,
+                  //             color: const Color(0xffFF6A2A),
+                  //           ),
+                  //           SizedBox(width: 12.w),
+                  //           Text(
+                  //             "Email: support@yourrealestate.com",
+                  //             style: GoogleFonts.inter(fontSize: 14.sp),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -1254,6 +1257,7 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
 
   Widget SavedScreen() {
     final getMyPropertyProvider = ref.watch(getMyPropertyContantListController);
+    final likeProvider = ref.watch(likePropertyController);
     return SafeArea(
       top: false,
       child: Column(
@@ -1279,9 +1283,9 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
             ),
           ),
           Expanded(
-            child: getMyPropertyProvider.when(
+            child: likeProvider.when(
               data: (snap) {
-                if (snap.data!.list!.isEmpty) {
+                if (snap.data!.isEmpty) {
                   return Center(
                     child: Padding(
                       padding: EdgeInsets.all(24.w),
@@ -1346,13 +1350,15 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
 
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: snap.data!.list!.length,
+                  itemCount: snap.data!.length,
                   itemBuilder: (context, index) {
-                    return PropertyCardSaved(data: snap.data!.list![index]);
+                    return PropertyCardSaved(data: snap.data![index]);
                   },
                 );
               },
               error: (error, stackTrace) {
+                log(stackTrace.toString());
+                log(error.toString());
                 return Center(child: Text(error.toString()));
               },
               loading: () => Center(child: CircularProgressIndicator()),
@@ -1873,12 +1879,11 @@ class PropertyCard extends StatelessWidget {
 // }
 
 class PropertyCardSaved extends StatelessWidget {
-  final ListElementSaved data; // Aapka model class yaha aayega
+  final Datum data; // Aapka model class yaha aayega
   const PropertyCardSaved({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    final property = data.propertyId;
     const primaryColor = Color(0xffFF6A2A);
 
     return Container(
@@ -1905,8 +1910,7 @@ class PropertyCardSaved extends StatelessWidget {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) =>
-                          SavedDetailsPage(savedData: property),
+                      builder: (context) => SavedDetailsPage(savedData: data),
                     ),
                   );
                 },
@@ -1915,10 +1919,23 @@ class PropertyCardSaved extends StatelessWidget {
                     top: Radius.circular(16.r),
                   ),
                   child: Image.network(
-                    property!.uploadedPhotos![0], // API se image
+                    data.propertyId!.uploadedPhotos![0],
+                    // API se image
                     height: 180.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return SizedBox(
+                        height: 180.h,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: primaryColor,
+                            strokeWidth: 1.w,
+                          ),
+                        ),
+                      );
+                    },
                     errorBuilder: (context, error, stack) => Container(
                       height: 180.h,
                       color: Colors.grey[200],
@@ -1941,7 +1958,7 @@ class PropertyCardSaved extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Text(
-                    "₹${property.price}",
+                    "₹${data.propertyId!.price}",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -1963,7 +1980,8 @@ class PropertyCardSaved extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      property.propertyType!.toUpperCase(),
+                      //property.propertyType!.toUpperCase(),
+                      data.propertyId!.propertyType!.toUpperCase(),
                       style: TextStyle(
                         color: primaryColor,
                         fontWeight: FontWeight.bold,
@@ -1971,7 +1989,7 @@ class PropertyCardSaved extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Status: ${data.status}",
+                      "Status: ${data.propertyId!.status}",
                       style: TextStyle(
                         color: Colors.green,
                         fontSize: 12.sp,
@@ -1982,7 +2000,8 @@ class PropertyCardSaved extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  property.propertyAddress ?? "",
+                  //property.propertyAddress ?? "",
+                  data.propertyId!.propertyAddress ?? "",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -1996,7 +2015,7 @@ class PropertyCardSaved extends StatelessWidget {
                     Icon(Icons.location_on, size: 14.sp, color: Colors.grey),
                     SizedBox(width: 4.w),
                     Text(
-                      "${property.city}",
+                      "${data.propertyId!.city}",
                       style: TextStyle(color: Colors.grey, fontSize: 13.sp),
                     ),
                   ],
@@ -2008,11 +2027,11 @@ class PropertyCardSaved extends StatelessWidget {
                   children: [
                     _buildIconDetail(
                       Icons.square_foot,
-                      "${property.area} sqft",
+                      "${data.propertyId!.area} sqft",
                     ),
                     _buildIconDetail(
                       Icons.bathtub_outlined,
-                      "${property.bathrooms} Bath",
+                      "${data.propertyId!.bathrooms} Bath",
                     ),
                     _buildIconDetail(Icons.chair_outlined, "Semi-Furnished"),
                   ],

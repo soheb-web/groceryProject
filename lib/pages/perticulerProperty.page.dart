@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:realstate/Controller/getMyPropertyController.dart';
+import 'package:realstate/Controller/likePropertyController.dart';
+import 'package:realstate/Model/likePropertyBodyModel.dart';
 import 'package:realstate/Model/saveContactInPropertyBodyModel.dart';
 import 'package:realstate/core/network/api.state.dart';
 import 'package:realstate/core/utils/preety.dio.dart';
@@ -14,15 +16,17 @@ import 'package:realstate/pages/details.page.dart';
 import 'package:realstate/Model/getPropertyResponsemodel.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class PerticulerPropertyPage extends StatefulWidget {
+class PerticulerPropertyPage extends ConsumerStatefulWidget {
   final ListElement data;
   const PerticulerPropertyPage({super.key, required this.data});
 
   @override
-  State<PerticulerPropertyPage> createState() => _PerticulerPropertyPageState();
+  ConsumerState<PerticulerPropertyPage> createState() =>
+      _PerticulerPropertyPageState();
 }
 
-class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
+class _PerticulerPropertyPageState
+    extends ConsumerState<PerticulerPropertyPage> {
   // Category data
   final List<Map<String, String>> categories = const [
     {
@@ -101,205 +105,270 @@ class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
     "Delhi",
   ];
   final PageController _pageController = PageController();
+  bool isLiked = false;
 
-  void showContactDialog(BuildContext context) {
+  void showContactBottomSheet(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic propertyData,
+  ) {
     final nameController = TextEditingController();
     final emailController = TextEditingController();
     final phoneController = TextEditingController();
 
-    // Dialog ke state ko manage karne ke liye variables
+    String? nameError;
+    String? emailError;
+    String? phoneError;
     bool agreeToContact = false;
-    bool interestedHomeLoan = false;
-    bool isLoading = false; // Isse yaha initialize karein
-
+    bool interestedHomeLoan = false; // Ye optional rahega
+    bool isLoading = false;
     const primaryColor = Color(0xffFF6A2A);
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: false,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            // setState ka naam badal diya taki confusion na ho
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+            return Container(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 15,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
               ),
-              title: const Text(
-                "Contact Details",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
-                ),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
               ),
-              content: SingleChildScrollView(
+              child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: "Name",
-                        prefixIcon: Icon(Icons.person, color: primaryColor),
-                        border: OutlineInputBorder(),
+                    Center(
+                      child: Container(
+                        width: 45,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Contact Details",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+
+                    // --- NAME FIELD ---
+                    TextField(
+                      controller: nameController,
+                      onChanged: (v) => setDialogState(() => nameError = null),
+                      decoration: InputDecoration(
+                        labelText: "Full Name",
+                        errorText: nameError,
+                        prefixIcon: const Icon(
+                          Icons.person_outline,
+                          color: primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+
+                    // --- EMAIL FIELD ---
                     TextField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: "Email",
-                        prefixIcon: Icon(Icons.email, color: primaryColor),
-                        border: OutlineInputBorder(),
+                      onChanged: (v) => setDialogState(() => emailError = null),
+                      decoration: InputDecoration(
+                        labelText: "Email Address",
+                        errorText: emailError,
+                        prefixIcon: const Icon(
+                          Icons.email_outlined,
+                          color: primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 15),
+
+                    // --- PHONE FIELD ---
                     TextField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
                       maxLength: 10,
-                      decoration: const InputDecoration(
-                        labelText: "Phone",
-                        prefixIcon: Icon(Icons.phone, color: primaryColor),
-                        border: OutlineInputBorder(),
+                      onChanged: (v) => setDialogState(() => phoneError = null),
+                      decoration: InputDecoration(
+                        labelText: "Phone Number",
+                        errorText: phoneError,
                         counterText: "",
+                        prefixIcon: const Icon(
+                          Icons.phone_outlined,
+                          color: primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
 
-                    // Required Checkbox
+                    // --- REQUIRED CHECKBOX ---
                     CheckboxListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text(
-                        "I agree to be contacted",
-                        style: TextStyle(fontSize: 13),
+                      title: Text(
+                        "I agree to be contacted (Required)",
+                        style: TextStyle(
+                          // Agar user bhool jaye toh text red ho jayega
+                          color: agreeToContact == "Please check the agreement"
+                              ? Colors.red
+                              : Colors.black87,
+                          fontSize: 14,
+                        ),
                       ),
                       value: agreeToContact,
                       activeColor: primaryColor,
-                      // Sahi parameter name niche hai:
                       controlAffinity: ListTileControlAffinity.leading,
-                      onChanged: (val) =>
-                          setDialogState(() => agreeToContact = val ?? false),
+                      onChanged: (val) {
+                        setDialogState(() {
+                          agreeToContact = val ?? false;
+                          if (agreeToContact)
+                            nameError = null; // Clear error if checked
+                        });
+                      },
                     ),
 
-                    // Optional Checkbox
+                    // --- OPTIONAL CHECKBOX (Home Loan) ---
                     CheckboxListTile(
                       contentPadding: EdgeInsets.zero,
                       title: const Text(
-                        "Interested in Home Loan",
-                        style: TextStyle(fontSize: 13),
+                        "Interested in Home Loan (Optional)",
+                        style: TextStyle(color: Colors.black87, fontSize: 14),
                       ),
                       value: interestedHomeLoan,
                       activeColor: primaryColor,
-                      // Sahi parameter name niche hai:
                       controlAffinity: ListTileControlAffinity.leading,
                       onChanged: (val) => setDialogState(
                         () => interestedHomeLoan = val ?? false,
                       ),
                     ),
+
+                    const SizedBox(height: 20),
+
+                    // --- SUBMIT BUTTON ---
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        onPressed: isLoading
+                            ? null
+                            : () async {
+                                bool isValid = true;
+
+                                setDialogState(() {
+                                  // 1. Name Validation
+                                  if (nameController.text.trim().isEmpty) {
+                                    nameError = "Name is required";
+                                    isValid = false;
+                                  }
+                                  // 2. Email Validation
+                                  if (emailController.text.trim().isEmpty) {
+                                    emailError = "Email is required";
+                                    isValid = false;
+                                  } else if (!emailController.text.contains(
+                                    "@",
+                                  )) {
+                                    emailError = "Enter a valid email";
+                                    isValid = false;
+                                  }
+                                  // 3. Phone Validation
+                                  if (phoneController.text.trim().length < 10) {
+                                    phoneError = "Enter 10 digit phone number";
+                                    isValid = false;
+                                  }
+                                  // 4. Checkbox Validation (Important!)
+                                  if (!agreeToContact) {
+                                    // Hum nameError variable ka use karke alert de sakte hain ya toast dikha sakte hain
+                                    nameError = "Please check the agreement";
+                                    isValid = false;
+                                  }
+                                });
+
+                                if (!isValid) return;
+
+                                setDialogState(() => isLoading = true);
+                                try {
+                                  final body = SaveContactInPropertyBodyModel(
+                                    email: emailController.text,
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                    propertyId: propertyData.id.toString(),
+                                    // Aapka API agar homeLoan support karta hai toh yaha bhej sakte hain
+                                  );
+
+                                  final service = APIStateNetwork(createDio());
+                                  final response = await service
+                                      .saveContactInProperty(body);
+
+                                  if (response.code == 0 ||
+                                      response.error == false) {
+                                    Fluttertoast.showToast(
+                                      msg: response.message ?? "Success",
+                                    );
+                                    ref.invalidate(
+                                      getMyPropertyContantListController,
+                                    );
+                                    Navigator.pop(context);
+                                  } else {
+                                    Fluttertoast.showToast(
+                                      msg: response.message ?? "Error",
+                                    );
+                                  }
+                                } catch (e) {
+                                  debugPrint("Error: $e");
+                                } finally {
+                                  setDialogState(() => isLoading = false);
+                                }
+                              },
+                        child: isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                "SUBMIT",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              actions: [
-                TextButton(
-                  onPressed: isLoading ? null : () => Navigator.pop(context),
-                  child: const Text(
-                    "Cancel",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    return ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        fixedSize: const Size(
-                          120,
-                          45,
-                        ), // Fixed size taaki loader ke time button shrank na ho
-                      ),
-                      onPressed: isLoading
-                          ? null
-                          : () async {
-                              if (nameController.text.isEmpty ||
-                                  emailController.text.isEmpty ||
-                                  phoneController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Please fill all fields"),
-                                  ),
-                                );
-                                return;
-                              }
-                              if (!agreeToContact) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "Please agree to be contacted",
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
-
-                              setDialogState(() => isLoading = true);
-
-                              try {
-                                // Body model aur API call
-                                final body = SaveContactInPropertyBodyModel(
-                                  email: emailController.text,
-                                  name: nameController.text,
-                                  phone: phoneController.text,
-                                  propertyId: widget.data.id.toString(),
-                                );
-
-                                final service = APIStateNetwork(createDio());
-                                final response = await service
-                                    .saveContactInProperty(body);
-
-                                if (response.code == 0 ||
-                                    response.error == false) {
-                                  Fluttertoast.showToast(
-                                    msg: response.message ?? "Success",
-                                  );
-                                  ref.invalidate(
-                                    getMyPropertyContantListController,
-                                  );
-
-                                  Navigator.pop(context);
-                                } else {
-                                  Fluttertoast.showToast(
-                                    msg: response.message ?? "Error",
-                                  );
-                                }
-                              } catch (e) {
-                                debugPrint("Error: $e");
-                              } finally {
-                                // Check if mounted to avoid errors if dialog closed
-                                setDialogState(() => isLoading = false);
-                              }
-                            },
-                      child: isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Text(
-                              "Submit",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                    );
-                  },
-                ),
-              ],
             );
           },
         );
@@ -834,31 +903,117 @@ class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
                           ],
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10.h, right: 10.w),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2.r),
-                          color: Colors.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.favorite_border,
-                              color: Colors.black,
-                              size: 16.sp,
-                            ),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "Save",
-                              style: GoogleFonts.inter(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
+
+                      StatefulBuilder(
+                        builder: (context, setLikeState) {
+                          return InkWell(
+                            onTap: () async {
+                              // Pehle UI update karein (Instant feedback ke liye)
+                              setLikeState(() {
+                                isLiked = !isLiked;
+                              });
+
+                              final body = LikePropertyBodyModel(
+                                propertyId: widget.data.id.toString(),
+                              );
+
+                              try {
+                                final service = APIStateNetwork(createDio());
+                                final response = await service.likeProperties(
+                                  body,
+                                );
+
+                                if (response.code == 0 ||
+                                    response.error == false) {
+                                  ref.invalidate(likePropertyController);
+                                  // Fluttertoast.showToast(
+                                  //   msg: response.message ?? "Success",
+                                  // );
+                                } else {
+                                  // Agar API fail ho jaye toh wapas purana state kar dein
+                                  setLikeState(() {
+                                    isLiked = !isLiked;
+                                  });
+                                  Fluttertoast.showToast(
+                                    msg: response.message ?? "Error",
+                                  );
+                                }
+                              } catch (e) {
+                                setLikeState(() {
+                                  isLiked = !isLiked;
+                                });
+                                log(e.toString());
+                              }
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              margin: EdgeInsets.only(top: 10.h, right: 10.w),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 8.h,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  20.r,
+                                ), // Modern Rounded Look
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: isLiked
+                                      ? Colors.red
+                                      : Colors.grey.shade300,
+                                  width: 1.5,
+                                ),
+                                boxShadow: isLiked
+                                    ? [
+                                        BoxShadow(
+                                          color: Colors.red.withOpacity(0.2),
+                                          blurRadius: 8,
+                                          spreadRadius: 1,
+                                        ),
+                                      ]
+                                    : [],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Icon Animation
+                                  TweenAnimationBuilder<double>(
+                                    tween: Tween(
+                                      begin: 1.0,
+                                      end: isLiked ? 1.2 : 1.0,
+                                    ),
+                                    duration: const Duration(milliseconds: 200),
+                                    builder: (context, value, child) {
+                                      return Transform.scale(
+                                        scale: value,
+                                        child: Icon(
+                                          isLiked
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: isLiked
+                                              ? Colors.red
+                                              : Colors.black,
+                                          size: 18.sp,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  Text(
+                                    isLiked ? "Saved" : "Save",
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: isLiked
+                                          ? Colors.red
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -872,7 +1027,7 @@ class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
                 count: photos.isEmpty ? 1 : photos.length,
                 effect: ExpandingDotsEffect(
                   activeDotColor: Colors.deepOrange,
-                  dotColor: Colors.white.withOpacity(.7),
+                  dotColor: Colors.grey,
                   dotHeight: 8,
                   dotWidth: 8,
                   expansionFactor: 3,
@@ -894,6 +1049,21 @@ class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
                         style: GoogleFonts.inter(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 6.h),
+                  Row(
+                    children: [
+                      Text(
+                        // "Jagatpura, NH - 8 Jaipur",
+                        "${property.localityArea}, ${property.city}",
+                        style: GoogleFonts.inter(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
                         ),
                       ),
                       Container(
@@ -921,17 +1091,6 @@ class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
                         ),
                       ),
                     ],
-                  ),
-
-                  SizedBox(height: 6.h),
-                  Text(
-                    // "Jagatpura, NH - 8 Jaipur",
-                    "${property.localityArea}, ${property.city}",
-                    style: GoogleFonts.inter(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
                   ),
 
                   SizedBox(height: 6.h),
@@ -968,7 +1127,8 @@ class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
                       ),
                     ),
                     onPressed: () {
-                      showContactDialog(context);
+                      //showContactDialog(context);
+                      showContactBottomSheet(context, ref, widget.data);
                     },
                     icon: const Icon(Icons.call_outlined, color: Colors.white),
                     label: Text(
@@ -1101,80 +1261,6 @@ class _PerticulerPropertyPageState extends State<PerticulerPropertyPage> {
                     ],
                   ),
 
-                  SizedBox(height: 20.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 90.w,
-                        height: 42.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2.r),
-                          color: Color.fromARGB(52, 255, 103, 137),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.share, color: Colors.black, size: 16.sp),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "Share",
-                              style: GoogleFonts.inter(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 90.w,
-                        height: 42.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2.r),
-                          color: Color.fromARGB(52, 255, 103, 137),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.favorite_border,
-                              color: Colors.black,
-                              size: 16.sp,
-                            ),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "Save",
-                              style: GoogleFonts.inter(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 100.w,
-                        height: 42.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2.r),
-                          color: Color(0xFFFF6725),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Ask For Details",
-                            style: GoogleFonts.inter(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   SizedBox(height: 20.h),
                   Text(
                     "Photos & Videos: Tour this project virtually",

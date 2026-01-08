@@ -1,158 +1,282 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:realstate/Controller/myRequestBookingSerivceController.dart';
+import 'package:realstate/Model/homeBookingServiceBodyModel.dart';
 import 'package:realstate/Model/homeGetServiceCateogryModel.dart';
+import 'package:realstate/core/network/api.state.dart';
+import 'package:realstate/core/utils/preety.dio.dart';
 
-class HomeServiceDetailsPage extends StatefulWidget {
+class HomeServiceDetailsPage extends ConsumerStatefulWidget {
   final ListElement service;
   const HomeServiceDetailsPage({super.key, required this.service});
 
   @override
-  State<HomeServiceDetailsPage> createState() => _HomeServiceDetailsPageState();
+  ConsumerState<HomeServiceDetailsPage> createState() =>
+      _HomeServiceDetailsPageState();
 }
 
-class _HomeServiceDetailsPageState extends State<HomeServiceDetailsPage> {
+class _HomeServiceDetailsPageState
+    extends ConsumerState<HomeServiceDetailsPage> {
   //static const primaryColor = Color(0xFFFF5722);
   static const primaryColor = Color(0xFFFF5722);
   static const darkBlue = Color(0xff0E1A35);
 
+  void showBookingDialog(BuildContext context) {
+    final addressController = TextEditingController();
+    final messageController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
+    bool isBooking = false;
+    const primaryColor = Color(0xFFFF5722);
+    String? addressError;
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true, // Bahar click karne par close hoga
+      barrierLabel: "Booking",
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 400),
+      pageBuilder: (context, anim1, anim2) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                ),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: Form(
+                    key: _formKey,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // --- CLOSE ICON AND HANDLE ---
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const SizedBox(width: 40), // Balance ke liye
+                              Container(
+                                width: 40,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () =>
+                                    Navigator.pop(context), // CLOSE ACTION
+                                icon: const Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            "Book Your Service",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor,
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+
+                          // Address Field
+                          TextFormField(
+                            controller: addressController,
+                            maxLines: 2,
+                            keyboardType: TextInputType.streetAddress,
+                            decoration: InputDecoration(
+                              labelText: "Service Address",
+                              prefixIcon: const Icon(
+                                Icons.location_on,
+                                color: primaryColor,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              errorText: addressError,
+                            ),
+
+                            onChanged: (val) {
+                              // Type karte hi error hata dene ke liye
+                              if (addressError != null) {
+                                setDialogState(() => addressError = null);
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 15),
+
+                          // Message Field
+                          TextFormField(
+                            controller: messageController,
+                            maxLines: 3,
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                              labelText: "Any Message(Optional)",
+                              alignLabelWithHint: true,
+                              prefixIcon: const Padding(
+                                padding: EdgeInsets.only(bottom: 40),
+                                child: Icon(Icons.message, color: primaryColor),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 25),
+
+                          // --- ACTION BUTTONS (CANCEL & CONFIRM) ---
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 15,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () =>
+                                      Navigator.pop(context), // CANCEL ACTION
+                                  child: const Text(
+                                    "CANCEL",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                flex: 2,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: primaryColor,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 15,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 0,
+                                  ),
+                                  onPressed: isBooking
+                                      ? null
+                                      : () async {
+                                          if (addressController.text
+                                              .trim()
+                                              .isEmpty) {
+                                            setDialogState(() {
+                                              addressError =
+                                                  "Please enter address";
+                                            });
+                                            return;
+                                          }
+
+                                          setDialogState(
+                                            () => isBooking = true,
+                                          );
+                                          final body =
+                                              HomeBookingServiceBodyModel(
+                                                address: addressController.text,
+                                                serviceType: widget.service.id
+                                                    .toString(),
+                                                message: messageController.text,
+                                              );
+                                          try {
+                                            final service = APIStateNetwork(
+                                              createDio(),
+                                            );
+                                            final response = await service
+                                                .bookHomeService(body);
+                                            if (response.code == 0 ||
+                                                response.error == false) {
+                                              ref.invalidate(
+                                                myRequestBookingServiceContorller,
+                                              );
+                                              Navigator.pop(context);
+                                              Fluttertoast.showToast(
+                                                msg:
+                                                    response.message ??
+                                                    "Sucess",
+                                              );
+                                            } else {
+                                              Fluttertoast.showToast(
+                                                msg:
+                                                    response.message ?? "Error",
+                                              );
+                                            }
+                                          } catch (e) {
+                                            setDialogState(
+                                              () => isBooking = false,
+                                            );
+                                          }
+                                        },
+                                  child: isBooking
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Text(
+                                          "CONFIRM",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position: Tween(
+            begin: const Offset(0, 1),
+            end: const Offset(0, 0),
+          ).animate(anim1),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    
-    // return Scaffold(
-    //   backgroundColor: Colors.grey.shade100,
-    //   /// ================= BOTTOM BUTTON =================
-    //   bottomNavigationBar: Padding(
-    //     padding: EdgeInsets.all(16.w),
-    //     child: SizedBox(
-    //       height: 52.h,
-    //       child: ElevatedButton(
-    //         style: ElevatedButton.styleFrom(
-    //           backgroundColor: primaryColor,
-    //           shape: RoundedRectangleBorder(
-    //             borderRadius: BorderRadius.circular(14.r),
-    //           ),
-    //         ),
-    //         onPressed: () {},
-    //         child: Text(
-    //           "Book Service",
-    //           style: GoogleFonts.inter(
-    //             fontSize: 16.sp,
-    //             fontWeight: FontWeight.w600,
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    //   body: CustomScrollView(
-    //     slivers: [
-    //       /// ================= IMAGE HEADER =================
-    //       SliverAppBar(
-    //         expandedHeight: 280.h,
-    //         pinned: true,
-    //         backgroundColor: primaryColor,
-    //         leading: _icon(Icons.arrow_back, () {
-    //           Navigator.pop(context);
-    //         }),
-    //         actions: [
-    //           _icon(Icons.favorite_border, () {}),
-    //           SizedBox(width: 10.w),
-    //         ],
-    //         flexibleSpace: FlexibleSpaceBar(
-    //           background: Stack(
-    //             fit: StackFit.expand,
-    //             children: [
-    //               Image.network(
-    //                 widget.service.image ??
-    //                     "https://images.unsplash.com/photo-1581578731548-c64695cc6952",
-    //                 fit: BoxFit.cover,
-    //                 loadingBuilder: (context, child, loadingProgress) {
-    //                   if (loadingProgress == null) return child;
-    //                   return Center(
-    //                     child: CircularProgressIndicator(
-    //                       color: Colors.white,
-    //                       strokeWidth: 1,
-    //                     ),
-    //                   );
-    //                 },
-    //                 errorBuilder: (context, error, stackTrace) {
-    //                   return Image.network(
-    //                     "https://images.unsplash.com/photo-1581578731548-c64695cc6952",
-    //                     fit: BoxFit.cover,
-    //                   );
-    //                 },
-    //               ),
-    //               Container(color: Colors.black.withOpacity(0.25)),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //       /// ================= CONTENT =================
-    //       SliverToBoxAdapter(
-    //         child: Padding(
-    //           padding: EdgeInsets.all(16.w),
-    //           child: Column(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //               /// TITLE
-    //               Text(
-    //                 widget.service.name ?? "",
-    //                 style: GoogleFonts.inter(
-    //                   fontSize: 22.sp,
-    //                   fontWeight: FontWeight.w600,
-    //                 ),
-    //               ),
-    //               SizedBox(height: 6.h),
-    //               /// ⭐ RATING
-    //               Row(
-    //                 children: [
-    //                   const Icon(Icons.star, color: Colors.amber, size: 18),
-    //                   SizedBox(width: 4.w),
-    //                   Text(
-    //                     "4.6",
-    //                     style: GoogleFonts.inter(
-    //                       fontSize: 13.sp,
-    //                       fontWeight: FontWeight.w500,
-    //                     ),
-    //                   ),
-    //                   Text(
-    //                     " (1.2k reviews)",
-    //                     style: GoogleFonts.inter(
-    //                       fontSize: 12.sp,
-    //                       color: Colors.grey.shade600,
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //               SizedBox(height: 14.h),
-    //               /// INFO CHIPS
-    //               Row(
-    //                 children: [
-    //                   _chip("60 min"),
-    //                   SizedBox(width: 8.w),
-    //                   _chip("30 days warranty"),
-    //                   SizedBox(width: 8.w),
-    //                   _chip("Verified"),
-    //                 ],
-    //               ),
-    //               SizedBox(height: 18.h),
-    //               /// PRICE CARD
-    //               _priceCard(),
-    //               SizedBox(height: 22.h),
-    //               /// SERVICE DETAILS
-    //               _serviceDetailsSection(),
-    //               SizedBox(height: 22.h),
-    //               /// WHY CHOOSE US
-    //               _whyChooseUs(),
-    //               SizedBox(height: 40.h),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
-
     return Scaffold(
       backgroundColor: Colors.white, // Pure white for a cleaner look
       bottomNavigationBar: _buildBottomAction(),
@@ -169,10 +293,6 @@ class _HomeServiceDetailsPageState extends State<HomeServiceDetailsPage> {
               Icons.arrow_back_ios_new,
               () => Navigator.pop(context),
             ),
-            actions: [
-              _circleIconButton(Icons.favorite_border, () {}),
-              SizedBox(width: 12.w),
-            ],
             flexibleSpace: FlexibleSpaceBar(
               stretchModes: const [StretchMode.zoomBackground],
               background: Stack(
@@ -447,7 +567,9 @@ class _HomeServiceDetailsPageState extends State<HomeServiceDetailsPage> {
           ),
           elevation: 0,
         ),
-        onPressed: () {},
+        onPressed: () {
+          showBookingDialog(context);
+        },
         child: Text(
           "Book Now",
           style: GoogleFonts.inter(
@@ -459,73 +581,6 @@ class _HomeServiceDetailsPageState extends State<HomeServiceDetailsPage> {
       ),
     );
   }
-
-  // Widget _chip(String text) {
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-  //     decoration: BoxDecoration(
-  //       color: Colors.orange.withOpacity(0.1),
-  //       borderRadius: BorderRadius.circular(20.r),
-  //     ),
-  //     child: Text(
-  //       text,
-  //       style: GoogleFonts.inter(
-  //         fontSize: 12.sp,
-  //         color: primaryColor,
-  //         fontWeight: FontWeight.w500,
-  //       ),
-  //     ),
-  //   );
-  // }
-  // Widget _priceCard() {
-  //   return Container(
-  //     padding: EdgeInsets.all(16.w),
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(16.r),
-  //       boxShadow: [
-  //         BoxShadow(color: Colors.black12.withOpacity(0.08), blurRadius: 10),
-  //       ],
-  //     ),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             Text(
-  //               "Starting from",
-  //               style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey),
-  //             ),
-  //             SizedBox(height: 4.h),
-  //             Text(
-  //               "₹499",
-  //               style: GoogleFonts.inter(
-  //                 fontSize: 20.sp,
-  //                 fontWeight: FontWeight.w600,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         Container(
-  //           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-  //           decoration: BoxDecoration(
-  //             color: primaryColor,
-  //             borderRadius: BorderRadius.circular(20.r),
-  //           ),
-  //           child: Text(
-  //             "Best Price",
-  //             style: GoogleFonts.inter(
-  //               fontSize: 12.sp,
-  //               color: Colors.white,
-  //               fontWeight: FontWeight.w500,
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   String _serviceType() {
     return widget.service.name?.toLowerCase() ?? "";
@@ -677,19 +732,4 @@ class _HomeServiceDetailsPageState extends State<HomeServiceDetailsPage> {
       ),
     );
   }
-
-  // Widget _icon(IconData icon, VoidCallback onTap) {
-  //   return InkWell(
-  //     onTap: onTap,
-  //     child: Container(
-  //       margin: EdgeInsets.all(8.w),
-  //       padding: EdgeInsets.all(8.w),
-  //       decoration: const BoxDecoration(
-  //         color: Colors.white,
-  //         shape: BoxShape.circle,
-  //       ),
-  //       child: Icon(icon, size: 20),
-  //     ),
-  //   );
-  // }
 }

@@ -1,14 +1,300 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:developer';
 
-class SavedDetailsPage extends StatelessWidget {
-  final dynamic savedData; // Saved API ka pura object pass karein
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:realstate/Controller/getMyPropertyController.dart';
+import 'package:realstate/Model/getLikeProperyResModel.dart';
+import 'package:realstate/Model/saveContactInPropertyBodyModel.dart';
+import 'package:realstate/core/network/api.state.dart';
+import 'package:realstate/core/utils/preety.dio.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+class SavedDetailsPage extends StatefulWidget {
+  final Datum savedData; // Saved API ka pura object pass karein
   const SavedDetailsPage({super.key, required this.savedData});
 
   @override
-  Widget build(BuildContext context) {
-    final property = savedData;
+  State<SavedDetailsPage> createState() => _SavedDetailsPageState();
+}
+
+class _SavedDetailsPageState extends State<SavedDetailsPage> {
+  final PageController _pageController = PageController();
+  void showContactBottomSheet(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic propertyData,
+  ) {
+    final nameController = TextEditingController();
+    final emailController = TextEditingController();
+    final phoneController = TextEditingController();
+
+    String? nameError;
+    String? emailError;
+    String? phoneError;
+    bool agreeToContact = false;
+    bool interestedHomeLoan = false; // Ye optional rahega
+    bool isLoading = false;
     const primaryColor = Color(0xffFF6A2A);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Container(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 15,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 45,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Contact Details",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+
+                    // --- NAME FIELD ---
+                    TextField(
+                      controller: nameController,
+                      onChanged: (v) => setDialogState(() => nameError = null),
+                      decoration: InputDecoration(
+                        labelText: "Full Name",
+                        errorText: nameError,
+                        prefixIcon: const Icon(
+                          Icons.person_outline,
+                          color: primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+
+                    // --- EMAIL FIELD ---
+                    TextField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (v) => setDialogState(() => emailError = null),
+                      decoration: InputDecoration(
+                        labelText: "Email Address",
+                        errorText: emailError,
+                        prefixIcon: const Icon(
+                          Icons.email_outlined,
+                          color: primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+
+                    // --- PHONE FIELD ---
+                    TextField(
+                      controller: phoneController,
+                      keyboardType: TextInputType.phone,
+                      maxLength: 10,
+                      onChanged: (v) => setDialogState(() => phoneError = null),
+                      decoration: InputDecoration(
+                        labelText: "Phone Number",
+                        errorText: phoneError,
+                        counterText: "",
+                        prefixIcon: const Icon(
+                          Icons.phone_outlined,
+                          color: primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // --- REQUIRED CHECKBOX ---
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        "I agree to be contacted (Required)",
+                        style: TextStyle(
+                          // Agar user bhool jaye toh text red ho jayega
+                          color: agreeToContact == "Please check the agreement"
+                              ? Colors.red
+                              : Colors.black87,
+                          fontSize: 14,
+                        ),
+                      ),
+                      value: agreeToContact,
+                      activeColor: primaryColor,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (val) {
+                        setDialogState(() {
+                          agreeToContact = val ?? false;
+                          if (agreeToContact)
+                            nameError = null; // Clear error if checked
+                        });
+                      },
+                    ),
+
+                    // --- OPTIONAL CHECKBOX (Home Loan) ---
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        "Interested in Home Loan (Optional)",
+                        style: TextStyle(color: Colors.black87, fontSize: 14),
+                      ),
+                      value: interestedHomeLoan,
+                      activeColor: primaryColor,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (val) => setDialogState(
+                        () => interestedHomeLoan = val ?? false,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // --- SUBMIT BUTTON ---
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        onPressed: isLoading
+                            ? null
+                            : () async {
+                                bool isValid = true;
+
+                                setDialogState(() {
+                                  // 1. Name Validation
+                                  if (nameController.text.trim().isEmpty) {
+                                    nameError = "Name is required";
+                                    isValid = false;
+                                  }
+                                  // 2. Email Validation
+                                  if (emailController.text.trim().isEmpty) {
+                                    emailError = "Email is required";
+                                    isValid = false;
+                                  } else if (!emailController.text.contains(
+                                    "@",
+                                  )) {
+                                    emailError = "Enter a valid email";
+                                    isValid = false;
+                                  }
+                                  // 3. Phone Validation
+                                  if (phoneController.text.trim().length < 10) {
+                                    phoneError = "Enter 10 digit phone number";
+                                    isValid = false;
+                                  }
+                                  // 4. Checkbox Validation (Important!)
+                                  if (!agreeToContact) {
+                                    // Hum nameError variable ka use karke alert de sakte hain ya toast dikha sakte hain
+                                    nameError = "Please check the agreement";
+                                    isValid = false;
+                                  }
+                                });
+
+                                if (!isValid) return;
+
+                                setDialogState(() => isLoading = true);
+                                try {
+                                  final body = SaveContactInPropertyBodyModel(
+                                    email: emailController.text,
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                    propertyId: widget.savedData.propertyId!.id
+                                        .toString(),
+                                    // Aapka API agar homeLoan support karta hai toh yaha bhej sakte hain
+                                  );
+
+                                  final service = APIStateNetwork(createDio());
+                                  final response = await service
+                                      .saveContactInProperty(body);
+
+                                  if (response.code == 0 ||
+                                      response.error == false) {
+                                    Fluttertoast.showToast(
+                                      msg: response.message ?? "Success",
+                                    );
+                                    ref.invalidate(
+                                      getMyPropertyContantListController,
+                                    );
+                                    Navigator.pop(context);
+                                  } else {
+                                    Fluttertoast.showToast(
+                                      msg: response.message ?? "Error",
+                                    );
+                                  }
+                                } catch (e) {
+                                  log("Error: $e");
+                                } finally {
+                                  setDialogState(() => isLoading = false);
+                                }
+                              },
+                        child: isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                "SUBMIT",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const primaryColor = Color(0xffFF6A2A);
+    final data = widget.savedData.propertyId;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -23,19 +309,38 @@ class SavedDetailsPage extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(property.uploadedPhotos[0], fit: BoxFit.cover),
-                  // Gradient for text visibility
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.3),
-                          Colors.transparent,
-                        ],
-                      ),
-                    ),
+                  PageView.builder(
+                    controller: _pageController,
+                    itemCount: data!.uploadedPhotos!.isEmpty
+                        ? 1
+                        : data.uploadedPhotos!.length,
+                    itemBuilder: (context, index) {
+                      return Image.network(
+                        data.uploadedPhotos!.isEmpty
+                            ? 'https://via.placeholder.com/600x400'
+                            : data.uploadedPhotos![index],
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, progress) {
+                          if (progress == null) return child;
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: primaryColor,
+                                strokeWidth: 1.w,
+                              ),
+                            ),
+                          );
+                        },
+                        errorBuilder: (_, __, ___) => Container(
+                          color: Colors.grey.shade300,
+                          child: const Center(
+                            child: Icon(Icons.image, size: 60),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -47,6 +352,26 @@ class SavedDetailsPage extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () => Navigator.pop(context),
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 10.h),
+              alignment: Alignment.center,
+              child: SmoothPageIndicator(
+                controller: _pageController,
+                count: data.uploadedPhotos!.isEmpty
+                    ? 1
+                    : data.uploadedPhotos!.length,
+                effect: ExpandingDotsEffect(
+                  activeDotColor: primaryColor,
+                  dotColor: Colors.grey,
+                  dotHeight: 8,
+                  dotWidth: 8,
+                  expansionFactor: 3,
+                  spacing: 6,
                 ),
               ),
             ),
@@ -68,7 +393,7 @@ class SavedDetailsPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${property.propertyType} in ${property.city}",
+                              "${data.propertyType} in ${data.city}",
                               style: TextStyle(
                                 fontSize: 22.sp,
                                 fontWeight: FontWeight.bold,
@@ -83,7 +408,7 @@ class SavedDetailsPage extends StatelessWidget {
                                   color: primaryColor,
                                 ),
                                 Text(
-                                  property.propertyAddress,
+                                  data.propertyAddress ?? "",
                                   style: TextStyle(color: Colors.grey[600]),
                                 ),
                               ],
@@ -92,7 +417,7 @@ class SavedDetailsPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "₹${property.price}",
+                        "₹${data.price}",
                         style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w900,
@@ -116,17 +441,17 @@ class SavedDetailsPage extends StatelessWidget {
                       _buildInfoIcon(
                         Icons.bathtub_outlined,
                         "Baths",
-                        property.bathrooms,
+                        data.bathrooms ?? "",
                       ),
                       _buildInfoIcon(
                         Icons.square_foot,
                         "Area",
-                        "${property.area} sqft",
+                        "${data.area} sqft",
                       ),
                       _buildInfoIcon(
                         Icons.category_outlined,
                         "Type",
-                        property.listingCategory,
+                        data.listingCategory ?? "",
                       ),
                     ],
                   ),
@@ -144,10 +469,7 @@ class SavedDetailsPage extends StatelessWidget {
                   SizedBox(height: 10.h),
                   Text(
                     // HTML tags remove karne ke liye regex use kar sakte hain
-                    property.description.replaceAll(
-                      RegExp(r'<[^>]*>|&nbsp;'),
-                      "",
-                    ),
+                    data.description!.replaceAll(RegExp(r'<[^>]*>|&nbsp;'), ""),
                     style: TextStyle(
                       fontSize: 15.sp,
                       color: Colors.grey[700],
@@ -170,7 +492,7 @@ class SavedDetailsPage extends StatelessWidget {
                           radius: 25.r,
                           backgroundColor: primaryColor,
                           child: Text(
-                            property.fullName[0],
+                            data.fullName ?? "",
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -179,7 +501,7 @@ class SavedDetailsPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              property.fullName,
+                              data.fullName ?? "",
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
@@ -216,32 +538,36 @@ class SavedDetailsPage extends StatelessWidget {
       ),
 
       // 6. Bottom Action Button
-      bottomSheet: Container(
-        padding: EdgeInsets.all(20.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
-        ),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
-            minimumSize: Size(double.infinity, 55.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.r),
-            ),
-          ),
-          onPressed: () {
-            // Yaha pe contact dialog call karein jo humne pehle banaya tha
-          },
-          child: const Text(
-            "CONTACT OWNER",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+      bottomSheet: Consumer(
+        builder: (context, ref, child) {
+          return Container(
+            padding: EdgeInsets.all(20.w),
+            decoration: BoxDecoration(
               color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
             ),
-          ),
-        ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                minimumSize: Size(double.infinity, 55.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.r),
+                ),
+              ),
+              onPressed: () {
+                showContactBottomSheet(context, ref, widget.savedData);
+              },
+              child: const Text(
+                "Contact",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

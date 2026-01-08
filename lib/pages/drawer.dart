@@ -306,10 +306,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:realstate/Controller/getMyPropertyController.dart';
+import 'package:realstate/Controller/likePropertyController.dart';
 import 'package:realstate/Controller/userProfileController.dart';
 import 'package:realstate/Model/userProfileResModel.dart';
 import 'package:realstate/pages/editProfile.page.dart';
 import 'package:realstate/pages/login.page.dart';
+import 'package:realstate/pages/myRequest.page.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AppDrawer extends ConsumerStatefulWidget {
@@ -465,17 +467,23 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                   index: 2,
                   context: context,
                 ),
+                _drawerItem(
+                  icon: Icons.assignment_ind_outlined,
+                  label: 'My Request',
+                  context: context,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => MyRequestPage()),
+                    );
+                  },
+                ),
                 const Divider(
                   height: 30,
                   thickness: 1,
                   indent: 10,
                   endIndent: 10,
-                ),
-                _drawerItem(
-                  icon: Icons.settings_rounded,
-                  label: 'Settings',
-                  index: -1, // Just for UI
-                  context: context,
                 ),
               ],
             ),
@@ -615,8 +623,9 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   Widget _drawerItem({
     required IconData icon,
     required String label,
-    required int index,
+    int? index,
     required BuildContext context,
+    VoidCallback? onTap,
   }) {
     // Current selected logic based on your functionality
     bool isSelected = false; // Add logic here if needed
@@ -624,10 +633,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 4.h),
       child: ListTile(
-        onTap: () {
-          Navigator.pop(context);
-          if (index != -1) widget.onItemSelected(index);
-        },
+        onTap:
+            onTap ??
+            () {
+              // Agar onTap diya hai toh wo chalega, nahi toh purana index wala logic
+              Navigator.pop(context);
+              if (index != null && index != -1) widget.onItemSelected(index);
+            },
         leading: Icon(
           icon,
           color: isSelected

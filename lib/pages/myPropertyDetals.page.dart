@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:realstate/Controller/getMyPropertyController.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -59,22 +58,6 @@ class _MyPropertyDetalsPageState extends ConsumerState<MyPropertyDetalsPage> {
                         onPressed: () => Navigator.pop(context),
                       ),
                     ),
-                    actions: [
-                      Container(
-                        margin: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.favorite_border,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ],
                     flexibleSpace: FlexibleSpaceBar(
                       background: Stack(
                         alignment: Alignment.bottomCenter,
@@ -111,25 +94,6 @@ class _MyPropertyDetalsPageState extends ConsumerState<MyPropertyDetalsPage> {
                               );
                             },
                           ),
-
-                          // ================= SMOOTH DOT INDICATOR =================
-                          // Positioned(
-                          //   bottom: 16.h,
-                          //   child: SmoothPageIndicator(
-                          //     controller: _pageController,
-                          //     count: widget.data.uploadedPhotos!.isEmpty
-                          //         ? 1
-                          //         : widget.data.uploadedPhotos!.length,
-                          //     effect: ExpandingDotsEffect(
-                          //       activeDotColor: primary,
-                          //       dotColor: Colors.white.withOpacity(.7),
-                          //       dotHeight: 8,
-                          //       dotWidth: 8,
-                          //       expansionFactor: 3,
-                          //       spacing: 6,
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -295,41 +259,6 @@ class _MyPropertyDetalsPageState extends ConsumerState<MyPropertyDetalsPage> {
               ),
 
               // ================= BOTTOM CTA =================
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(.1),
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.call),
-                          label: const Text("Call Owner"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primary,
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ],
           );
         },
