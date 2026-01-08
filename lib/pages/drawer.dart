@@ -461,7 +461,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 ),
                 _drawerItem(
                   icon: Icons.call_rounded,
-                  label: 'Call Us',
+                  label: 'Contact Us',
                   index: 2,
                   context: context,
                 ),

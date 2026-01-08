@@ -18,6 +18,7 @@ import 'package:realstate/pages/homeServiceDetails.page.dart';
 import 'package:realstate/pages/loanServiceDetails.page.dart';
 import 'package:realstate/pages/myPropertyDetals.page.dart';
 import 'package:realstate/pages/propertyCat.page.dart';
+import 'package:realstate/pages/savedDetails.page.dart';
 import 'package:shimmer/shimmer.dart';
 import '../Model/SavedModel.dart';
 import '../Model/getMyPropertyResModel.dart';
@@ -1872,32 +1873,13 @@ class PropertyCard extends StatelessWidget {
 // }
 
 class PropertyCardSaved extends StatelessWidget {
-  final ListElementSaved data;
+  final ListElementSaved data; // Aapka model class yaha aayega
   const PropertyCardSaved({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    final primary = const Color(0xFFFF5722);
-
-    // Safely extract values with fallbacks
-    final status = data.status ?? 'Unknown';
-    // final dataTime = data.date ?? 'N/A';
-    final name = data.name ?? 'Unnamed Property';
-    final phone = data.phone ?? 'No contact';
-
-    String formatDateTimeFromMillis(int? millis) {
-      if (millis == null) return "No date";
-      try {
-        final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(millis);
-        return DateFormat('d MMM yyyy').format(dateTime);
-        // Or full: DateFormat('dd MMM yyyy, hh:mm a').format(dateTime);
-      } catch (e) {
-        return "Invalid date";
-      }
-    }
-
-    // Usage
-    final String dataTime = formatDateTimeFromMillis(data.date);
+    final property = data.propertyId;
+    const primaryColor = Color(0xffFF6A2A);
 
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
@@ -1906,109 +1888,154 @@ class PropertyCardSaved extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.08),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: const Offset(0, 6),
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ================= IMAGE PLACEHOLDER (since it's commented) =================
-          // You can uncomment and fix later, but for now, show a placeholder
-          Container(
-            height: 190.h,
-            width: double.infinity,
-            color: Colors.grey.shade300,
-            child: const Center(
-              child: Icon(Icons.image, size: 50, color: Colors.grey),
-            ),
-          ),
-
-          // BUY / RENT CHIP
-          Container(
-            margin: EdgeInsets.only(left: 10, top: 10),
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-            decoration: BoxDecoration(
-              color: primary,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              status.toUpperCase(),
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
+          // 1. Image Section with Price Badge
+          Stack(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) =>
+                          SavedDetailsPage(savedData: property),
+                    ),
+                  );
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(16.r),
+                  ),
+                  child: Image.network(
+                    property!.uploadedPhotos![0], // API se image
+                    height: 180.h,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stack) => Container(
+                      height: 180.h,
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.image_not_supported),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-
-          // PRICE
-          Container(
-            margin: EdgeInsets.only(right: 12, top: 5.h),
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              "$dataTime",
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.bold,
-                color: primary,
+              // Price Badge
+              Positioned(
+                bottom: 12,
+                left: 12,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Text(
+                    "₹${property.price}",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
 
-          // ================= DETAILS =================
+          // 2. Details Section
           Padding(
-            padding: EdgeInsets.only(left: 10),
+            padding: EdgeInsets.all(12.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // TITLE
-                Text(
-                  name,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-
-                SizedBox(height: 4.h),
-
-                // LOCATION / PHONE
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Icon(Icons.location_on, size: 14, color: Colors.grey),
-                    SizedBox(width: 4.w),
-                    Expanded(
-                      child: Text(
-                        phone, // fixed typo: removed ",}"
-                        style: TextStyle(fontSize: 13.sp, color: Colors.grey),
+                    Text(
+                      property.propertyType!.toUpperCase(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                    Text(
+                      "Status: ${data.status}",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
-
-                SizedBox(height: 10.h),
-
-                // SPECS (uncomment when fields exist)
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     _spec(Icons.king_bed, "${data.bedRoom ?? 0} Beds"),
-                //     ...
-                //   ],
-                // ),
+                SizedBox(height: 4.h),
+                Text(
+                  property.propertyAddress ?? "",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Row(
+                  children: [
+                    Icon(Icons.location_on, size: 14.sp, color: Colors.grey),
+                    SizedBox(width: 4.w),
+                    Text(
+                      "${property.city}",
+                      style: TextStyle(color: Colors.grey, fontSize: 13.sp),
+                    ),
+                  ],
+                ),
+                Divider(height: 20.h),
+                // 3. Icons Row (Area, Bathrooms, Furnishing)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildIconDetail(
+                      Icons.square_foot,
+                      "${property.area} sqft",
+                    ),
+                    _buildIconDetail(
+                      Icons.bathtub_outlined,
+                      "${property.bathrooms} Bath",
+                    ),
+                    _buildIconDetail(Icons.chair_outlined, "Semi-Furnished"),
+                  ],
+                ),
               ],
             ),
           ),
           SizedBox(height: 10.h),
         ],
       ),
+    );
+  }
+
+  Widget _buildIconDetail(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, size: 16.sp, color: Colors.grey[600]),
+        SizedBox(width: 4.w),
+        Text(
+          text,
+          style: TextStyle(fontSize: 12.sp, color: Colors.grey[700]),
+        ),
+      ],
     );
   }
 }
