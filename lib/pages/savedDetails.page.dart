@@ -492,7 +492,7 @@ class _SavedDetailsPageState extends State<SavedDetailsPage> {
                           radius: 25.r,
                           backgroundColor: primaryColor,
                           child: Text(
-                            data.fullName ?? "",
+                            data.fullName![0].toUpperCase() ?? "",
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -501,7 +501,7 @@ class _SavedDetailsPageState extends State<SavedDetailsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              data.fullName ?? "",
+                              data.fullName ?? "N/A",
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
