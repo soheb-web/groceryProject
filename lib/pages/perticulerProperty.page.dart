@@ -16,6 +16,7 @@ import 'package:realstate/core/utils/preety.dio.dart';
 import 'package:realstate/pages/details.page.dart';
 import 'package:realstate/Model/getPropertyResponsemodel.dart';
 import 'package:realstate/pages/home.page.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PerticulerPropertyPage extends ConsumerStatefulWidget {
@@ -892,144 +893,162 @@ class _PerticulerPropertyPageState
 
                 Align(
                   alignment: AlignmentGeometry.topRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 10.h, right: 10.w),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2.r),
-                          color: Colors.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.share, color: Colors.black, size: 16.sp),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "Share",
-                              style: GoogleFonts.inter(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
+                  child: InkWell(
+                    onTap: () {
+                      String slug = widget.data.slug ?? "";
+                      String baseUrl = "https://propertyleinnovation.com/property";
+
+                      String finalUrl = slug.startsWith('/')
+                          ? "$baseUrl$slug"
+                          : "$baseUrl/$slug";
+                      // Share karein
+                      Share.share("Check out this property: $finalUrl");
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 10.h, right: 10.w),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2.r),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.share,
                                 color: Colors.black,
+                                size: 16.sp,
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 6.w),
+                              Text(
+                                "Share",
+                                style: GoogleFonts.inter(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
 
-                      StatefulBuilder(
-                        builder: (context, setLikeState) {
-                          return InkWell(
-                            onTap: () async {
-                              // Pehle UI update karein (Instant feedback ke liye)
-                              setLikeState(() {
-                                isLiked = !isLiked;
-                              });
-
-                              final body = LikePropertyBodyModel(
-                                propertyId: widget.data.id.toString(),
-                              );
-
-                              try {
-                                final service = APIStateNetwork(createDio());
-                                final response = await service.likeProperties(
-                                  body,
-                                );
-
-                                if (response.code == 0 ||
-                                    response.error == false) {
-                                  ref.invalidate(likePropertyController);
-                                  // Fluttertoast.showToast(
-                                  //   msg: response.message ?? "Success",
-                                  // );
-                                } else {
-                                  // Agar API fail ho jaye toh wapas purana state kar dein
-                                  setLikeState(() {
-                                    isLiked = !isLiked;
-                                  });
-                                  Fluttertoast.showToast(
-                                    msg: response.message ?? "Error",
-                                  );
-                                }
-                              } catch (e) {
+                        StatefulBuilder(
+                          builder: (context, setLikeState) {
+                            return InkWell(
+                              onTap: () async {
+                                // Pehle UI update karein (Instant feedback ke liye)
                                 setLikeState(() {
                                   isLiked = !isLiked;
                                 });
-                                log(e.toString());
-                              }
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              margin: EdgeInsets.only(top: 10.h, right: 10.w),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 12.w,
-                                vertical: 8.h,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  20.r,
-                                ), // Modern Rounded Look
-                                color: Colors.white,
-                                border: Border.all(
-                                  color: isLiked
-                                      ? Colors.red
-                                      : Colors.grey.shade300,
-                                  width: 1.5,
+
+                                final body = LikePropertyBodyModel(
+                                  propertyId: widget.data.id.toString(),
+                                );
+
+                                try {
+                                  final service = APIStateNetwork(createDio());
+                                  final response = await service.likeProperties(
+                                    body,
+                                  );
+
+                                  if (response.code == 0 ||
+                                      response.error == false) {
+                                    ref.invalidate(likePropertyController);
+                                    // Fluttertoast.showToast(
+                                    //   msg: response.message ?? "Success",
+                                    // );
+                                  } else {
+                                    // Agar API fail ho jaye toh wapas purana state kar dein
+                                    setLikeState(() {
+                                      isLiked = !isLiked;
+                                    });
+                                    Fluttertoast.showToast(
+                                      msg: response.message ?? "Error",
+                                    );
+                                  }
+                                } catch (e) {
+                                  setLikeState(() {
+                                    isLiked = !isLiked;
+                                  });
+                                  log(e.toString());
+                                }
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                margin: EdgeInsets.only(top: 10.h, right: 10.w),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12.w,
+                                  vertical: 8.h,
                                 ),
-                                boxShadow: isLiked
-                                    ? [
-                                        BoxShadow(
-                                          color: Colors.red.withOpacity(0.2),
-                                          blurRadius: 8,
-                                          spreadRadius: 1,
-                                        ),
-                                      ]
-                                    : [],
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // Icon Animation
-                                  TweenAnimationBuilder<double>(
-                                    tween: Tween(
-                                      begin: 1.0,
-                                      end: isLiked ? 1.2 : 1.0,
-                                    ),
-                                    duration: const Duration(milliseconds: 200),
-                                    builder: (context, value, child) {
-                                      return Transform.scale(
-                                        scale: value,
-                                        child: Icon(
-                                          isLiked
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          color: isLiked
-                                              ? Colors.red
-                                              : Colors.black,
-                                          size: 18.sp,
-                                        ),
-                                      );
-                                    },
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    20.r,
+                                  ), // Modern Rounded Look
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: isLiked
+                                        ? Colors.red
+                                        : Colors.grey.shade300,
+                                    width: 1.5,
                                   ),
-                                  SizedBox(width: 8.w),
-                                  Text(
-                                    isLiked ? "Saved" : "Save",
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: isLiked
-                                          ? Colors.red
-                                          : Colors.black,
+                                  boxShadow: isLiked
+                                      ? [
+                                          BoxShadow(
+                                            color: Colors.red.withOpacity(0.2),
+                                            blurRadius: 8,
+                                            spreadRadius: 1,
+                                          ),
+                                        ]
+                                      : [],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // Icon Animation
+                                    TweenAnimationBuilder<double>(
+                                      tween: Tween(
+                                        begin: 1.0,
+                                        end: isLiked ? 1.2 : 1.0,
+                                      ),
+                                      duration: const Duration(
+                                        milliseconds: 200,
+                                      ),
+                                      builder: (context, value, child) {
+                                        return Transform.scale(
+                                          scale: value,
+                                          child: Icon(
+                                            isLiked
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: isLiked
+                                                ? Colors.red
+                                                : Colors.black,
+                                            size: 18.sp,
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      isLiked ? "Saved" : "Save",
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: isLiked
+                                            ? Colors.red
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

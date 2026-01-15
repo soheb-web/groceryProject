@@ -181,6 +181,8 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
   bool isLoading = false;
   final _formKeyContactUs = GlobalKey<FormState>();
 
+  DateTime? lastPressedAt;
+
   @override
   Widget build(BuildContext context) {
     final profileController = ref.watch(userProfileController);
@@ -197,87 +199,23 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
           });
           return;
         }
-        final shouldExit = await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            icon: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xffFF6A2A).withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.exit_to_app_rounded,
-                color: Color(0xffFF6A2A),
-                size: 40,
-              ),
-            ),
-            title: const Text(
-              "Exit App",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            content: const Text(
-              "Do you really want to leave the app?\nWe'll miss you!",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
-            ),
-            actionsPadding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 15,
-            ),
-            actions: [
-              Row(
-                children: [
-                  // NO BUTTON
-                  Expanded(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text(
-                        "No, Stay",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  // YES BUTTON
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xffFF6A2A),
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text(
-                        "Yes, Exit",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-        if (shouldExit == true) {
-          SystemNavigator.pop();
+        final now = DateTime.now();
+        final backButtonHasNotBeenPressedRecently =
+            lastPressedAt == null ||
+            now.difference(lastPressedAt!) > const Duration(seconds: 2);
+
+        if (backButtonHasNotBeenPressedRecently) {
+          lastPressedAt = now;
+          Fluttertoast.showToast(
+            msg: "Press back again to exit",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black87,
+            textColor: Colors.white,
+          );
+          return;
         }
+        SystemNavigator.pop();
       },
       child: Scaffold(
         key: _scaffoldKey,
@@ -1116,7 +1054,6 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
                   //   color: const Color(0xffFF6A2A),
                   // ),
                   // SizedBox(height: 20.h),
-
                   // // Title
                   // Text(
                   //   "We're Here to Help!",
@@ -1127,7 +1064,6 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
                   //   textAlign: TextAlign.center,
                   // ),
                   // SizedBox(height: 10.h),
-
                   // Text(
                   //   "For any property inquiry, feel free to call us anytime.",
                   //   style: GoogleFonts.inter(
@@ -1137,7 +1073,6 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
                   //   textAlign: TextAlign.center,
                   // ),
                   // SizedBox(height: 40.h),
-
                   // // Main Inquiry Number
                   // Text(
                   //   "+91-8899556644",
@@ -1148,7 +1083,6 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
                   //   ),
                   // ),
                   // SizedBox(height: 10.h),
-
                   // Text(
                   //   "Available 24/7",
                   //   style: GoogleFonts.inter(
@@ -1157,7 +1091,6 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
                   //   ),
                   // ),
                   // SizedBox(height: 40.h),
-
                   // // Big Call Button
                   // SizedBox(
                   //   width: double.infinity,
@@ -1189,7 +1122,6 @@ class _RealEstateHomePageState extends ConsumerState<RealEstateHomePage> {
                   //   ),
                   // ),
                   // SizedBox(height: 20.h),
-
                   // // WhatsApp Option
                   // Row(
                   //   mainAxisAlignment: MainAxisAlignment.center,
