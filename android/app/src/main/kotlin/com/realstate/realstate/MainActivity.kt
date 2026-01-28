@@ -1,4 +1,4 @@
-package com.realstate.realstate
+package com.grocery
 
 import android.content.ActivityNotFoundException
 import android.content.Intent

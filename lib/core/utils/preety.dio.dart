@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import '../../pages/login.page.dart';
+import '../../pages/loginScreen.dart';
 import 'globalroute.key.dart';
 
 Dio createDio() {
@@ -35,7 +35,7 @@ Dio createDio() {
       onResponse: (response, handler) async {
         if (response.data['code'] == 401 || response.data['code'] == 3) {
           navigatorKey.currentState?.pushAndRemoveUntil(
-            CupertinoPageRoute(builder: (_) => LoginPage()),
+            CupertinoPageRoute(builder: (_) => LoginScreen()),
             (route) => false,
           );
           final box = Hive.box("userdata");
@@ -94,7 +94,7 @@ Dio createDio() {
               toastLength: Toast.LENGTH_LONG,
             );
             navigatorKey.currentState?.pushAndRemoveUntil(
-              CupertinoPageRoute(builder: (_) => LoginPage()),
+              CupertinoPageRoute(builder: (_) => LoginScreen()),
               (route) => false,
             );
           }
