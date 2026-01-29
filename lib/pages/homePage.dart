@@ -1,0 +1,594 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery/pages/cartPage.dart';
+import 'package:grocery/pages/favouritePage.dart';
+import 'package:grocery/pages/productCategoryPage.dart';
+import 'package:grocery/pages/profilePage.dart';
+
+class HomeBottom extends StatefulWidget {
+  const HomeBottom({super.key});
+
+  @override
+  State<HomeBottom> createState() => _HomeBottomState();
+}
+
+class _HomeBottomState extends State<HomeBottom> {
+  int bottomIndex = 0;
+
+  List<Widget> pages = [HomePage(), CartPage(), FavouritePage(), ProfilePage()];
+  final List<String> appBarTitles = [
+    "FreshCart",
+    "Cart",
+    "Favourite",
+    "Profile",
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFFFFFFFF),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFFFFFF),
+        automaticallyImplyLeading: false,
+        title: Text(
+          appBarTitles[bottomIndex],
+          style: GoogleFonts.montserrat(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF0A0A0A),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.dark_mode_outlined, color: Color(0xFF0A0A0A)),
+          ),
+          SizedBox(width: 5.w),
+        ],
+      ),
+      // body: pages[bottomIndex],
+      body: IndexedStack(index: bottomIndex, children: pages),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(2, -5),
+              blurRadius: 15,
+              spreadRadius: 0,
+              color: Color.fromARGB(22, 0, 0, 0),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          onTap: (value) {
+            setState(() {
+              bottomIndex = value;
+            });
+          },
+          currentIndex: bottomIndex,
+          elevation: 0,
+          backgroundColor: Colors.white,
+          selectedItemColor: const Color(0xFF16A34A),
+          unselectedItemColor: Colors.black,
+          selectedLabelStyle: GoogleFonts.montserrat(fontSize: 12.sp),
+          unselectedLabelStyle: GoogleFonts.montserrat(fontSize: 12.sp),
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/Svg/home.svg",
+                color: bottomIndex == 0
+                    ? const Color(0xFF16A34A)
+                    : Color(0xFF181725),
+              ),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/Svg/cart.svg",
+                color: bottomIndex == 1
+                    ? const Color(0xFF16A34A)
+                    : Color(0xFF181725),
+              ),
+              label: "Cart",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/Svg/favourite.svg",
+                color: bottomIndex == 2
+                    ? const Color(0xFF16A34A)
+                    : Color(0xFF181725),
+              ),
+              label: "Favourite",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/Svg/profile.svg",
+                color: bottomIndex == 3
+                    ? const Color(0xFF16A34A)
+                    : Color(0xFF181725),
+              ),
+              label: "Profile",
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Map<String, dynamic>> categories = [
+    {"image": "assets/png/all.png", "name": "All"},
+    {"image": "assets/png/fresh.png", "name": "Fressh"},
+    {"image": "assets/png/organic.png", "name": "Organic"},
+    {"image": "assets/png/bakary.png", "name": "Bakery"},
+    {"image": "assets/png/dairy.png", "name": "Dairy"},
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFFFFFFFF),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 13.h),
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(
+                left: 16.w,
+                right: 16.w,
+                top: 11.h,
+                bottom: 11.h,
+              ),
+              decoration: BoxDecoration(
+                color: Color(0xFFF5F5F5),
+                border: Border.all(color: Color(0xFF000000), width: 0.53),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.location_on_outlined, color: Color(0xFF16A34A)),
+                  SizedBox(width: 8.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Deliver to",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF737373),
+                        ),
+                      ),
+                      Text(
+                        "123 Main St, Downtown",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF0A0A0A),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Color(0xFF737373),
+                    size: 15.sp,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Padding(
+              padding: EdgeInsets.only(left: 16.w, right: 16.w),
+              child: TextField(
+                onTap: () {},
+                decoration: InputDecoration(
+                  hintText: "Search for groceries...",
+                  hintStyle: GoogleFonts.montserrat(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF737373),
+                  ),
+                  filled: true,
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 12.h,
+                    horizontal: 16.w,
+                  ),
+                  fillColor: Color(0xFFF5F5F5),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Container(
+              margin: EdgeInsets.only(left: 16.w, right: 20.w),
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.r),
+                color: Color(0xFFFFA400),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Shop Smarter,\nSave More!",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFFFFFFF),
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  Container(
+                    width: 115.w,
+                    height: 32.h,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(102, 210, 210, 210),
+                      border: Border.all(color: Color(0xFFFFFFFF), width: 1.w),
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Get 40% Off 🎉",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFFFFFFFF),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.h),
+            SizedBox(
+              height: 90.h,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                itemCount: categories.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(16.r),
+                    onTap: () {},
+                    child: Container(
+                      width: 80.w,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            categories[index]['image'].toString(),
+                            width: 30.w,
+                            height: 30.h,
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            categories[index]['name'].toString(),
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF0A0A0A),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 20.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Featured Stores",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF0A0A0A),
+                    ),
+                  ),
+                  Text(
+                    "See all",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF16A34A),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16.h),
+
+            /// Store Cards
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductCategoryPage(),
+                  ),
+                );
+              },
+              child: StoreCard(
+                image:
+                    "https://images.unsplash.com/photo-1542838132-92c53300491e",
+                rating: "4.8",
+                title: "Fresh Market",
+                subtitle: "Fresh Produce",
+                time: "20-30 min",
+                price: "\$2.99",
+                distance: "1.2 km",
+              ),
+            ),
+
+            StoreCard(
+              image:
+                  "https://images.unsplash.com/photo-1506806732259-39c2d0268443",
+              rating: "4.9",
+              title: "Organic Haven",
+              subtitle: "Organic",
+              time: "25-35 min",
+              price: "\$3.49",
+              distance: "2.5 km",
+            ),
+
+            StoreCard(
+              image:
+                  "https://images.unsplash.com/photo-1604719312566-8912e9227c6a",
+              rating: "4.6",
+              title: "SuperMart Express",
+              subtitle: "Supermarket",
+              time: "15-25 min",
+              price: "\$1.99",
+              distance: "0.8 km",
+            ),
+            SizedBox(height: 16.h),
+
+            /// Offer Card
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 16.w, right: 16.w),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.r),
+                gradient: LinearGradient(
+                  colors: [Color(0xFF16A34A), Color(0xFF15803D)],
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Special Offer",
+                    style: GoogleFonts.montserrat(
+                      color: Color(0xFFFFFFFF),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    "Get 20% off on your first order!",
+                    style: GoogleFonts.montserrat(
+                      color: Color(0xFFFFFFFF),
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    "Use code: FRESH20",
+                    style: GoogleFonts.montserrat(
+                      color: Color(0xFFFFFFFF),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Text("Order Now"),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StoreCard extends StatelessWidget {
+  final String image;
+  final String rating;
+  final String title;
+  final String subtitle;
+  final String time;
+  final String price;
+  final String distance;
+
+  const StoreCard({
+    super.key,
+    required this.image,
+    required this.rating,
+    required this.title,
+    required this.subtitle,
+    required this.time,
+    required this.price,
+    required this.distance,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 16.h, left: 16.w, right: 16.w),
+      color: Color(0xFFFFFFFF),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      child: Column(
+        children: [
+          /// Image
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                child: Image.network(
+                  image,
+                  height: 160.h,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      height: 160.h,
+                      width: double.infinity,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.green,
+                          strokeWidth: 1.w,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Positioned(
+                right: 10.w,
+                top: 10.h,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.star, color: Color(0xFFFDC700), size: 15.sp),
+                      SizedBox(width: 5.w),
+                      Text(
+                        rating,
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13.sp,
+                          color: Color(0xFF0A0A0A),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          /// Details
+          Padding(
+            padding: EdgeInsets.only(
+              top: 15.h,
+              left: 16.w,
+              bottom: 24.h,
+              right: 16.w,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF0A0A0A),
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  subtitle,
+                  style: GoogleFonts.montserrat(
+                    color: Color(0xFF737373),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 16.sp,
+                      color: Color(0xFF737373),
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      time,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF737373),
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      price,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF737373),
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      distance,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF737373),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

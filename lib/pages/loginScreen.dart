@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery/pages/homePage.dart';
 
 import 'ResisterScreen.dart';
 
@@ -27,21 +28,16 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 40.h),
 
               // Shopping cart icon
-            Container(
-
+              Container(
                 height: 80.h,
                 width: 80.h,
-
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.sp),
-                  border: Border.all(
-                    color: Color(0xffF5F5F5)
-                  )
+                  border: Border.all(color: Color(0xffF5F5F5)),
                 ),
 
-                child: Image.asset("assets/png/loginLogo.png")
-
-            ),
+                child: Image.asset("assets/png/loginLogo.png"),
+              ),
 
               SizedBox(height: 24.h),
 
@@ -68,9 +64,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
               SizedBox(height: 48.h),
 
-
-
-
               Container(
                 margin: EdgeInsets.only(bottom: 10.h),
                 child: Row(
@@ -81,16 +74,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: GoogleFonts.montserrat(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black
+                        color: Colors.black,
                       ),
                     ),
                   ],
                 ),
               ),
-
-
-
-
 
               // Email Field
               _buildTextField(
@@ -101,7 +90,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
               SizedBox(height: 20.h),
 
-
               Container(
                 margin: EdgeInsets.only(bottom: 10.h),
                 child: Row(
@@ -110,9 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       "Password",
                       style: GoogleFonts.montserrat(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -164,7 +152,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 55.h,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: Login logic
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeBottom()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF16A34A),
@@ -200,9 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  Expanded(child: Divider(color: Color(0xffD9D9D9)
-
-                  )),
+                  Expanded(child: Divider(color: Color(0xffD9D9D9))),
                 ],
               ),
 
@@ -238,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     "Don't have an account? ",
                     style: GoogleFonts.montserrat(
                       fontSize: 15.sp,
-                      color: Color(0xffA3A3A3)
+                      color: Color(0xffA3A3A3),
                     ),
                   ),
                   GestureDetector(
@@ -271,6 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   Widget _buildTextField({
     required String hint,
     required IconData prefixIcon,
@@ -296,17 +286,11 @@ class _LoginScreenState extends State<LoginScreen> {
         // मुख्य बदलाव यहाँ से शुरू
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14.r),
-          borderSide: const BorderSide(
-            color: Color(0xFFD9D9D9),
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: Color(0xFFD9D9D9), width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14.r),
-          borderSide: const BorderSide(
-            color: Color(0xFFD9D9D9),
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: Color(0xFFD9D9D9), width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14.r),
@@ -353,7 +337,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: Color(0xffD9D9D9)),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.r),
+          ),
         ),
       ),
     );

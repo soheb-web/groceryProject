@@ -16,27 +16,27 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
   int _currentPage = 0;
 
   final List<Map<String, dynamic>> _pages = [
-
     {
       'image': "assets/png/ShopFreshGroceries.png",
       'title': "Shop Fresh Groceries",
-      'subtitle': "Browse thousands of products from local\nstores and supermarkets",
+      'subtitle':
+          "Browse thousands of products from local\nstores and supermarkets",
       'buttonText': "Next →",
     },
-
 
     {
       'image': "assets/png/fastDelivery.png",
       'title': "Fast Delivery",
-      'subtitle': "Get your groceries delivered to your doorstep\nin 30 minutes or less",
+      'subtitle':
+          "Get your groceries delivered to your doorstep\nin 30 minutes or less",
       'buttonText': "Next →",
     },
-
 
     {
       'image': "assets/png/trackYourOrder.png",
       'title': "Track Your Order",
-      'subtitle': "Real-time tracking of your delivery driver\nand order status",
+      'subtitle':
+          "Real-time tracking of your delivery driver\nand order status",
       'buttonText': "Get Started →",
     },
   ];
@@ -55,7 +55,10 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
               child: GestureDetector(
                 onTap: () {
                   // TODO: Skip to login or home
-                  Navigator.pushReplacementNamed(context, '/login'); // या तुम्हारा route
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/login',
+                  ); // या तुम्हारा route
                 },
                 child: Text(
                   "Skip",
@@ -81,44 +84,42 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-SizedBox(height:150.h),
-                      index==0?
-
-                      Container(
-                        height: 128.h,
-                        width: 128.h,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xffF5F5F5)),
-                          // borderRadius: BorderRadius.circular(10),
-                          shape: BoxShape.circle,
-                          // color: const Color(0xFF16A34A),
-                        ),
-                        child: Center(
-                          child: Image.asset(
-                            page['image'],
-                            height: 60.h,
-                            width: 60.h,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ):
-
-                      Container(
-                        height: 128.h,
-                        width: 128.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFF16A34A),
-                        ),
-                        child: Center(
-                          child: Image.asset(
-                            page['image'],
-                            height: 60.h,
-                            width: 60.h,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
+                      SizedBox(height: 150.h),
+                      index == 0
+                          ? Container(
+                              height: 128.h,
+                              width: 128.h,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xffF5F5F5)),
+                                // borderRadius: BorderRadius.circular(10),
+                                shape: BoxShape.circle,
+                                // color: const Color(0xFF16A34A),
+                              ),
+                              child: Center(
+                                child: Image.asset(
+                                  page['image'],
+                                  height: 60.h,
+                                  width: 60.h,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : Container(
+                              height: 128.h,
+                              width: 128.h,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color(0xFF16A34A),
+                              ),
+                              child: Center(
+                                child: Image.asset(
+                                  page['image'],
+                                  height: 60.h,
+                                  width: 60.h,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
 
                       SizedBox(height: 48.h),
 
@@ -149,17 +150,15 @@ SizedBox(height:150.h),
 
                       SizedBox(height: 48.h),
 
-
                       // SizedBox(height: 40.h),
-Expanded(child: SizedBox()),
-
+                      Expanded(child: SizedBox()),
 
                       // Page Indicator Dots
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
                           _pages.length,
-                              (i) => Padding(
+                          (i) => Padding(
                             padding: EdgeInsets.symmetric(horizontal: 6.w),
                             child: Container(
                               height: 10.h,
@@ -175,21 +174,18 @@ Expanded(child: SizedBox()),
                         ),
                       ),
                       // Next / Get Started Button
-                      SizedBox(height: 20.h,),
+                      SizedBox(height: 20.h),
                       SizedBox(
                         width: double.infinity,
                         height: 58.h,
                         child: ElevatedButton(
                           onPressed: () {
                             if (_currentPage < _pages.length - 1) {
-
                               _pageController.nextPage(
                                 duration: const Duration(milliseconds: 400),
                                 curve: Curves.easeInOut,
                               );
-
                             } else {
-
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -220,7 +216,7 @@ Expanded(child: SizedBox()),
                         ),
                       ),
 
-SizedBox(height: 40.h,),
+                      SizedBox(height: 40.h),
                     ],
                   ),
                 );
