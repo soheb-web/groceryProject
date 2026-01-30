@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 Text(
                                   "Sarah johnson",
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.inter(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xFFFFFFFF),
@@ -83,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 Text(
                                   "Sarah.j@email.com",
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.inter(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
                                     color: Color.fromARGB(178, 255, 255, 255),
@@ -126,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Text(
                               "24",
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.inter(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF16A34A),
@@ -134,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             Text(
                               "Order",
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.inter(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Color.fromARGB(178, 0, 0, 0),
@@ -153,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Text(
                               "\$420",
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.inter(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF16A34A),
@@ -161,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             Text(
                               "Spent",
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.inter(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Color.fromARGB(178, 0, 0, 0),
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Text(
                               "150",
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.inter(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF16A34A),
@@ -188,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             Text(
                               "Point",
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.inter(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Color.fromARGB(178, 0, 0, 0),
@@ -289,7 +289,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () {},
                     child: Text(
                       "Log Out",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: Color(0xFFD02600),

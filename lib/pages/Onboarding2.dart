@@ -62,7 +62,7 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
                 },
                 child: Text(
                   "Skip",
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.inter(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF16A34A),
@@ -127,7 +127,7 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
                       Text(
                         page['title'],
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.inter(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           color: Colors.black87,
@@ -140,7 +140,7 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
                       Text(
                         page['subtitle'],
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.inter(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                           color: const Color(0xFFA3A3A3),
@@ -207,7 +207,7 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
                           ),
                           child: Text(
                             page['buttonText'],
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.inter(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w400,
                               color: Colors.white,

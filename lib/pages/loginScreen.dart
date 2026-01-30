@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // Welcome Back!
               Text(
                 "Welcome Back!",
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.inter(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
                   color: Colors.black87,
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               Text(
                 "Login to continue shopping",
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.inter(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
                   color: Colors.grey.shade600,
@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(
                       "Email",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(
                       "Password",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: Text(
                     "Forgot Password?",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       color: const Color(0xFF16A34A),
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: Text(
                     "Login",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: Colors.white,
@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Text(
                       "or",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         color: Color(0xffA3A3A3),
                         fontSize: 14.sp,
                       ),
@@ -225,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Text(
                     "Don't have an account? ",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       fontSize: 15.sp,
                       color: Color(0xffA3A3A3),
                     ),
@@ -243,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: Text(
                       "Sign Up",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
                         color: const Color(0xFF16A34A),
@@ -271,10 +271,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextField(
       obscureText: obscureText,
       keyboardType: keyboardType,
-      style: GoogleFonts.montserrat(fontSize: 16.sp),
+      style: GoogleFonts.inter(fontSize: 16.sp),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: GoogleFonts.montserrat(
+        hintStyle: GoogleFonts.inter(
           color: Colors.grey.shade500,
           fontSize: 15.sp,
         ),
@@ -329,7 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // Icon(icon, size: 24.sp, color: Colors.black87),
         label: Text(
           text,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.inter(
             fontSize: 16.sp,
             fontWeight: FontWeight.w400,
             color: Colors.black,

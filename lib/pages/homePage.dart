@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery/pages/cartPage.dart';
 import 'package:grocery/pages/favouritePage.dart';
 import 'package:grocery/pages/productCategoryPage.dart';
 import 'package:grocery/pages/profilePage.dart';
+import 'package:grocery/pages/searchPage.dart';
 
 class HomeBottom extends StatefulWidget {
   const HomeBottom({super.key});
@@ -24,96 +27,132 @@ class _HomeBottomState extends State<HomeBottom> {
     "Favourite",
     "Profile",
   ];
+  DateTime? lastPressedAt;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFFFFFFF),
-      appBar: AppBar(
+    return PopScope(
+      //   canPop: false, // IMPORTANT
+      onPopInvoked: (didPop) {
+        // if (didPop) return;
+
+        // // Agar bottom tab 0 nahi hai to pehle home pe lao
+        // if (bottomIndex != 0) {
+        //   setState(() {
+        //     bottomIndex = 0;
+        //   });
+        //   return;
+        // }
+
+        // final now = DateTime.now();
+        // final backButtonHasNotBeenPressedRecently =
+        //     lastPressedAt == null ||
+        //     now.difference(lastPressedAt!) > const Duration(seconds: 2);
+
+        // if (backButtonHasNotBeenPressedRecently) {
+        //   lastPressedAt = now;
+        //   Fluttertoast.showToast(
+        //     msg: "Press back again to exit",
+        //     toastLength: Toast.LENGTH_SHORT,
+        //     gravity: ToastGravity.BOTTOM,
+        //     backgroundColor: Colors.black87,
+        //     textColor: Colors.white,
+        //     fontSize: 14,
+        //   );
+        //   return;
+        // }
+
+        // // Exit app
+        // SystemNavigator.pop();
+      },
+      child: Scaffold(
         backgroundColor: Color(0xFFFFFFFF),
-        automaticallyImplyLeading: false,
-        title: Text(
-          appBarTitles[bottomIndex],
-          style: GoogleFonts.montserrat(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF0A0A0A),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.dark_mode_outlined, color: Color(0xFF0A0A0A)),
-          ),
-          SizedBox(width: 5.w),
-        ],
-      ),
-      // body: pages[bottomIndex],
-      body: IndexedStack(index: bottomIndex, children: pages),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(2, -5),
-              blurRadius: 15,
-              spreadRadius: 0,
-              color: Color.fromARGB(22, 0, 0, 0),
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFFFFFF),
+          automaticallyImplyLeading: false,
+          title: Text(
+            appBarTitles[bottomIndex],
+            style: GoogleFonts.inter(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF0A0A0A),
             ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.dark_mode_outlined, color: Color(0xFF0A0A0A)),
+            ),
+            SizedBox(width: 5.w),
           ],
         ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          onTap: (value) {
-            setState(() {
-              bottomIndex = value;
-            });
-          },
-          currentIndex: bottomIndex,
-          elevation: 0,
-          backgroundColor: Colors.white,
-          selectedItemColor: const Color(0xFF16A34A),
-          unselectedItemColor: Colors.black,
-          selectedLabelStyle: GoogleFonts.montserrat(fontSize: 12.sp),
-          unselectedLabelStyle: GoogleFonts.montserrat(fontSize: 12.sp),
-          items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                "assets/Svg/home.svg",
-                color: bottomIndex == 0
-                    ? const Color(0xFF16A34A)
-                    : Color(0xFF181725),
+        // body: pages[bottomIndex],
+        body: IndexedStack(index: bottomIndex, children: pages),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(2, -5),
+                blurRadius: 15,
+                spreadRadius: 0,
+                color: Color.fromARGB(22, 0, 0, 0),
               ),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                "assets/Svg/cart.svg",
-                color: bottomIndex == 1
-                    ? const Color(0xFF16A34A)
-                    : Color(0xFF181725),
+            ],
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            onTap: (value) {
+              setState(() {
+                bottomIndex = value;
+              });
+            },
+            currentIndex: bottomIndex,
+            elevation: 0,
+            backgroundColor: Colors.white,
+            selectedItemColor: const Color(0xFF16A34A),
+            unselectedItemColor: Colors.black,
+            selectedLabelStyle: GoogleFonts.inter(fontSize: 12.sp),
+            unselectedLabelStyle: GoogleFonts.inter(fontSize: 12.sp),
+            items: [
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  "assets/Svg/home.svg",
+                  color: bottomIndex == 0
+                      ? const Color(0xFF16A34A)
+                      : Color(0xFF181725),
+                ),
+                label: "Home",
               ),
-              label: "Cart",
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                "assets/Svg/favourite.svg",
-                color: bottomIndex == 2
-                    ? const Color(0xFF16A34A)
-                    : Color(0xFF181725),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  "assets/Svg/cart.svg",
+                  color: bottomIndex == 1
+                      ? const Color(0xFF16A34A)
+                      : Color(0xFF181725),
+                ),
+                label: "Cart",
               ),
-              label: "Favourite",
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                "assets/Svg/profile.svg",
-                color: bottomIndex == 3
-                    ? const Color(0xFF16A34A)
-                    : Color(0xFF181725),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  "assets/Svg/favourite.svg",
+                  color: bottomIndex == 2
+                      ? const Color(0xFF16A34A)
+                      : Color(0xFF181725),
+                ),
+                label: "Favourite",
               ),
-              label: "Profile",
-            ),
-          ],
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  "assets/Svg/profile.svg",
+                  color: bottomIndex == 3
+                      ? const Color(0xFF16A34A)
+                      : Color(0xFF181725),
+                ),
+                label: "Profile",
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -165,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text(
                         "Deliver to",
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.inter(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
                           color: Color(0xFF737373),
@@ -173,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Text(
                         "123 Main St, Downtown",
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.inter(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                           color: Color(0xFF0A0A0A),
@@ -194,10 +233,15 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: EdgeInsets.only(left: 16.w, right: 16.w),
               child: TextField(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchPage()),
+                  );
+                },
                 decoration: InputDecoration(
                   hintText: "Search for groceries...",
-                  hintStyle: GoogleFonts.montserrat(
+                  hintStyle: GoogleFonts.inter(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                     color: Color(0xFF737373),
@@ -233,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Text(
                     "Shop Smarter,\nSave More!",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFFFFFFFF),
@@ -251,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                     child: Center(
                       child: Text(
                         "Get 40% Off 🎉",
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.inter(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
                           color: Color(0xFFFFFFFF),
@@ -292,7 +336,7 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(height: 8.h),
                           Text(
                             categories[index]['name'].toString(),
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.inter(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Color(0xFF0A0A0A),
@@ -312,7 +356,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Text(
                     "Featured Stores",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF0A0A0A),
@@ -320,7 +364,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Text(
                     "See all",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
                       color: Color(0xFF16A34A),
@@ -392,7 +436,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Text(
                     "Special Offer",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       color: Color(0xFFFFFFFF),
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
@@ -401,7 +445,7 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 6.h),
                   Text(
                     "Get 20% off on your first order!",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       color: Color(0xFFFFFFFF),
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
@@ -410,7 +454,7 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 8.h),
                   Text(
                     "Use code: FRESH20",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       color: Color(0xFFFFFFFF),
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
@@ -506,7 +550,7 @@ class StoreCard extends StatelessWidget {
                       SizedBox(width: 5.w),
                       Text(
                         rating,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.inter(
                           fontWeight: FontWeight.w400,
                           fontSize: 13.sp,
                           color: Color(0xFF0A0A0A),
@@ -532,7 +576,7 @@ class StoreCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.inter(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                     color: Color(0xFF0A0A0A),
@@ -541,7 +585,7 @@ class StoreCard extends StatelessWidget {
                 SizedBox(height: 4.h),
                 Text(
                   subtitle,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.inter(
                     color: Color(0xFF737373),
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
@@ -558,7 +602,7 @@ class StoreCard extends StatelessWidget {
                     SizedBox(width: 4.w),
                     Text(
                       time,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF737373),
@@ -567,7 +611,7 @@ class StoreCard extends StatelessWidget {
                     Spacer(),
                     Text(
                       price,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF737373),
@@ -576,7 +620,7 @@ class StoreCard extends StatelessWidget {
                     Spacer(),
                     Text(
                       distance,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: Color(0xFF737373),

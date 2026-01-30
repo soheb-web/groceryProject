@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'Onboarding2.dart';
-import 'loginScreen.dart';   // फाइल का नाम सही होना चाहिए (case-sensitive)
+import 'loginScreen.dart'; // फाइल का नाम सही होना चाहिए (case-sensitive)
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -29,7 +29,7 @@ class OnboardingScreen extends StatelessWidget {
                   Text(
                     "Welcome to Our store",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 34.sp,
                       fontWeight: FontWeight.w700,
@@ -41,7 +41,7 @@ class OnboardingScreen extends StatelessWidget {
                   Text(
                     "Get your groceries in as fast as one hour",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
@@ -72,7 +72,7 @@ class OnboardingScreen extends StatelessWidget {
                       ),
                       child: Text(
                         "Get Started",
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.inter(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,

@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'OnboardingScreen.dart';
 
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -28,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>  OnboardingScreen(), // ← your next screen
+            builder: (context) => OnboardingScreen(), // ← your next screen
           ),
         );
       }
@@ -59,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
           SizedBox(height: 10.h),
           Text(
             "ZIPPYYY",
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.inter(
               textStyle: TextStyle(
                 color: Colors.white,
                 fontSize: 14.sp,

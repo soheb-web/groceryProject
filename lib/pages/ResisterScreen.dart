@@ -42,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               // Create Account title
               Text(
                 "Create Account",
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.inter(
                   fontSize: 24.sp, // थोड़ा बड़ा login से, premium feel
                   fontWeight: FontWeight.w700,
                   color: Colors.black87,
@@ -53,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               Text(
                 "Sign up to get started",
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.inter(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
                   color: const Color(0xFFA3A3A3),
@@ -102,7 +102,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _obscurePassword ? Icons.visibility_off : Icons.visibility,
                     color: Colors.grey.shade600,
                   ),
-                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                  onPressed: () =>
+                      setState(() => _obscurePassword = !_obscurePassword),
                 ),
               ),
 
@@ -116,10 +117,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 obscureText: _obscureConfirmPassword,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                    _obscureConfirmPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                     color: Colors.grey.shade600,
                   ),
-                  onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                  onPressed: () => setState(
+                    () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                  ),
                 ),
               ),
 
@@ -144,7 +149,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Expanded(
                     child: RichText(
                       text: TextSpan(
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.inter(
                           fontSize: 14.sp,
                           color: const Color(0xFFA3A3A3),
                         ),
@@ -152,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           const TextSpan(text: "I agree to the "),
                           TextSpan(
                             text: "Terms & Conditions",
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.inter(
                               color: const Color(0xFF16A34A),
                               fontWeight: FontWeight.w500,
                             ),
@@ -160,7 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           const TextSpan(text: " and "),
                           TextSpan(
                             text: "Privacy Policy",
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.inter(
                               color: const Color(0xFF16A34A),
                               fontWeight: FontWeight.w500,
                             ),
@@ -181,8 +186,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: ElevatedButton(
                   onPressed: _agreeToTerms
                       ? () {
-                    // TODO: Sign up logic (validation + API)
-                  }
+                          // TODO: Sign up logic (validation + API)
+                        }
                       : null, // disable अगर checkbox नहीं ticked
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF16A34A),
@@ -193,7 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: Text(
                     "Create Account",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: Colors.white,
@@ -210,7 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   Text(
                     "Already have an account? ",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.inter(
                       fontSize: 15.sp,
                       color: const Color(0xFFA3A3A3),
                     ),
@@ -222,7 +227,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     child: Text(
                       "Login",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.inter(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
                         color: const Color(0xFF16A34A),
@@ -248,7 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         children: [
           Text(
             label,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.inter(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               color: Colors.black,
@@ -269,10 +274,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return TextField(
       obscureText: obscureText,
       keyboardType: keyboardType,
-      style: GoogleFonts.montserrat(fontSize: 16.sp),
+      style: GoogleFonts.inter(fontSize: 16.sp),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: GoogleFonts.montserrat(
+        hintStyle: GoogleFonts.inter(
           color: Colors.grey.shade500,
           fontSize: 15.sp,
         ),
