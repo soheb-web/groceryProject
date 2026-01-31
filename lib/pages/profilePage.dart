@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery/pages/editProfilePage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -225,11 +226,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: Column(
                       children: [
-                        _item(Icons.person_outline, "Edit Profile"),
+                        _item(Icons.person_outline, "Edit Profile", () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfilePage(),
+                            ),
+                          );
+                        }),
                         _divider(),
-                        _item(Icons.location_on_outlined, "Addresses"),
+                        _item(Icons.location_on_outlined, "Addresses", () {}),
                         _divider(),
-                        _item(Icons.credit_card, "Payment Methods"),
+                        _item(Icons.credit_card, "Payment Methods", () {}),
                       ],
                     ),
                   ),
@@ -251,9 +259,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: Column(
                       children: [
-                        _item(Icons.notifications_none, "Notification"),
+                        _item(Icons.notifications_none, "Notification", () {}),
                         _divider(),
-                        _item(Icons.settings, "Setting"),
+                        _item(Icons.settings, "Setting", () {}),
                       ],
                     ),
                   ),
@@ -273,7 +281,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       border: Border.all(color: Color.fromARGB(40, 0, 0, 0)),
                       borderRadius: BorderRadius.circular(10.r),
                     ),
-                    child: _item(Icons.help_outline, "Help & Support"),
+                    child: _item(Icons.help_outline, "Help & Support", () {}),
                   ),
                   SizedBox(height: 24.h),
                   ElevatedButton(
@@ -316,7 +324,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _item(IconData icon, String title) {
+  Widget _item(IconData icon, String title, VoidCallback callBack) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon),
@@ -333,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
         size: 25.sp,
         color: Color(0xFF181725),
       ),
-      onTap: () {},
+      onTap: callBack,
     );
   }
 

@@ -221,7 +221,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   Widget _addressCard() {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
@@ -230,8 +230,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       child: Row(
         children: [
           Container(
-            width: 35.w,
-            height: 35.h,
+            width: 40.w,
+            height: 40.h,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Color.fromARGB(51, 22, 163, 74),
