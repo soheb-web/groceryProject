@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery/pages/PickAddressPage.dart';
 import 'package:grocery/pages/trackingPage.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -36,7 +37,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
             _sectionHeader(
               "Delivery Address",
               action: "Change",
-              onActionTap: () {},
+              onActionTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PickAddressPage()),
+                );
+              },
             ),
             SizedBox(height: 16.h.h),
             _addressCard(),

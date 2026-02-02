@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery/pages/PickAddressPage.dart';
 import 'package:grocery/pages/editProfilePage.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -235,7 +236,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           );
                         }),
                         _divider(),
-                        _item(Icons.location_on_outlined, "Addresses", () {}),
+                        _item(Icons.location_on_outlined, "Addresses", () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PickAddressPage(),
+                            ),
+                          );
+                        }),
                         _divider(),
                         _item(Icons.credit_card, "Payment Methods", () {}),
                       ],

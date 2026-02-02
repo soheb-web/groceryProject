@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery/pages/PickAddressPage.dart';
 import 'package:grocery/pages/cartPage.dart';
 import 'package:grocery/pages/favouritePage.dart';
 import 'package:grocery/pages/productCategoryPage.dart';
@@ -32,38 +33,34 @@ class _HomeBottomState extends State<HomeBottom> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      //   canPop: false, // IMPORTANT
+      canPop: false, // IMPORTANT
       onPopInvoked: (didPop) {
-        // if (didPop) return;
-
-        // // Agar bottom tab 0 nahi hai to pehle home pe lao
-        // if (bottomIndex != 0) {
-        //   setState(() {
-        //     bottomIndex = 0;
-        //   });
-        //   return;
-        // }
-
-        // final now = DateTime.now();
-        // final backButtonHasNotBeenPressedRecently =
-        //     lastPressedAt == null ||
-        //     now.difference(lastPressedAt!) > const Duration(seconds: 2);
-
-        // if (backButtonHasNotBeenPressedRecently) {
-        //   lastPressedAt = now;
-        //   Fluttertoast.showToast(
-        //     msg: "Press back again to exit",
-        //     toastLength: Toast.LENGTH_SHORT,
-        //     gravity: ToastGravity.BOTTOM,
-        //     backgroundColor: Colors.black87,
-        //     textColor: Colors.white,
-        //     fontSize: 14,
-        //   );
-        //   return;
-        // }
-
-        // // Exit app
-        // SystemNavigator.pop();
+        if (didPop) return;
+        // Agar bottom tab 0 nahi hai to pehle home pe lao
+        if (bottomIndex != 0) {
+          setState(() {
+            bottomIndex = 0;
+          });
+          return;
+        }
+        final now = DateTime.now();
+        final backButtonHasNotBeenPressedRecently =
+            lastPressedAt == null ||
+            now.difference(lastPressedAt!) > const Duration(seconds: 2);
+        if (backButtonHasNotBeenPressedRecently) {
+          lastPressedAt = now;
+          Fluttertoast.showToast(
+            msg: "Press back again to exit",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black87,
+            textColor: Colors.white,
+            fontSize: 14,
+          );
+          return;
+        }
+        // Exit app
+        SystemNavigator.pop();
       },
       child: Scaffold(
         backgroundColor: Color(0xFFFFFFFF),
@@ -182,51 +179,59 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.only(top: 13.h),
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(
-                left: 16.w,
-                right: 16.w,
-                top: 11.h,
-                bottom: 11.h,
-              ),
-              decoration: BoxDecoration(
-                color: Color(0xFFF5F5F5),
-                border: Border.all(color: Color(0xFF000000), width: 0.53),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.location_on_outlined, color: Color(0xFF16A34A)),
-                  SizedBox(width: 8.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Deliver to",
-                        style: GoogleFonts.inter(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF737373),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PickAddressPage()),
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.only(top: 13.h),
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(
+                  left: 16.w,
+                  right: 16.w,
+                  top: 11.h,
+                  bottom: 11.h,
+                ),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF5F5F5),
+                  border: Border.all(color: Color(0xFF000000), width: 0.53),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.location_on_outlined, color: Color(0xFF16A34A)),
+                    SizedBox(width: 8.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Deliver to",
+                          style: GoogleFonts.inter(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF737373),
+                          ),
                         ),
-                      ),
-                      Text(
-                        "123 Main St, Downtown",
-                        style: GoogleFonts.inter(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF0A0A0A),
+                        Text(
+                          "123 Main St, Downtown",
+                          style: GoogleFonts.inter(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF0A0A0A),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Color(0xFF737373),
-                    size: 15.sp,
-                  ),
-                ],
+                      ],
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color(0xFF737373),
+                      size: 15.sp,
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 16.h),
@@ -397,26 +402,46 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            StoreCard(
-              image:
-                  "https://images.unsplash.com/photo-1506806732259-39c2d0268443",
-              rating: "4.9",
-              title: "Organic Haven",
-              subtitle: "Organic",
-              time: "25-35 min",
-              price: "\$3.49",
-              distance: "2.5 km",
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductCategoryPage(),
+                  ),
+                );
+              },
+              child: StoreCard(
+                image:
+                    "https://images.unsplash.com/photo-1506806732259-39c2d0268443",
+                rating: "4.9",
+                title: "Organic Haven",
+                subtitle: "Organic",
+                time: "25-35 min",
+                price: "\$3.49",
+                distance: "2.5 km",
+              ),
             ),
 
-            StoreCard(
-              image:
-                  "https://images.unsplash.com/photo-1604719312566-8912e9227c6a",
-              rating: "4.6",
-              title: "SuperMart Express",
-              subtitle: "Supermarket",
-              time: "15-25 min",
-              price: "\$1.99",
-              distance: "0.8 km",
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductCategoryPage(),
+                  ),
+                );
+              },
+              child: StoreCard(
+                image:
+                    "https://images.unsplash.com/photo-1604719312566-8912e9227c6a",
+                rating: "4.6",
+                title: "SuperMart Express",
+                subtitle: "Supermarket",
+                time: "15-25 min",
+                price: "\$1.99",
+                distance: "0.8 km",
+              ),
             ),
             SizedBox(height: 16.h),
 

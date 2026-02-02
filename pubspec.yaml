@@ -39,39 +39,26 @@ dependencies:
   intl_phone_field: ^3.2.0
   otp_pin_field: ^1.4.1
   flutter_svg: ^2.2.0
-  flutter_dash: ^1.0.0
-  carousel_slider: ^5.1.1
-  dotted_line: ^3.2.3
-  fluttertoast: ^8.2.12
   permission_handler: ^12.0.1
   image_picker: ^1.2.1
-  dotted_border: ^3.1.0
-  pretty_dio_logger: ^1.4.0
-  riverpod: ^2.6.1
-  flutter_riverpod: ^2.6.1
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  marquee: ^2.3.0
-  dio: ^5.9.0
-  retrofit: ^4.9.2
-  json_annotation: ^4.9.0
-  logger: ^2.6.2
   shimmer: ^3.0.0
   smooth_page_indicator: ^2.0.1
   intl: ^0.20.2
   photo_view: ^0.15.0
   share_plus: ^12.0.1
-  url_launcher: ^6.3.2
-  cached_network_image: ^3.4.1
+  fluttertoast: ^9.0.0
+  dio: ^5.9.1
+  pretty_dio_logger: ^1.4.0
+  retrofit: ^4.9.2
+  logger: ^2.6.2
+  json_annotation: ^4.10.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  riverpod: ^2.6.1
+  flutter_riverpod: ^2.6.1
+  path_provider: ^2.1.5
 
 
-
-  # dio: ^5.4.0
-  # retrofit: ^4.1.0  
-  # json_annotation: ^4.9.0
-  # retrofit_generator: ^8.1.0
-  # build_runner: ^2.4.12
-  # json_serializable: ^6.8.0 
 
 
 dev_dependencies:
@@ -84,9 +71,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   retrofit_generator: ^10.2.1
-  build_runner: ^2.10.4
-  json_serializable: ^6.11.3
-  
+  build_runner: ^2.10.5
+  json_serializable: ^6.12.0
   
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

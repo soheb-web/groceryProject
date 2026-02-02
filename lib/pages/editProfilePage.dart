@@ -67,25 +67,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
               prefixIcon: Icons.location_city_outlined,
               keyboardType: TextInputType.text,
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: _customField(
-                    label: "State",
-                    hint: "State",
-                    prefixIcon: Icons.location_on_outlined,
-                    keyboardType: TextInputType.text,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 28.w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _customField(
+                      label: "State",
+                      hint: "State",
+                      prefixIcon: Icons.location_on_outlined,
+                      keyboardType: TextInputType.text,
+                      horizontalPadding: 0,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: _customField(
-                    label: "Zip Code",
-                    hint: "Zip code",
-                    prefixIcon: Icons.pin_drop_outlined,
-                    keyboardType: TextInputType.number,
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: _customField(
+                      label: "Zip Code",
+                      hint: "Zip code",
+                      prefixIcon: Icons.pin_drop_outlined,
+                      keyboardType: TextInputType.number,
+                      horizontalPadding: 0,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             SizedBox(height: 40.h),
             // --- Save Button ---
@@ -124,9 +130,14 @@ Widget _customField({
   required IconData prefixIcon,
   required String label,
   TextInputType? keyboardType,
+  double? horizontalPadding,
 }) {
   return Padding(
-    padding: EdgeInsets.only(left: 28.w, right: 28.w, top: 16.h),
+    padding: EdgeInsets.only(
+      left: horizontalPadding ?? 28.w,
+      right: horizontalPadding ?? 28.w,
+      top: 16.h,
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -141,9 +152,10 @@ Widget _customField({
         SizedBox(height: 10.h),
         TextFormField(
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 16.h,
-              horizontal: 14.w,
+            contentPadding: EdgeInsets.only(
+              top: 16.h,
+              bottom: 16.h,
+              right: 14.w,
             ),
             hintText: hint,
             hintStyle: GoogleFonts.inter(

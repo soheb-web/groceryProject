@@ -39,7 +39,7 @@
     },
     {
       "name": "build",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/build-4.0.3",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/build-4.0.4",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -57,7 +57,7 @@
     },
     {
       "name": "build_runner",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/build_runner-2.10.4",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/build_runner-2.10.5",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -69,33 +69,9 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/built_value-8.12.1",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/built_value-8.12.3",
       "packageUri": "lib/",
       "languageVersion": "3.0"
-    },
-    {
-      "name": "cached_network_image",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image-3.4.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "cached_network_image_platform_interface",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_platform_interface-4.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "cached_network_image_web",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_web-1.3.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "carousel_slider",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/carousel_slider-5.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
     },
     {
       "name": "characters",
@@ -123,7 +99,7 @@
     },
     {
       "name": "code_builder",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/code_builder-4.11.0",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/code_builder-4.11.1",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -171,7 +147,7 @@
     },
     {
       "name": "dio",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.9.0",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -180,24 +156,6 @@
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/dio_web_adapter-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.3"
-    },
-    {
-      "name": "dotted_border",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/dotted_border-3.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.7"
-    },
-    {
-      "name": "dotted_line",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/dotted_line-3.2.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "fading_edge_scrollview",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/fading_edge_scrollview-4.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
     },
     {
       "name": "fake_async",
@@ -254,18 +212,6 @@
       "languageVersion": "3.8"
     },
     {
-      "name": "flutter_cache_manager",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_cache_manager-3.4.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "flutter_dash",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_dash-1.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.33",
       "packageUri": "lib/",
@@ -303,7 +249,7 @@
     },
     {
       "name": "fluttertoast",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-8.2.14",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-9.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -441,13 +387,19 @@
     },
     {
       "name": "json_annotation",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/json_annotation-4.9.0",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/json_annotation-4.10.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "json_schema",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/json_schema-5.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "json_serializable",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/json_serializable-6.11.3",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/json_serializable-6.12.0",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
@@ -488,12 +440,6 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "marquee",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/marquee-2.3.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.5"
-    },
-    {
       "name": "matcher",
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.17",
       "packageUri": "lib/",
@@ -516,12 +462,6 @@
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/mime-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.2"
-    },
-    {
-      "name": "octo_image",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/octo_image-2.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
     },
     {
       "name": "otp_pin_field",
@@ -674,6 +614,12 @@
       "languageVersion": "3.6"
     },
     {
+      "name": "quiver",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/quiver-3.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "retrofit",
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/retrofit-4.9.2",
       "packageUri": "lib/",
@@ -686,16 +632,16 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "rfc_6901",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/rfc_6901-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "riverpod",
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/riverpod-2.6.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
-    },
-    {
-      "name": "rxdart",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/rxdart-0.28.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
     },
     {
       "name": "share_plus",
@@ -741,13 +687,13 @@
     },
     {
       "name": "source_gen",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/source_gen-4.1.1",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/source_gen-4.2.0",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
     {
       "name": "source_helper",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/source_helper-1.3.9",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/source_helper-1.3.10",
       "packageUri": "lib/",
       "languageVersion": "3.9"
     },
@@ -756,36 +702,6 @@
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.1",
       "packageUri": "lib/",
       "languageVersion": "3.1"
-    },
-    {
-      "name": "sqflite",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.4.2",
-      "packageUri": "lib/",
-      "languageVersion": "3.7"
-    },
-    {
-      "name": "sqflite_android",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_android-2.4.2+2",
-      "packageUri": "lib/",
-      "languageVersion": "3.9"
-    },
-    {
-      "name": "sqflite_common",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.5.6",
-      "packageUri": "lib/",
-      "languageVersion": "3.8"
-    },
-    {
-      "name": "sqflite_darwin",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_darwin-2.4.2",
-      "packageUri": "lib/",
-      "languageVersion": "3.7"
-    },
-    {
-      "name": "sqflite_platform_interface",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_platform_interface-2.4.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.5"
     },
     {
       "name": "stack_trace",
@@ -818,12 +734,6 @@
       "languageVersion": "3.1"
     },
     {
-      "name": "synchronized",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.4.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.8"
-    },
-    {
       "name": "term_glyph",
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.2",
       "packageUri": "lib/",
@@ -854,34 +764,16 @@
       "languageVersion": "3.6"
     },
     {
-      "name": "url_launcher",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.2",
+      "name": "uri",
+      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/uri-1.0.0",
       "packageUri": "lib/",
-      "languageVersion": "3.6"
-    },
-    {
-      "name": "url_launcher_android",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.3.28",
-      "packageUri": "lib/",
-      "languageVersion": "3.9"
-    },
-    {
-      "name": "url_launcher_ios",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.6",
-      "packageUri": "lib/",
-      "languageVersion": "3.9"
+      "languageVersion": "2.12"
     },
     {
       "name": "url_launcher_linux",
       "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.2",
       "packageUri": "lib/",
       "languageVersion": "3.8"
-    },
-    {
-      "name": "url_launcher_macos",
-      "rootUri": "file:///C:/Users/Globally-04/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.5",
-      "packageUri": "lib/",
-      "languageVersion": "3.9"
     },
     {
       "name": "url_launcher_platform_interface",

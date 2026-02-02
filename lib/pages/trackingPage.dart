@@ -877,7 +877,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                 child: TextField(
                   controller: messageController,
                   decoration: InputDecoration(
-                    hintText: "Please call when you arrive",
+                    hintText: "Enter Message",
                     filled: true,
                     fillColor: Color(0xFFF5F5F5),
                     contentPadding: EdgeInsets.symmetric(
