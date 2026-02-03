@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,29 +50,6 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Skip button
-            Positioned(
-              top: 16.h,
-              right: 24.w,
-              child: GestureDetector(
-                onTap: () {
-                  // TODO: Skip to login or home
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/login',
-                  ); // या तुम्हारा route
-                },
-                child: Text(
-                  "Skip",
-                  style: GoogleFonts.inter(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF16A34A),
-                  ),
-                ),
-              ),
-            ),
-
             PageView.builder(
               controller: _pageController,
               itemCount: _pages.length,
@@ -221,6 +200,29 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
                   ),
                 );
               },
+            ),
+
+            // Skip button
+            Positioned(
+              top: 16.h,
+              right: 24.w,
+              child: GestureDetector(
+                onTap: () {
+                  log("tap");
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
+                child: Text(
+                  "Skip",
+                  style: GoogleFonts.inter(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF16A34A),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

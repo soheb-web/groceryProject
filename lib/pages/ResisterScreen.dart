@@ -31,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 80.h,
                 width: 80.h,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.sp),
+                  shape: BoxShape.circle,
                   border: Border.all(color: const Color(0xFFF5F5F5)),
                 ),
                 child: Image.asset("assets/png/loginLogo.png"),
@@ -186,9 +186,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: ElevatedButton(
                   onPressed: _agreeToTerms
                       ? () {
-                          // TODO: Sign up logic (validation + API)
+                          ////////////////////
                         }
-                      : null, // disable अगर checkbox नहीं ticked
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF16A34A),
                     shape: RoundedRectangleBorder(
