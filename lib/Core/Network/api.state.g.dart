@@ -12,7 +12,7 @@ part of 'api.state.dart';
 
 class _APIStateNetwork implements APIStateNetwork {
   _APIStateNetwork(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://4vx2jv62-5000.inc1.devtunnels.ms/api/';
+    baseUrl ??= 'http://192.168.1.43:5000/api/';
   }
 
   final Dio _dio;
@@ -32,7 +32,7 @@ class _APIStateNetwork implements APIStateNetwork {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/auth/register',
+            'auth/register',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -50,26 +50,31 @@ class _APIStateNetwork implements APIStateNetwork {
   }
 
   @override
-  Future<HttpResponse<dynamic>> loginUser(LoginBodyModel body) async {
+  Future<LoginResModel> loginUser(LoginBodyModel body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<HttpResponse<dynamic>>(
+    final _options = _setStreamType<LoginResModel>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/auth/login',
+            'auth/login',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late LoginResModel _value;
+    try {
+      _value = LoginResModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

@@ -17,7 +17,6 @@ bool _agreeToTerms = false;
 class _SignUpScreenState extends State<SignUpScreen> {
   late final RegisterController _controller;
 
-  // नया variable — errors button press होने पर ही दिखाने के लिए
   bool _showValidationErrors = false;
 
   @override
@@ -79,10 +78,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 40.h),
 
                 // Full Name
-                _buildLabel("Full Name"),
+                _buildLabel("First Name"),
                 _buildTextField(
                   controller: _controller.fullNameController,
-                  hint: "Enter your full name",
+                  hint: "Enter your first name",
                   prefixIcon: Icons.person_outline,
                   errorText: _showValidationErrors
                       ? _controller.validateFullName()
@@ -117,6 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 // Phone Number
                 _buildLabel("Phone Number"),
                 _buildTextField(
+                  maxLength: 10,
                   controller: _controller.phoneController,
                   hint: "Enter your phone number",
                   prefixIcon: Icons.phone_outlined,
@@ -125,7 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ? _controller.validatePhone()
                       : null,
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
 
                 // Password
                 _buildLabel("Create Password"),
@@ -294,6 +294,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     required TextEditingController controller,
     required String hint,
     required IconData prefixIcon,
+    int? maxLength,
     String? errorText,
     bool obscureText = false,
     Widget? suffixIcon,
@@ -302,6 +303,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return TextField(
       controller: controller,
       obscureText: obscureText,
+      maxLength: maxLength,
       keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hint,

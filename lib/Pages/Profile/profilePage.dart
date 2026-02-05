@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery/Pages/Address/PickAddressPage.dart';
+import 'package:grocery/Pages/Login/loginScreen.dart';
+import 'package:hive/hive.dart';
 
 import 'editProfilePage.dart';
 
@@ -15,6 +18,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePagestate extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
+    var box = Hive.box("userdata");
+
     return Scaffold(
       backgroundColor: Color(0xFFFFFFFF),
       body: SingleChildScrollView(
@@ -77,7 +82,8 @@ class _ProfilePagestate extends State<ProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Sarah johnson",
+                                  // "Sarah johnson",
+                                  box.get("name").toString(),
                                   style: GoogleFonts.inter(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
@@ -85,7 +91,8 @@ class _ProfilePagestate extends State<ProfilePage> {
                                   ),
                                 ),
                                 Text(
-                                  "Sarah.j@email.com",
+                                  // "Sarah.j@email.com",
+                                  box.get("email").toString(),
                                   style: GoogleFonts.inter(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
@@ -303,7 +310,9 @@ class _ProfilePagestate extends State<ProfilePage> {
                         side: BorderSide(color: Color(0xFFD02600)),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      showLogoutDialog(context);
+                    },
                     child: Text(
                       "Log Out",
                       style: GoogleFonts.inter(
@@ -357,5 +366,129 @@ class _ProfilePagestate extends State<ProfilePage> {
   // 🔹 Divider
   Widget _divider() {
     return Divider(height: 1.h);
+  }
+
+  void showLogoutDialog(BuildContext context) {
+    var box = Hive.box("userdata");
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Styled Icon
+                Container(
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF169545).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.logout_rounded,
+                    color: Color(0xFF169545),
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Text Content
+                const Text(
+                  "Oh no! Leaving?",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff2D2D2D),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  "Are you sure you want to log out? We'll miss having you around.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 15, color: Colors.grey),
+                ),
+                const SizedBox(height: 32),
+
+                // Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          box.clear();
+                          Navigator.pop(context);
+                          Fluttertoast.showToast(
+                            msg: "LogOut Successfull",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: const Color(
+                              0xFF169545,
+                            ), // Aapka Green Color
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(),
+                            ),
+                            (route) => false,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF169545),
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          "Logout",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

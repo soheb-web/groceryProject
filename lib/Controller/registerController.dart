@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../Core/Network/api.state.dart';
 import '../Core/Utils/preety.dio.dart';
@@ -5,11 +6,11 @@ import '../Model/Body/registerBodyModel.dart';
 
 class RegisterController extends ChangeNotifier {
   // ─── Form Controllers ───────────────────────────────────────────────────────
-  final fullNameController    = TextEditingController();
-  final lastNameController    = TextEditingController();
-  final emailController       = TextEditingController();
-  final phoneController       = TextEditingController();
-  final passwordController    = TextEditingController();
+  final fullNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
   // ─── State ──────────────────────────────────────────────────────────────────
@@ -20,7 +21,8 @@ class RegisterController extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   // ─── Getters for clean validation ───────────────────────────────────────────
-  bool get passwordsMatch => passwordController.text == confirmPasswordController.text;
+  bool get passwordsMatch =>
+      passwordController.text == confirmPasswordController.text;
 
   String? validateFullName() {
     final name = fullNameController.text.trim();
@@ -30,9 +32,11 @@ class RegisterController extends ChangeNotifier {
   }
 
   String? validateLastName() {
-    final name = lastNameController.text.trim();           // ← FIXED: was using fullNameController
+    final name = lastNameController.text
+        .trim(); // ← FIXED: was using fullNameController
     if (name.isEmpty) return "Last name is required";
-    if (name.length < 2) return "Last name too short";     // slightly more lenient than full name
+    if (name.length < 2)
+      return "Last name too short"; // slightly more lenient than full name
     return null;
   }
 
@@ -56,12 +60,13 @@ class RegisterController extends ChangeNotifier {
   String? validatePassword() {
     final pass = passwordController.text;
     if (pass.isEmpty) return "Password is required";
-    if (pass.length < 6) return "Password must be at least 6 characters";
+    if (pass.length < 8) return "Password must be at least 6 characters";
     return null;
   }
 
   String? validateConfirmPassword() {
-    if (confirmPasswordController.text.isEmpty) return "Please confirm your password";
+    if (confirmPasswordController.text.isEmpty)
+      return "Please confirm your password";
     if (!passwordsMatch) return "Passwords do not match";
     return null;
   }
@@ -85,7 +90,7 @@ class RegisterController extends ChangeNotifier {
     final fullName = fullNameController.text.trim();
     final nameParts = fullName.split(RegExp(r'\s+'));
     final firstName = nameParts.isNotEmpty ? nameParts.first : "";
-    final lastName = lastNameController.text.trim();   // using separate controller
+    final lastName = lastNameController.text.trim();
 
     try {
       final service = APIStateNetwork(createDio());
@@ -104,15 +109,34 @@ class RegisterController extends ChangeNotifier {
       notifyListeners();
       return true; // success
     } catch (e) {
-      // Improved error message extraction
-      String msg = e.toString();
-      if (msg.startsWith("Exception: ")) {
-        msg = msg.substring(11);
-      }
-      _errorMessage = msg.isNotEmpty ? msg : "Something went wrong. Please try again.";
+      // // Improved error message extraction
+      // String msg = e.toString();
+      // if (msg.startsWith("Exception: ")) {
+      //   msg = msg.substring(11);
+      // }
+      // _errorMessage = msg.isNotEmpty
+      //     ? msg
+      //     : "Something went wrong. Please try again.";
+      // _isLoading = false;
+      // notifyListeners();
+      // return false; // failed
+
       _isLoading = false;
+
+      if (e is DioException) {
+        // Backend se aane wala message extract karna (success: false wala part)
+        final responseData = e.response?.data;
+        if (responseData != null && responseData is Map) {
+          _errorMessage = responseData['message'] ?? "Registration failed";
+        } else {
+          _errorMessage = "Network error occurred";
+        }
+      } else {
+        _errorMessage = e.toString().replaceFirst("Exception: ", "");
+      }
+
       notifyListeners();
-      return false; // failed
+      return false;
     }
   }
 
