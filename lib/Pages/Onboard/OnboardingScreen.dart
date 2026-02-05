@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'Onboarding2.dart';
-import 'loginScreen.dart'; // फाइल का नाम सही होना चाहिए (case-sensitive)
+import '../Login/loginScreen.dart'; // फाइल का नाम सही होना चाहिए (case-sensitive)
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});

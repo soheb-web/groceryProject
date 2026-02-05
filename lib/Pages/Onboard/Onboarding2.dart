@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'loginScreen.dart';
+import '../Login/loginScreen.dart';
 
 class OnboardingScreenMain extends StatefulWidget {
   const OnboardingScreenMain({super.key});
@@ -17,7 +17,7 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<Map<String, dynamic>> _pages = [
+  final List<Map<String, dynamic>> _Pages = [
     {
       'image': "assets/png/ShopFreshGroceries.png",
       'title': "Shop Fresh Groceries",
@@ -52,12 +52,12 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
           children: [
             PageView.builder(
               controller: _pageController,
-              itemCount: _pages.length,
+              itemCount: _Pages.length,
               onPageChanged: (index) {
                 setState(() => _currentPage = index);
               },
               itemBuilder: (context, index) {
-                final page = _pages[index];
+                final page = _Pages[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 28.w),
                   child: Column(
@@ -136,7 +136,7 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
-                          _pages.length,
+                          _Pages.length,
                           (i) => Padding(
                             padding: EdgeInsets.symmetric(horizontal: 6.w),
                             child: Container(
@@ -159,7 +159,7 @@ class _OnboardingScreenMainState extends State<OnboardingScreenMain> {
                         height: 58.h,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_currentPage < _pages.length - 1) {
+                            if (_currentPage < _Pages.length - 1) {
                               _pageController.nextPage(
                                 duration: const Duration(milliseconds: 400),
                                 curve: Curves.easeInOut,

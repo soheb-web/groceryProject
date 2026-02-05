@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import '../../pages/loginScreen.dart';
+import '../../Pages/Login/loginScreen.dart';
 import 'globalroute.key.dart';
 
 Dio createDio() {
+
   final dio = Dio();
   dio.interceptors.add(
     PrettyDioLogger(
@@ -52,26 +53,7 @@ Dio createDio() {
         handler.next(response);
       },
 
-      // onError: (error, handler) async {
-      //   if (error.response!.statusCode == 401) {
-      //     final box = Hive.box("userdata");
-      //     await box.clear();
-      //     Fluttertoast.showToast(
-      //       msg: "Token expire please login again.",
-      //       backgroundColor: Colors.red,
-      //       toastLength: Toast.LENGTH_LONG,
-      //     );
-      //     navigatorKey.currentState?.pushAndRemoveUntil(
-      //       CupertinoPageRoute(builder: (_) => LoginPage()),
-      //       (route) => false,
-      //     );
-      //   } else {
-      //     log("Global context is null, cannot show SnackBar or navigate");
-      //   }
-      //   return handler.next(error);
-      // },
       onError: (DioException error, handler) async {
-        // 🔹 Case 1: Server / Internet issue
         if (error.type == DioExceptionType.connectionError ||
             error.type == DioExceptionType.connectionTimeout ||
             error.type == DioExceptionType.receiveTimeout) {
@@ -82,7 +64,7 @@ Dio createDio() {
           );
           return handler.next(error);
         }
-        // 🔹 Case 2: Response aaya hai (safe check)
+
         if (error.response != null) {
           final statusCode = error.response?.statusCode;
           if (statusCode == 401) {
@@ -99,12 +81,13 @@ Dio createDio() {
             );
           }
         } else {
-          // 🔹 Unknown error
           log("❌ Dio error without response: ${error.message}");
         }
+
         handler.next(error);
       },
     ),
   );
   return dio;
+
 }
