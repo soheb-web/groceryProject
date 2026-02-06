@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocery/Controller/fetchProfileController.dart';
 import 'package:grocery/Controller/loginController.dart';
-import 'package:grocery/Controller/updateProfileController.dart';
 import 'package:grocery/Pages/Address/PickAddressPage.dart';
 import 'package:grocery/Pages/Login/loginScreen.dart';
 import 'package:grocery/Pages/Profile/helpOrSupportPage.dart';
