@@ -43,6 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 // Shopping cart icon with border (same as login)
                 Container(
+                  margin: EdgeInsets.only(top: 25.h),
                   height: 80.h,
                   width: 80.h,
                   decoration: BoxDecoration(
@@ -52,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: Image.asset("assets/png/loginLogo.png"),
                 ),
 
-                SizedBox(height: 24.h),
+                SizedBox(height: 16.h),
 
                 // Create Account title
                 Text(
@@ -64,8 +65,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
 
-                SizedBox(height: 8.h),
-
                 Text(
                   "Sign up to get started",
                   style: GoogleFonts.inter(
@@ -75,7 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
 
-                SizedBox(height: 40.h),
+                SizedBox(height: 20.h),
 
                 // Full Name
                 _buildLabel("First Name"),

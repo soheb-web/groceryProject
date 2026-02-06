@@ -67,13 +67,14 @@ class LoginNotifier extends StateNotifier<LoginState> {
 
       if (response.success == true) {
         var box = Hive.box("userdata");
+        await box.clear();
         final token = response.data?.tokens?.access;
-        await box.put("token", response.data!.tokens!.access.toString());
-        await box.put("firstName", response.data!.user!.firstName.toString());
-        await box.put("lastName", response.data!.user!.lastName.toString());
-        await box.put("email", response.data!.user!.email.toString());
-        await box.put("name", response.data!.user!.name.toString());
-        await box.put("id", response.data!.user!.id.toString());
+        await box.put("token", response.data!.tokens!.access);
+        await box.put("firstName", response.data!.user!.firstName);
+        await box.put("lastName", response.data!.user!.lastName);
+        await box.put("email", response.data!.user!.email);
+        await box.put("name", response.data!.user!.name);
+        await box.put("id", response.data!.user!.id);
         state = state.copyWith(isLoading: false, token: token, error: null);
         Fluttertoast.showToast(
           msg: response.message ?? "Login Complete",
