@@ -85,8 +85,8 @@ class _HomeBottomState extends State<HomeBottom> {
             SizedBox(width: 5.w),
           ],
         ),
-        // body: Pages[bottomIndex],
-        body: IndexedStack(index: bottomIndex, children: Pages),
+        body: Pages[bottomIndex],
+        // body: IndexedStack(index: bottomIndex, children: Pages),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Colors.white,

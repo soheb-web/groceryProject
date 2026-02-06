@@ -81,7 +81,7 @@ class LoginNotifier extends StateNotifier<LoginState> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
-          backgroundColor: const Color(0xFF169545), // Aapka Green Color
+          backgroundColor: const Color(0xFF169545), 
           textColor: Colors.white,
           fontSize: 16.0,
         );
