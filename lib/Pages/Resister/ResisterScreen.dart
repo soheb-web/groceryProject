@@ -17,7 +17,6 @@ bool _agreeToTerms = false;
 class _SignUpScreenState extends State<SignUpScreen> {
   late final RegisterController _controller;
 
-  // नया variable — errors button press होने पर ही दिखाने के लिए
   bool _showValidationErrors = false;
 
   @override
@@ -44,6 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 // Shopping cart icon with border (same as login)
                 Container(
+                  margin: EdgeInsets.only(top: 25.h),
                   height: 80.h,
                   width: 80.h,
                   decoration: BoxDecoration(
@@ -53,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: Image.asset("assets/png/loginLogo.png"),
                 ),
 
-                SizedBox(height: 24.h),
+                SizedBox(height: 16.h),
 
                 // Create Account title
                 Text(
@@ -65,8 +65,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
 
-                SizedBox(height: 8.h),
-
                 Text(
                   "Sign up to get started",
                   style: GoogleFonts.inter(
@@ -76,15 +74,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
 
-                SizedBox(height: 40.h),
+                SizedBox(height: 20.h),
 
                 // Full Name
-                _buildLabel("Full Name"),
+                _buildLabel("First Name"),
                 _buildTextField(
                   controller: _controller.fullNameController,
-                  hint: "Enter your full name",
+                  hint: "Enter your first name",
                   prefixIcon: Icons.person_outline,
-                  errorText: _showValidationErrors ? _controller.validateFullName() : null,
+                  errorText: _showValidationErrors
+                      ? _controller.validateFullName()
+                      : null,
                 ),
                 SizedBox(height: 20.h),
 
@@ -93,7 +93,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _controller.lastNameController,
                   hint: "Enter your Last name",
                   prefixIcon: Icons.person_outline,
-                  errorText: _showValidationErrors ? _controller.validateLastName() : null,
+                  errorText: _showValidationErrors
+                      ? _controller.validateLastName()
+                      : null,
                 ),
                 SizedBox(height: 20.h),
 
@@ -104,20 +106,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   hint: "Enter your email",
                   prefixIcon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
-                  errorText: _showValidationErrors ? _controller.validateEmail() : null,
+                  errorText: _showValidationErrors
+                      ? _controller.validateEmail()
+                      : null,
                 ),
                 SizedBox(height: 20.h),
 
                 // Phone Number
                 _buildLabel("Phone Number"),
                 _buildTextField(
+                  maxLength: 10,
                   controller: _controller.phoneController,
                   hint: "Enter your phone number",
                   prefixIcon: Icons.phone_outlined,
                   keyboardType: TextInputType.phone,
-                  errorText: _showValidationErrors ? _controller.validatePhone() : null,
+                  errorText: _showValidationErrors
+                      ? _controller.validatePhone()
+                      : null,
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
 
                 // Password
                 _buildLabel("Create Password"),
@@ -128,12 +135,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   obscureText: _obscurePassword,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: Colors.grey.shade600,
                     ),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
-                  errorText: _showValidationErrors ? _controller.validatePassword() : null,
+                  errorText: _showValidationErrors
+                      ? _controller.validatePassword()
+                      : null,
                 ),
                 SizedBox(height: 20.h),
 
@@ -146,13 +158,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   obscureText: _obscureConfirmPassword,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                      _obscureConfirmPassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: Colors.grey.shade600,
                     ),
-                    onPressed: () =>
-                        setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                    onPressed: () => setState(
+                      () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                    ),
                   ),
-                  errorText: _showValidationErrors ? _controller.validateConfirmPassword() : null,
+                  errorText: _showValidationErrors
+                      ? _controller.validateConfirmPassword()
+                      : null,
                 ),
 
                 SizedBox(height: 16.h),
@@ -213,36 +230,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: _controller.isLoading || !_agreeToTerms
                         ? null
                         : () async {
-                      // Button press होने पर errors दिखाने का flag on करो
-                      setState(() {
-                        _showValidationErrors = true;
-                      });
+                            // Button press होने पर errors दिखाने का flag on करो
+                            setState(() {
+                              _showValidationErrors = true;
+                            });
 
-                      // अगर form valid नहीं है तो API call मत करो
-                      if (!_controller.isFormValid) {
-                        return;
-                      }
+                            // अगर form valid नहीं है तो API call मत करो
+                            if (!_controller.isFormValid) {
+                              return;
+                            }
 
-                      final success = await _controller.register(context);
+                            final success = await _controller.register(context);
 
-                      if (success && context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Account created! Please login"),
-                          ),
-                        );
-                        Navigator.pop(context);
-                      } else if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              _controller.errorMessage ?? "Something went wrong",
-                            ),
-                            backgroundColor: Colors.red.shade700,
-                          ),
-                        );
-                      }
-                    },
+                            if (success && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Account created! Please login",
+                                  ),
+                                ),
+                              );
+                              Navigator.pop(context);
+                            } else if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    _controller.errorMessage ??
+                                        "Something went wrong",
+                                  ),
+                                  backgroundColor: Colors.red.shade700,
+                                ),
+                              );
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF16A34A),
                       shape: RoundedRectangleBorder(
@@ -252,12 +272,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     child: _controller.isLoading
                         ? const SizedBox.square(
-                      dimension: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2.5,
-                      ),
-                    )
+                            dimension: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2.5,
+                            ),
+                          )
                         : const Text("Create Account"),
                   ),
                 ),
@@ -273,6 +293,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     required TextEditingController controller,
     required String hint,
     required IconData prefixIcon,
+    int? maxLength,
     String? errorText,
     bool obscureText = false,
     Widget? suffixIcon,
@@ -281,6 +302,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return TextField(
       controller: controller,
       obscureText: obscureText,
+      maxLength: maxLength,
       keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hint,

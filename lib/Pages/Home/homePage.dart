@@ -1,39 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grocery/Controller/getCategoryController.dart';
 import 'package:grocery/Pages/Address/PickAddressPage.dart';
 import 'package:grocery/Pages/Favourite/favouritePage.dart';
 import 'package:grocery/Pages/Product/productCategoryPage.dart';
 import 'package:grocery/Pages/Search/searchPage.dart';
 
+import '../../Controller/getProductCotroller.dart';
 import '../Cart/cartPage.dart';
 import '../Profile/profilePage.dart';
 
-class HomeBottom extends StatefulWidget {
+class HomeBottom extends ConsumerStatefulWidget {
   const HomeBottom({super.key});
 
   @override
-  State<HomeBottom> createState() => _HomeBottomState();
+  ConsumerState<HomeBottom> createState() => _HomeBottomState();
 }
 
-class _HomeBottomState extends State<HomeBottom> {
+class _HomeBottomState extends ConsumerState<HomeBottom> {
   int bottomIndex = 0;
 
   List<Widget> Pages = [HomePage(), CartPage(), FavouritePage(), ProfilePage()];
+
   final List<String> appBarTitles = [
     "FreshCart",
     "Cart",
     "Favourite",
     "Profile",
   ];
+
   DateTime? lastPressedAt;
 
   @override
   Widget build(BuildContext context) {
+    final getProduct = ref.watch(getProductController);
     return PopScope(
       canPop: false, // IMPORTANT
       onPopInvoked: (didPop) {
@@ -85,8 +91,7 @@ class _HomeBottomState extends State<HomeBottom> {
             SizedBox(width: 5.w),
           ],
         ),
-        // body: Pages[bottomIndex],
-        body: IndexedStack(index: bottomIndex, children: Pages),
+        body: Pages[bottomIndex],
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -155,32 +160,29 @@ class _HomeBottomState extends State<HomeBottom> {
         ),
       ),
     );
+
   }
 }
 
-class HomePage extends StatefulWidget {
+
+final selectedCategoryProvider = StateProvider<String?>((ref) => null);
+
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePagestate();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productAsync = ref.watch(getProductController);
+    final categoryAsync = ref.watch(getCategoryController);
+    final selectedCategory = ref.watch(selectedCategoryProvider);
 
-class _HomePagestate extends State<HomePage> {
-  List<Map<String, dynamic>> categories = [
-    {"image": "assets/png/all.png", "name": "All"},
-    {"image": "assets/png/fresh.png", "name": "Fressh"},
-    {"image": "assets/png/organic.png", "name": "Organic"},
-    {"image": "assets/png/bakary.png", "name": "Bakery"},
-    {"image": "assets/png/dairy.png", "name": "Dairy"},
-  ];
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFFFFFFFF),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Location bar ── same as before
             InkWell(
               onTap: () {
                 Navigator.push(
@@ -198,12 +200,12 @@ class _HomePagestate extends State<HomePage> {
                   bottom: 11.h,
                 ),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF5F5F5),
-                  border: Border.all(color: Color(0xFF000000), width: 0.53),
+                  color: const Color(0xFFF5F5F5),
+                  border: Border.all(color: const Color(0xFF000000), width: 0.53),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.location_on_outlined, color: Color(0xFF16A34A)),
+                    const Icon(Icons.location_on_outlined, color: Color(0xFF16A34A)),
                     SizedBox(width: 8.w),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +215,7 @@ class _HomePagestate extends State<HomePage> {
                           style: GoogleFonts.inter(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
-                            color: Color(0xFF737373),
+                            color: const Color(0xFF737373),
                           ),
                         ),
                         Text(
@@ -221,13 +223,13 @@ class _HomePagestate extends State<HomePage> {
                           style: GoogleFonts.inter(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF0A0A0A),
+                            color: const Color(0xFF0A0A0A),
                           ),
                         ),
                       ],
                     ),
-                    Spacer(),
-                    Icon(
+                    const Spacer(),
+                     Icon(
                       Icons.arrow_forward_ios,
                       color: Color(0xFF737373),
                       size: 15.sp,
@@ -237,6 +239,8 @@ class _HomePagestate extends State<HomePage> {
               ),
             ),
             SizedBox(height: 16.h),
+
+            // Search bar ── same
             Padding(
               padding: EdgeInsets.only(left: 16.w, right: 16.w),
               child: TextField(
@@ -251,14 +255,14 @@ class _HomePagestate extends State<HomePage> {
                   hintStyle: GoogleFonts.inter(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF737373),
+                    color: const Color(0xFF737373),
                   ),
                   filled: true,
                   contentPadding: EdgeInsets.symmetric(
                     vertical: 12.h,
                     horizontal: 16.w,
                   ),
-                  fillColor: Color(0xFFF5F5F5),
+                  fillColor: const Color(0xFFF5F5F5),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16.r),
                     borderSide: BorderSide.none,
@@ -271,13 +275,15 @@ class _HomePagestate extends State<HomePage> {
               ),
             ),
             SizedBox(height: 16.h),
+
+            // Banner ── same
             Container(
               margin: EdgeInsets.only(left: 16.w, right: 20.w),
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.r),
-                color: Color(0xFFFFA400),
+                color: const Color(0xFFFFA400),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,7 +293,7 @@ class _HomePagestate extends State<HomePage> {
                     style: GoogleFonts.inter(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFFFFFFFF),
+                      color: const Color(0xFFFFFFFF),
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -295,8 +301,8 @@ class _HomePagestate extends State<HomePage> {
                     width: 115.w,
                     height: 32.h,
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(102, 210, 210, 210),
-                      border: Border.all(color: Color(0xFFFFFFFF), width: 1.w),
+                      color: const Color.fromARGB(102, 210, 210, 210),
+                      border: Border.all(color: const Color(0xFFFFFFFF), width: 1.w),
                       borderRadius: BorderRadius.circular(30.r),
                     ),
                     child: Center(
@@ -305,7 +311,7 @@ class _HomePagestate extends State<HomePage> {
                         style: GoogleFonts.inter(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFFFFFFFF),
+                          color: const Color(0xFFFFFFFF),
                         ),
                       ),
                     ),
@@ -314,48 +320,110 @@ class _HomePagestate extends State<HomePage> {
               ),
             ),
             SizedBox(height: 20.h),
+
+            // Categories from API ── design 100% same as your original
             SizedBox(
               height: 90.h,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                itemCount: categories.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(16.r),
-                    onTap: () {},
-                    child: Container(
-                      width: 80.w,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF5F5F5),
-                        borderRadius: BorderRadius.circular(14.r),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            categories[index]['image'].toString(),
-                            width: 30.w,
-                            height: 30.h,
+              child: categoryAsync.when(
+                data: (categoryModel) {
+                  // API categories
+                  final apiCategories = categoryModel.data ?? [];
+
+                  // Always add "All" as the FIRST item
+                  final displayCategories = ['All', ...apiCategories];
+
+                  if (apiCategories.isEmpty && displayCategories.length == 1) {
+                    // Only "All" exists
+                    return const Center(child: Text("No categories"));
+                  }
+
+                  return ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    itemCount: displayCategories.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) {
+                      final categoryName = displayCategories[index];
+
+                      final displayText = (categoryName == 'All') ? 'All' : categoryName;
+
+                      final imagePath = (categoryName == 'All')
+                          ? "assets/png/all.png"
+                          : _getCategoryImage(categoryName);
+
+                      return InkWell(
+
+                        borderRadius: BorderRadius.circular(16.r),
+
+                        onTap: () {
+                          // "All" → clear filter (show all products)
+                          // Other category → filter by that name
+                          // Click same category again → clear filter
+                          final current = ref.read(selectedCategoryProvider);
+
+                          if (categoryName == 'All') {
+                            ref.read(selectedCategoryProvider.notifier).state = null;
+                          }
+                          else {
+                            ref.read(selectedCategoryProvider.notifier).state =
+                            (current == categoryName) ? null : categoryName;
+                          }
+
+                        },
+
+                        child:
+
+                        Container(
+                          // padding: EdgeInsets.all(10.sp),
+                          width: 90.w,
+
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF5F5F5),
+                            borderRadius: BorderRadius.circular(14.r),
                           ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            categories[index]['name'].toString(),
-                            style: GoogleFonts.inter(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF0A0A0A),
-                            ),
+                          // Removed padding from container - we control spacing with SizedBox inside
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,      // Vertically center everything
+                            crossAxisAlignment: CrossAxisAlignment.center,    // Horizontally center image & text
+                            children: [
+                              Image.asset(
+                                imagePath,
+                                width: 30.w,
+                                height: 30.h,
+                                fit: BoxFit.contain,  // Ensures image stays centered inside its box
+                              ),
+
+                              SizedBox(height: 8.h),
+
+                              Text(
+                                displayText,   // "All" or real category name
+                                textAlign: TextAlign.center,   // Extra safety for multi-word text
+                                style: GoogleFonts.inter(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xFF0A0A0A),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+
+                      );
+                    },
                   );
                 },
+                error: (err, stack) => const Center(child: Text("Error loading categories")),
+                loading: () => const Center(
+                  child: SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: CircularProgressIndicator(strokeWidth: 2.5),
+                  ),
+                ),
               ),
             ),
+
+            // Title ── kept exactly "Featured Stores" as in your original
             Padding(
               padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 20.h),
               child: Row(
@@ -366,7 +434,7 @@ class _HomePagestate extends State<HomePage> {
                     style: GoogleFonts.inter(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF0A0A0A),
+                      color: const Color(0xFF0A0A0A),
                     ),
                   ),
                   Text(
@@ -374,7 +442,7 @@ class _HomePagestate extends State<HomePage> {
                     style: GoogleFonts.inter(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
-                      color: Color(0xFF16A34A),
+                      color: const Color(0xFF16A34A),
                     ),
                   ),
                 ],
@@ -382,79 +450,96 @@ class _HomePagestate extends State<HomePage> {
             ),
             SizedBox(height: 16.h),
 
-            /// Store Cards
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductCategoryPage(),
+            // Products ── filtered when category selected
+            productAsync.when(
+              data: (model) {
+                var products = model.data ?? [];
+
+                // Apply category filter (case insensitive)
+                if (selectedCategory != null) {
+                  products = products.where((p) {
+                    return p.category?.toLowerCase() == selectedCategory!.toLowerCase();
+                  }).toList();
+                }
+
+                if (products.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40, horizontal: 16),
+                    child: Center(child: Text("No products available")),
+                  );
+                }
+
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductCategoryPage(),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 12.h),
+                          child: StoreCard(
+                            image: product.image ?? "https://via.placeholder.com/300",
+                            rating: "4.8",
+                            title: product.name ?? "Unknown",
+                            subtitle: product.category ?? "Category",
+                            time: "20-30 min",
+                            price: "₹${product.price?.toStringAsFixed(2) ?? '0.00'}",
+                            distance: "2.1 km",
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 );
               },
-              child: StoreCard(
-                image:
-                    "https://images.unsplash.com/photo-1542838132-92c53300491e",
-                rating: "4.8",
-                title: "Fresh Market",
-                subtitle: "Fresh Produce",
-                time: "20-30 min",
-                price: "\$2.99",
-                distance: "1.2 km",
+              error: (err, stack) => Padding(
+                padding: const EdgeInsets.all(32),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                      const SizedBox(height: 16),
+                      const Text("Failed to load products"),
+                      Text("$err"),
+                      const SizedBox(height: 16),
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.refresh, size: 18),
+                        label: const Text("Retry"),
+                        onPressed: () => ref.invalidate(getProductController),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              loading: () => const Padding(
+                padding: EdgeInsets.all(60),
+                child: Center(child: CircularProgressIndicator()),
               ),
             ),
 
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductCategoryPage(),
-                  ),
-                );
-              },
-              child: StoreCard(
-                image:
-                    "https://images.unsplash.com/photo-1506806732259-39c2d0268443",
-                rating: "4.9",
-                title: "Organic Haven",
-                subtitle: "Organic",
-                time: "25-35 min",
-                price: "\$3.49",
-                distance: "2.5 km",
-              ),
-            ),
-
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductCategoryPage(),
-                  ),
-                );
-              },
-              child: StoreCard(
-                image:
-                    "https://images.unsplash.com/photo-1604719312566-8912e9227c6a",
-                rating: "4.6",
-                title: "SuperMart Express",
-                subtitle: "Supermarket",
-                time: "15-25 min",
-                price: "\$1.99",
-                distance: "0.8 km",
-              ),
-            ),
             SizedBox(height: 16.h),
 
-            /// Offer Card
+            // Offer Card ── same as before
             Container(
               width: double.infinity,
               margin: EdgeInsets.only(left: 16.w, right: 16.w),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [Color(0xFF16A34A), Color(0xFF15803D)],
                 ),
               ),
@@ -464,7 +549,7 @@ class _HomePagestate extends State<HomePage> {
                   Text(
                     "Special Offer",
                     style: GoogleFonts.inter(
-                      color: Color(0xFFFFFFFF),
+                      color: const Color(0xFFFFFFFF),
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
                     ),
@@ -473,7 +558,7 @@ class _HomePagestate extends State<HomePage> {
                   Text(
                     "Get 20% off on your first order!",
                     style: GoogleFonts.inter(
-                      color: Color(0xFFFFFFFF),
+                      color: const Color(0xFFFFFFFF),
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                     ),
@@ -482,7 +567,7 @@ class _HomePagestate extends State<HomePage> {
                   Text(
                     "Use code: FRESH20",
                     style: GoogleFonts.inter(
-                      color: Color(0xFFFFFFFF),
+                      color: const Color(0xFFFFFFFF),
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
                     ),
@@ -502,10 +587,32 @@ class _HomePagestate extends State<HomePage> {
                 ],
               ),
             ),
+
+            SizedBox(height: 40.h),
           ],
         ),
       ),
     );
+  }
+
+  // Map category name to your existing asset images
+  String _getCategoryImage(String categoryName) {
+    final name = categoryName.toLowerCase().trim();
+
+    if (name.contains('all') || name == 'all') return "assets/png/all.png";
+    if (name.contains('fresh') || name.contains('vegetable') || name.contains('sabji')) {
+      return "assets/png/fresh.png";
+    }
+    if (name.contains('organic')) return "assets/png/organic.png";
+    if (name.contains('bakery') || name.contains('bread') || name.contains('cake')) {
+      return "assets/png/bakary.png";
+    }
+    if (name.contains('dairy') || name.contains('milk') || name.contains('paneer')) {
+      return "assets/png/dairy.png";
+    }
+
+    // fallback
+    return "assets/png/all.png";
   }
 }
 

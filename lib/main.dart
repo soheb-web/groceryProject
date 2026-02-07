@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:grocery/Pages/Home/homePage.dart';
 import 'package:grocery/Pages/Onboard/SpalshScreen.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -15,6 +18,9 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    var box = Hive.box("userdata");
+    var token = box.get("token");
+    log("Bearer Token : - ${token ?? "No Token Found"}");
     return ScreenUtilInit(
       designSize: Size(375, 812),
       minTextAdapt: true,
@@ -25,7 +31,7 @@ class MyApp extends StatelessWidget {
 
           title: 'RealState',
 
-          home: SplashScreen(),
+          home: token == null ? SplashScreen() : HomeBottom(),
         );
       },
     );

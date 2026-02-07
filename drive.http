@@ -1,274 +1,122 @@
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTM4ZmY3MzRiMDc4OGQ5NTJjYmRkYjAiLCJlbWFpbCI6InNhaGlsam95YUBnbWFpbC5jb20iLCJpYXQiOjE3NjUzNDM5NDQsImV4cCI6MTc5Njg3OTk0NH0.TJLeynyh-xSNoiMFTEkdin5x4zEJw1yi05nvK318f-0
-@url =  http://192.168.1.22:9999/api/v1
-//@url =  https://majesticlivingproperties.com/api/v1
-//@url =  https://api.propertyleinnovation.com/api/v1
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODQ2MGVhZGU5MzIzYjRlMTY0NWJmOCIsImVtYWlsIjoic2FqaXZAZ21haWwuY29tIiwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzcwMzU3ODgyLCJhdWQiOiJyYnMtZ3JvY2VyeS11c2VycyIsImlzcyI6InJicy1ncm9jZXJ5LWFwcCJ9.e9-V2k4JE72mi9mxlYEgRG-1cwJ-v4oWaJFTfdLeYgI
+@url =  https://4vx2jv62-5000.inc1.devtunnels.ms/api
 
 # 
-post {{url}}/user/userRegister
+post {{url}}/auth/register
 Content-type: application/json
 
 {
-    "name":"demo1",
-    "email":"demo1@gmail.com",
-    "phone":"1234567890",
-    "password":"123456"
+  "firstName": "Sahil",
+  "lastName": "Joya",
+  "email": "sahil.joya@example.com",
+  "password": "Sahil@123",
+  "phone": "9876543210"
 }
 
 ############
 # login user
-post {{url}}/user/userLogin
+post {{url}}/auth/login
 Content-type: application/json
 
 {
-    "phone":"8955892899"
+    "email":"sajiv@gmail.com",
+    "password":"12345678"
 }
 
 ############
-# otp verify
-post {{url}}/user/verifyOtp
+# Profile
+GET  {{url}}/auth/profile
 Content-type: application/json
-
-{
-    "token":"w1dI6AhKBDfDMPM1jH7dXYZszCm8ydJ05yscfw0x",
-    "otp":"123456"
-}
-
-
-############
-# userProfile
-post {{url}}/user/userProfile
-Content-type: application/json
-Authorization: {{token}
+Authorization: {{token}}
 
 
 
 ############
-# userUpdate
-post {{url}}/user/userUpdate
+# updateProfile
+PUT  {{url}}/auth/updateProfile
 Content-type: application/json
 Authorization: {{token}}
 
 {
-    "name":"Sahil Joya",
-    "image":"https://demmyimage.com/upload/khan.png"
+  "firstName":"Sajiv",
+  "lastName":"Ansari",
+  "phone":"9508937828",
+  "address":{
+    "street":"Jhotwara",
+    "city":"Jaipur",
+    "state":"Rajsthan",
+    "zipCode":"302012",
+    "country":"India"
+  }
 }
-
-
-//userSellProperty ============= new field add 
-###
-POST {{url}}/user/sell-property HTTP/1.1
+############
+# changePassword
+PUT  {{url}}/auth/changePassword
 Content-type: application/json
 Authorization: {{token}}
 
 {
-  "property": "residential",
-  "propertyType": "apartment",
-  "listingCategory": "rent",
-
-  "localityArea": "Vaishali Nagar",
-  "city": "Jaipur",
-
-  "price": "4500000",
-  "area": "2342 sqft",
-  "bedRoom": "2",
-
-  "bathrooms": "2",
-  "furnishing": "semi-furnished",
-
-  "amenities": [
-    "Lift",
-    "Parking",
-    "Power Backup",
-    "Security"
-  ],
-
-  "permitNo": "PERMIT-12345",
-  "rera": "RERA-JAIPUR-2024-001",
-
-  "ded": "",
-  "brn": "",
-
-  "aroundProject": [
-    {
-      "name": "World Trade Park",
-      "details": "10 minutes drive"
-    },
-    {
-      "name": "Metro Station",
-      "details": "500 meters"
-    }
-  ],
-
-  "description": "Spacious 2 BHK apartment with good ventilation and modern amenities.",
-
-  "aveneuOverView": {
-    "projectArea": "5 Acres",
-    "size": "2342 sqft",
-    "projectSize": "120 Units",
-    "launchDate": "2023-01-15",
-    "possessionStart": "2024-06-01"
-  },
-
-  "propertyAddress": "Flat No 302, Vaishali Nagar, Jaipur, Rajasthan",
-
-  "uploadedPhotos": [
-    "https://cdn.propertyle.com/images/property1.jpg",
-    "https://cdn.propertyle.com/images/property2.jpg"
-  ]
+  "newPassword":"123456",
+  "currentPassword":"321654"
 }
 
 
 ############
-# getPropertyList
-post {{url}}/user/get-list
+# products
+GET {{url}}/user/products?category=&search=&page=1&limit=20
+Content-Type: application/json
+
+############
+# products get by id
+GET   {{url}}/user/products/getById?id=6981d3fc70067af2d5ec90ff
 Content-type: application/json
+
+############
+# subscription
+POST  {{url}}/user/subscription/create
+Content-Type: application/json
 Authorization: {{token}}
 
 {
-    "sortOrder":"desc",
-    "sortBy":"createdAt",
-    "pageNo":"1",
-    "size":"10"
+  "productId": "65f1c9a2b8f7c12345678901",
+  "quantity": 2,
+  "frequency": "DAILY",
+  "startDate": "2026-02-10",
 }
 
-############
-# getMyProperty
-post {{url}}/user/getMyProperty
-Content-type: application/json
-Authorization: {{token}}
-
 
 ############
-# getPropertyById
-post {{url}}/user/get-property-by-id
-Content-type: application/json
+# toggleSubscription
+POST  {{url}}/user/toggleSubscription
+Content-Type: application/json
 Authorization: {{token}}
 
 {
-    "id":"2-bhk-apartment-mansarovar-jaipur-rent-1706092339123"
+  "id":"65f1c9a2b8f7c12345678901"
 }
 
+
 ############
-# contact property wale ko
-post {{url}}/user/saveContactInProperty
-Content-type: application/json
+# checkSubscription
+GET {{url}}/user/checkSubscription?productId=65f1c9a2b8f7c12345678901
+Content-Type: application/json
 Authorization: {{token}}
+
+############
+# subscriptionProducts
+GET {{url}}/user/subscriptionProducts
+Content-Type: application/json
+Authorization: {{token}}
+
+############
+# contact us query
+POST  {{url}}/user/contactForm
+Content-Type: application/json
 
 {
-    "email":"vivek.khenna@gmail.com",
-    "name":"vivek khenna",
-    "phone":"32423423423",
-    "propertyId":"695b5f85c79cf6cd0bfca5d1"
+  "name":"sajivddin",
+  "email":"sajiv@gamil.com",
+   "queryType":"order issues",
+   "subject":"order nhi ho rha hai ",
+   "message":"help karo order nhi ho rha hai "
 }
-
-############
-# Contact Us
-post {{url}}/user/contact-us
-Content-type: application/json
-Authorization: {{token}}
-
-{
-    "email":"vivek.khenna@gmail.com",
-    "name":"vivek khenna",
-    "phone":"32423423423",
-    "subject" : "abs",
-    "message" : "abs",
-    "location":"Jaipur"
-}
-
-############
-# getLoanList
-post {{url}}/user/getLoanList
-Content-type: application/json
-Authorization: {{token}}
-
-{
-  "pageNo":1,
-  "size":10
-}
-
-############
-# loanQuery
-post {{url}}/user/loanQuery
-Content-type: application/json
-Authorization: {{token}}
-
-{
-  "phone":"9784945414",
-  "loanType":"home_loan",
-  "name":"rt",
-  "city":"Merta"
-}
-
-############
-# getServiceCategory
-post {{url}}/user/getServiceCategory
-Content-type: application/json
-Authorization: {{token}}
-
-############
-# serviceSave
-post {{url}}/user/serviceSave
-Content-type: application/json
-Authorization: {{token}}
-
-{
-  "name":"John",
-  "email":"John@gmail.com",
-  "phone":"9583764576",
-  "serviceType":"69425d19cb4e5371e2d03f44"
-}
-
-############
-# city list
-post {{url}}/user/getCityList
-Content-type: application/json
-
-
-############
-# updateMy property status
-post {{url}}/user/updatePropertyStatus
-Content-type: application/json
-Authorization: {{token}}
-
-{
-    "id":"69467b1685ce3dd0edd45703",
-    "status":"sold"
-}
-
-
-############
-# Book service for my home
-post {{url}}/user/BookService
-Content-type: application/json
-Authorization: {{token}}
-
-{
-  "address":"mere gar par",
-  "message": "",
-  "serviceType":"69425d19cb4e5371e2d03f44"
-}
-
-
-############
-# My booked home serices
-post {{url}}/user/BookingServices
-Content-type: application/json
-Authorization: {{token}}
-
-
-############
-# togelProperties
-post {{url}}/user/togelProperties
-Content-type: application/json
-Authorization: {{token}}
-{
-  "propertyId":"6944fb14b77f6c3433909769"
-}
-
-############
-# togelProperties 
-post {{url}}user/getLikeProperties
-Content-type: application/json
-Authorization: {{token}}
-
